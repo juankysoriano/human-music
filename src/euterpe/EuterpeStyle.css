@@ -1,0 +1,14 @@
+.Euterpe {
+    border: 10px solid green;
+    text-align: center;
+    background-color: black;
+    height: 100vh;
+}
+
+.Euterpe .ruleHeader {
+    color: white;
+}
+
+.Euterpe .ruleButton {
+    margin: 10px;
+}

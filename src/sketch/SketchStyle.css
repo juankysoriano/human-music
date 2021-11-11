@@ -1,0 +1,4 @@
+.CellularAutomataSketch .p5Canvas:nth-child(1) {
+    display: inline;
+    border: 10px solid green;
+}
