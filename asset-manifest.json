@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/juankysoriano/euterpe/static/css/main.a09649ef.chunk.css",
+    "main.js": "/juankysoriano/euterpe/static/js/main.1dec0461.chunk.js",
+    "main.js.map": "/juankysoriano/euterpe/static/js/main.1dec0461.chunk.js.map",
+    "runtime-main.js": "/juankysoriano/euterpe/static/js/runtime-main.c76bb532.js",
+    "runtime-main.js.map": "/juankysoriano/euterpe/static/js/runtime-main.c76bb532.js.map",
+    "static/js/2.ae91bcd8.chunk.js": "/juankysoriano/euterpe/static/js/2.ae91bcd8.chunk.js",
+    "static/js/2.ae91bcd8.chunk.js.map": "/juankysoriano/euterpe/static/js/2.ae91bcd8.chunk.js.map",
+    "index.html": "/juankysoriano/euterpe/index.html",
+    "static/css/main.a09649ef.chunk.css.map": "/juankysoriano/euterpe/static/css/main.a09649ef.chunk.css.map",
+    "static/js/2.ae91bcd8.chunk.js.LICENSE.txt": "/juankysoriano/euterpe/static/js/2.ae91bcd8.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c76bb532.js",
+    "static/js/2.ae91bcd8.chunk.js",
+    "static/css/main.a09649ef.chunk.css",
+    "static/js/main.1dec0461.chunk.js"
+  ]
+}
