@@ -6,13 +6,21 @@ import DefaultAutomata from '../cellular-automata/1d/default1DCellularAutomata';
 import * as Tone from 'tone'
 
 const sketch: Sketch = p5 => {
-  let note = "B3";
-  let newNote = "B3";
-  let notes = ["R", "B3", "C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"]
+  let note = "R";
+  let newNote = "R";
+  let notes = ["R", "B2", "C3", "D3", "E3", "F3", "G3", "A3", "B3", "C4"]
   const width = 1000;
   const height = 600;
-  const synth = new Tone.PolySynth(Tone.Synth).toDestination();
-
+  let loaded = false;
+  const synth = new Tone.Sampler({
+    urls: {
+      "C4": "Giuseppe-C.mp3",
+      "D4": "Giuseppe-D.mp3",
+      "E4": "Giuseppe-E.mp3"
+    },
+    baseUrl: "./sounds/"
+  }).toDestination();
+  Tone.loaded().then(() => { loaded = true });
   p5.width = width;
   p5.height = height;
   let automata = DefaultAutomata;
@@ -23,7 +31,7 @@ const sketch: Sketch = p5 => {
 
   p5.setup = () => {
     p5.createCanvas(width, height);
-    p5.frameRate(3);
+    p5.frameRate(5);
     automataPainter.setup();
   };
 
@@ -39,11 +47,14 @@ const sketch: Sketch = p5 => {
   }
 
   p5.draw = () => {
+    if (!loaded) {
+      return;
+    }
     let livingCells = automata.state.filter(state => state !== 0).length;
     newNote = notes[livingCells % notes.length];
     if (note !== newNote) {
       if (note !== "R") {
-        synth.triggerRelease(note, Tone.now()); 
+        synth.triggerRelease(note, Tone.now());
       }
       if (newNote !== "R") {
         synth.triggerAttack(newNote, Tone.now());

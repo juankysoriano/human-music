@@ -9,14 +9,15 @@ import * as Tone from 'tone'
 
 export default function Euterpe() {
     let ruleChanged = false;
-    const [rule, setRule] = useState(90);
+    const [rule, setRule] = useState(2);
     const [automata, setAutomata] = useState(DefaultAutomata);
 
-    const changeRule = () => {
+    const changeRule = (rule: number) => {
         if (!ruleChanged) {
             Tone.start();
             ruleChanged = true;
         }
+        setRule(rule);
         setAutomata(
             new ElementaryCellularAutomata1D.Builder()
                 .withStates(2)
@@ -30,7 +31,7 @@ export default function Euterpe() {
         <div className="Euterpe">
             <h1 className="ruleHeader">Playing rule: {rule}</h1>
             <CellularAutomataSketch />
-            <button className="ruleButton" onClick={() => { setRule(Math.round(Math.random() * 255)); changeRule() }}>
+            <button className="ruleButton" onClick={() => { changeRule(Math.round(Math.random() * 255)) }}>
                 Randomise Rule
             </button>
         </div>
