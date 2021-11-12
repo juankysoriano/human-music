@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author": "juanky.soriano@gmail.com",
-  "homepage": "https://github.com/juankysoriano/euterpe",
+  "homepage": "https://juankysoriano.github.io/euterpe/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
