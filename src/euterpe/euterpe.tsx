@@ -16,17 +16,11 @@ export default function Euterpe() {
     async function start() {
         await Tone.start();
         setStarted(true);
-        setRule(2)
-        setAutomata(
-            new ElementaryCellularAutomata1D.Builder()
-                .withStates(2)
-                .withSize(100)
-                .withRule(2)
-                .build() as CellularAutomata1D
-        );
+        randomiseRule();
     }
 
-    const changeRule = (rule: number) => {
+    async function randomiseRule() {
+        const rule = Math.round(Math.random() * 255);
         setRule(rule);
         setAutomata(
             new ElementaryCellularAutomata1D.Builder()
@@ -42,8 +36,8 @@ export default function Euterpe() {
             <h1 className="ruleHeader">Playing rule: {rule}</h1>
             <CellularAutomataSketch />
             {started
-                ? <button className="ruleButton" onClick={() => { changeRule(Math.round(Math.random() * 255)) }}>Randomise Rule</button>
-                : <button className="startButton" onClick={() => start()}>Start</button>
+                ? <button className="ruleButton" onClick={randomiseRule}>Randomise Rule</button>
+                : <button className="startButton" onClick={start}>Start</button>
             }
         </div>
     </SketchProvider.Provider>

@@ -8,17 +8,22 @@ import * as Tone from 'tone'
 const sketch: Sketch = p5 => {
   let note = "R";
   let newNote = "R";
-  let notes = ["R", "B2", "C3", "D3", "E3", "F3", "G3", "A3", "B3", "C4"]
+  let notes = ["R", "B2", "C3", "D3", "E3", "F3", "G3", "A3", "B3", "C4"];
   const width = 1000;
   const height = 600;
   let loaded = false;
   const synth = new Tone.Sampler({
+    // urls: {
+    //   "C4": "Giuseppe-C.mp3",
+    //   "D4": "Giuseppe-D.mp3",
+    //   "E4": "Giuseppe-E.mp3"
+    // },
+    // baseUrl: process.env.PUBLIC_URL + "/sounds/"
     urls: {
-      "C4": "Giuseppe-C.mp3",
-      "D4": "Giuseppe-D.mp3",
-      "E4": "Giuseppe-E.mp3"
+      A1: "A1.mp3",
+      A2: "A2.mp3",
     },
-    baseUrl: "./sounds/"
+    baseUrl: "https://tonejs.github.io/audio/casio/",
   }).toDestination();
   Tone.loaded().then(() => { loaded = true });
   p5.width = width;
@@ -53,9 +58,7 @@ const sketch: Sketch = p5 => {
     let livingCells = automata.state.filter(state => state !== 0).length;
     newNote = notes[livingCells % notes.length];
     if (note !== newNote) {
-      if (note !== "R") {
-        synth.triggerRelease(note, Tone.now());
-      }
+      synth.triggerRelease(note, Tone.now());
       if (newNote !== "R") {
         synth.triggerAttack(newNote, Tone.now());
       }
