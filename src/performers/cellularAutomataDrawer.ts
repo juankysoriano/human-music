@@ -1,5 +1,8 @@
 import p5 from 'p5';
-import { CellularAutomata1D } from './cellularAutomata1D';
+import { CellularAutomata1D } from '../cellular-automata';
+import { CellularAutomata1DPlayer } from './cellularAutomataPlayer';
+
+const colors = ['#000000', '#F36E44', '#568140']
 
 export class CellularAutomata1DPainter {
     private step: number = 0;
@@ -11,6 +14,20 @@ export class CellularAutomata1DPainter {
         this.sketch = sketch;
         this.automata = automata;
         this.cellSize = sketch.width / automata.size;
+    }
+
+    updateAutomata(automata: CellularAutomata1D) {
+        this.automata = automata;
+        this.step = 0;
+    }
+
+    draw() {
+        for (let i = 0; i < this.automata.size; i++) {
+            this.sketch.noStroke();
+            this.sketch.fill(colors[this.automata.state[i]]);
+            this.sketch.rect(this.cellSize*i, this.step*this.cellSize, this.cellSize, this.cellSize);
+        }
+        this.step++;
     }
 
     static Builder = class {
@@ -35,29 +52,6 @@ export class CellularAutomata1DPainter {
                 throw new Error("Must pass a p5 sketch upon building");
             }
             return new CellularAutomata1DPainter(this.sketch!, this.automata!);
-        }
-    }
-
-    setup() {
-        this.sketch.noStroke();
-    }
-
-    draw() {
-        for (let i = 0; i < this.automata.size; i++) {
-            this.setFillColor(this.automata.state[i]);
-            this.sketch.rect(this.cellSize*i, this.step*this.cellSize, this.cellSize, this.cellSize);
-
-        }
-        this.step++;
-    }
-
-    private setFillColor(state: number) {
-        if (state === 0) {
-            this.sketch.fill('#000000');
-        } else if (state === 1) {
-            this.sketch.fill('#F36E44');
-        } else if (state === 2) {
-            this.sketch.fill('#568140');
         }
     }
 

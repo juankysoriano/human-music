@@ -132,6 +132,5 @@ export const DefaultAutomata = new CellularAutomata.Builder()
     .withStates(2)
     .build() as CellularAutomata1D;
 
-export * from './1d/cellularAutomata1DPainter';
 export * from './1d/totalisticCellularAutomata1D';
 export * from './1d/elementaryCellularAutomata1D'
