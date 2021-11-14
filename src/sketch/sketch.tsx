@@ -1,9 +1,8 @@
-import { CellularAutomata1DPainter } from '../cellular-automata/1d/cellularAutomata1DPainter';
 import { ReactP5Wrapper, Sketch } from "react-p5-wrapper";
 import SketchProvider from './SketchProvider';
-import './SketchStyle.css'
-import DefaultAutomata from '../cellular-automata/1d/default1DCellularAutomata';
+import './styles/SketchStyle.css'
 import * as Tone from 'tone'
+import { DefaultAutomata, CellularAutomata1DPainter } from '../cellular-automata';
 
 const sketch: Sketch = p5 => {
   let note = "R";

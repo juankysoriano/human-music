@@ -43,12 +43,12 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
         let lookUpIndex: number;
         let numberOfInvolvedCells = 2 * this.radius + 1;
         let code = 0;
-        if (index == 0) {
+        if (index === 0) {
             for (let i = -this.radius; i < numberOfInvolvedCells; i++) {
                 lookUpIndex = this.wrappedIndex(i);
                 code += this._state[lookUpIndex];
             }
-        } else {    
+        } else {
             lookUpIndex = this.wrappedIndex(index - this.radius - 1);
             let offsetA = this._state[lookUpIndex];
             lookUpIndex = this.wrappedIndex(index + this.radius);
@@ -61,63 +61,5 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
 
     private wrappedIndex(index: number) {
         return index < 0 ? index + this.size : index >= this.size ? index - this.size : index;
-    }
-
-
-    static Builder = class {
-        private states: number = 2;
-        private size: number = 100;
-        private rule: number = 0;
-        private randomInitialConfiguration: boolean = false;
-
-        withStates(states: number) {
-            if (states < 1) {
-                throw new Error("Number of states must be greater than 1");
-            }
-            this.states = states;
-            return this;
-        }
-
-        withSize(size: number) {
-            this.size = size;
-            if (size <= 10) {
-                throw new Error("Size of cellular automata must be greater than 10");
-            }
-            return this;
-        }
-
-        withRule(rule: number) {
-            this.rule = rule;
-            if (rule < 0) {
-                throw new Error("Rule must be a positive number");
-            }
-            return this;
-        }
-
-        withRandomInitialConfiguration() {
-            this.randomInitialConfiguration = true;
-            return this;
-        }
-
-        build() {
-            const radius = 1;
-            const ruleCharacters = Array.from(BigInt(this.rule).toString(this.states));
-            const lookupTable: number[] = Array.from({ length: ruleCharacters.length });
-            for (let i = 0; i < ruleCharacters.length; i++) {
-                lookupTable[i] = +ruleCharacters[i] - +'0';
-            }
-            const initialState = this.randomInitialConfiguration
-                ? Array.from({ length: this.size }, () => Math.round(Math.random()))
-                : Array.from({ length: this.size }, (_, index) => index == Math.floor(this.size / 2) ? 1 : 0);
-
-            return new TotalisticCellularAutomata1D(
-                this.states,
-                this.size,
-                radius,
-                this.rule,  
-                initialState,
-                lookupTable
-            );
-        }
     }
 }

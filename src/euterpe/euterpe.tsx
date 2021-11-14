@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { CellularAutomata1D } from "../cellular-automata/1d/cellularAutomata1D";
-import { ElementaryCellularAutomata1D } from "../cellular-automata/1d/elementaryCellularAutomata1D";
 import SketchProvider from "../sketch/SketchProvider";
 import CellularAutomataSketch from "../sketch/sketch";
-import './EuterpeStyle.css'
-import DefaultAutomata from "../cellular-automata/1d/default1DCellularAutomata";
+import './styles/EuterpeStyle.css'
+import { CellularAutomata, CellularAutomata1D, DefaultAutomata, Dimensions, Type } from "../cellular-automata";
 import * as Tone from 'tone'
 
 export default function Euterpe() {
@@ -23,7 +21,9 @@ export default function Euterpe() {
         const rule = Math.round(Math.random() * 255);
         setRule(rule);
         setAutomata(
-            new ElementaryCellularAutomata1D.Builder()
+            new CellularAutomata.Builder()
+                .withDimensions(Dimensions.UNIDIMENSIONAL)
+                .withType(Type.ELEMENTARY)
                 .withStates(2)
                 .withSize(100)
                 .withRule(rule)
@@ -33,7 +33,7 @@ export default function Euterpe() {
 
     return <SketchProvider.Provider value={automata}>
         <div className="Euterpe">
-            <h1 className="ruleHeader">Playing rule: {rule}</h1>
+            <h1 className="ruleHeader">{started ? "Playing rule:" + rule : "Euterpe"}</h1>
             <CellularAutomataSketch />
             {started
                 ? <button className="ruleButton" onClick={randomiseRule}>Randomise Rule</button>
