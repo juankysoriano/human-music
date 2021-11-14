@@ -75,7 +75,7 @@ export class CellularAutomata {
             return this.type === Type.TOTALISTIC ? this.buildTotallistic1D() : this.buildElementary1D();
         }
 
-        buildTotallistic1D() {
+        private buildTotallistic1D() {
             const radius = 1;
             const ruleCharacters = Array.from(BigInt(this.rule).toString(this.states));
             const lookupTable: number[] = Array.from({ length: ruleCharacters.length });
@@ -96,7 +96,7 @@ export class CellularAutomata {
             );
         }
 
-        buildElementary1D() {
+        private buildElementary1D() {
             const radius = 1;
             const ruleCharacters = Array.from(BigInt(this.rule).toString(this.states));
             const lookupTable: number[] = Array.from({ length: ruleCharacters.length });
