@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/euterpe/static/css/main.a09649ef.chunk.css",
-    "main.js": "/euterpe/static/js/main.f3f8f700.chunk.js",
-    "main.js.map": "/euterpe/static/js/main.f3f8f700.chunk.js.map",
+    "main.css": "/euterpe/static/css/main.4765a638.chunk.css",
+    "main.js": "/euterpe/static/js/main.e1c0c06f.chunk.js",
+    "main.js.map": "/euterpe/static/js/main.e1c0c06f.chunk.js.map",
     "runtime-main.js": "/euterpe/static/js/runtime-main.50fdf5b9.js",
     "runtime-main.js.map": "/euterpe/static/js/runtime-main.50fdf5b9.js.map",
-    "static/js/2.c41b4b97.chunk.js": "/euterpe/static/js/2.c41b4b97.chunk.js",
-    "static/js/2.c41b4b97.chunk.js.map": "/euterpe/static/js/2.c41b4b97.chunk.js.map",
+    "static/js/2.881ac7a4.chunk.js": "/euterpe/static/js/2.881ac7a4.chunk.js",
+    "static/js/2.881ac7a4.chunk.js.map": "/euterpe/static/js/2.881ac7a4.chunk.js.map",
     "index.html": "/euterpe/index.html",
-    "static/css/main.a09649ef.chunk.css.map": "/euterpe/static/css/main.a09649ef.chunk.css.map",
-    "static/js/2.c41b4b97.chunk.js.LICENSE.txt": "/euterpe/static/js/2.c41b4b97.chunk.js.LICENSE.txt"
+    "static/css/main.4765a638.chunk.css.map": "/euterpe/static/css/main.4765a638.chunk.css.map",
+    "static/js/2.881ac7a4.chunk.js.LICENSE.txt": "/euterpe/static/js/2.881ac7a4.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.50fdf5b9.js",
-    "static/js/2.c41b4b97.chunk.js",
-    "static/css/main.a09649ef.chunk.css",
-    "static/js/main.f3f8f700.chunk.js"
+    "static/js/2.881ac7a4.chunk.js",
+    "static/css/main.4765a638.chunk.css",
+    "static/js/main.e1c0c06f.chunk.js"
   ]
 }
