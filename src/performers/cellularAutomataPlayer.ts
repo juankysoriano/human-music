@@ -41,7 +41,7 @@ export class CellularAutomata1DPlayer {
             return this;
         }
 
-        build() {
+        async build() {
             if (this.automata === null) {
                 throw new Error("Must pass a cellular automata upon building");
             }
@@ -52,6 +52,8 @@ export class CellularAutomata1DPlayer {
                 },
                 baseUrl: "https://tonejs.github.io/audio/casio/",
             }).toDestination();
+
+            await Tone.loaded();
 
             return new CellularAutomata1DPlayer(instrument, this.automata!);
         }

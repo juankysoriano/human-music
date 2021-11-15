@@ -1,8 +1,7 @@
 import p5 from 'p5';
 import { CellularAutomata1D } from '../cellular-automata';
-import { CellularAutomata1DPlayer } from './cellularAutomataPlayer';
 
-const colors = ['#000000', '#F36E44', '#568140']
+const colors = ['#000000', '#e8b354', '#568140']
 
 export class CellularAutomata1DPainter {
     private step: number = 0;
@@ -13,7 +12,7 @@ export class CellularAutomata1DPainter {
     constructor(sketch: p5, automata: CellularAutomata1D) {
         this.sketch = sketch;
         this.automata = automata;
-        this.cellSize = sketch.width / automata.size;
+        this.cellSize = Math.ceil(sketch.width / automata.size);
     }
 
     updateAutomata(automata: CellularAutomata1D) {

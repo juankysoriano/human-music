@@ -1,9 +1,9 @@
 {
-  "name": "euterpe",
+  "name": "human-music",
   "version": "0.1.0",
   "private": true,
   "author": "juanky.soriano@gmail.com",
-  "homepage": "https://juankysoriano.github.io/euterpe/",
+  "homepage": "https://juankysoriano.github.io/human-music/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.2",
     "@testing-library/jest-dom": "^5.15.0",

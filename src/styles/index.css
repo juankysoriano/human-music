@@ -1,9 +1,16 @@
 body {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: 'ChubbyChoo-Regular';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: auto;
   padding: 0%;
+}
+
+@font-face {
+  font-family: 'ChubbyChoo-Regular';
+  src: local('ChubbyChoo-Regular'), url(../fonts/ChubbyChoo-Regular.woff) format('woff');
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
 }
 
 * {
