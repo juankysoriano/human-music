@@ -1,5 +1,4 @@
 import p5 from 'p5';
-import { off } from 'process';
 import { CellularAutomata1D } from '../cellular-automata';
 
 const colors = ['#000000', '#e8b354', '#568140']
