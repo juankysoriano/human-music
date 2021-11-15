@@ -1,20 +1,21 @@
 {
   "files": {
-    "main.css": "/euterpe/static/css/main.4765a638.chunk.css",
-    "main.js": "/euterpe/static/js/main.e1c0c06f.chunk.js",
-    "main.js.map": "/euterpe/static/js/main.e1c0c06f.chunk.js.map",
-    "runtime-main.js": "/euterpe/static/js/runtime-main.50fdf5b9.js",
-    "runtime-main.js.map": "/euterpe/static/js/runtime-main.50fdf5b9.js.map",
-    "static/js/2.881ac7a4.chunk.js": "/euterpe/static/js/2.881ac7a4.chunk.js",
-    "static/js/2.881ac7a4.chunk.js.map": "/euterpe/static/js/2.881ac7a4.chunk.js.map",
-    "index.html": "/euterpe/index.html",
-    "static/css/main.4765a638.chunk.css.map": "/euterpe/static/css/main.4765a638.chunk.css.map",
-    "static/js/2.881ac7a4.chunk.js.LICENSE.txt": "/euterpe/static/js/2.881ac7a4.chunk.js.LICENSE.txt"
+    "main.css": "/human-music/static/css/main.d9c4f5c4.chunk.css",
+    "main.js": "/human-music/static/js/main.be5e04f7.chunk.js",
+    "main.js.map": "/human-music/static/js/main.be5e04f7.chunk.js.map",
+    "runtime-main.js": "/human-music/static/js/runtime-main.4e96f57e.js",
+    "runtime-main.js.map": "/human-music/static/js/runtime-main.4e96f57e.js.map",
+    "static/js/2.ef6fc71b.chunk.js": "/human-music/static/js/2.ef6fc71b.chunk.js",
+    "static/js/2.ef6fc71b.chunk.js.map": "/human-music/static/js/2.ef6fc71b.chunk.js.map",
+    "index.html": "/human-music/index.html",
+    "static/css/main.d9c4f5c4.chunk.css.map": "/human-music/static/css/main.d9c4f5c4.chunk.css.map",
+    "static/js/2.ef6fc71b.chunk.js.LICENSE.txt": "/human-music/static/js/2.ef6fc71b.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/human-music/static/media/ChubbyChoo-Regular.fa2a1aa7.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.50fdf5b9.js",
-    "static/js/2.881ac7a4.chunk.js",
-    "static/css/main.4765a638.chunk.css",
-    "static/js/main.e1c0c06f.chunk.js"
+    "static/js/runtime-main.4e96f57e.js",
+    "static/js/2.ef6fc71b.chunk.js",
+    "static/css/main.d9c4f5c4.chunk.css",
+    "static/js/main.be5e04f7.chunk.js"
   ]
 }
