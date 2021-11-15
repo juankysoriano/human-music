@@ -127,7 +127,7 @@ export class CellularAutomata {
 export const DefaultAutomata = new CellularAutomata.Builder()
     .withDimensions(Dimensions.UNIDIMENSIONAL)
     .withType(Type.ELEMENTARY)
-    .withSize(301)
+    .withSize(101)
     .withRule(0)
     .withStates(2)
     .build() as CellularAutomata1D;

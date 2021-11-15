@@ -4,6 +4,7 @@ import CellularAutomataSketch from "../sketch/sketch";
 import './styles/EuterpeStyle.css'
 import { CellularAutomata, CellularAutomata1D, DefaultAutomata, Dimensions, Type } from "../cellular-automata";
 import * as Tone from 'tone'
+import earth from '../resources/images/earth.png'
 
 export default function Euterpe() {
     const [started, setStarted] = useState(false);
@@ -24,7 +25,7 @@ export default function Euterpe() {
                 .withDimensions(Dimensions.UNIDIMENSIONAL)
                 .withType(Type.ELEMENTARY)
                 .withStates(2)
-                .withSize(301)
+                .withSize(101)
                 .withRule(rule)
                 .build() as CellularAutomata1D
         );
@@ -35,7 +36,7 @@ export default function Euterpe() {
             <CellularAutomataSketch />
             <div className="Panel">
                 <div className="Headers">
-                    <img src={process.env.PUBLIC_URL + "/earth.png"} className="EarthRadioLogo" alt="Earth" />
+                    <img src={earth} className="EarthRadioLogo" alt="Earth" />
                     <h1 className="Title">Human Music</h1>
                     <h2 className="Subtitle">by Earth Radio</h2>
                 </div>

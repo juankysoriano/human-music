@@ -8,7 +8,7 @@ body {
 
 @font-face {
   font-family: 'ChubbyChoo-Regular';
-  src: local('ChubbyChoo-Regular'), url(../fonts/ChubbyChoo-Regular.woff) format('woff');
+  src: local('ChubbyChoo-Regular'), url(../resources/fonts/ChubbyChoo-Regular.woff) format('woff');
   /* other formats include: 'woff2', 'truetype, 'opentype',
                             'embedded-opentype', and 'svg' */
 }

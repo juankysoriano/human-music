@@ -1,4 +1,5 @@
 import p5 from 'p5';
+import { off } from 'process';
 import { CellularAutomata1D } from '../cellular-automata';
 
 const colors = ['#000000', '#e8b354', '#568140']
@@ -12,19 +13,20 @@ export class CellularAutomata1DPainter {
     constructor(sketch: p5, automata: CellularAutomata1D) {
         this.sketch = sketch;
         this.automata = automata;
-        this.cellSize = Math.ceil(sketch.width / automata.size);
+        this.cellSize = this.sketch.width / automata.size / window.devicePixelRatio;
     }
 
     updateAutomata(automata: CellularAutomata1D) {
-        this.automata = automata;
         this.step = 0;
+        this.automata = automata;
+        this.cellSize = this.sketch.width / automata.size / window.devicePixelRatio;
     }
 
     draw() {
         for (let i = 0; i < this.automata.size; i++) {
             this.sketch.noStroke();
             this.sketch.fill(colors[this.automata.state[i]]);
-            this.sketch.rect(this.cellSize*i, this.step*this.cellSize, this.cellSize, this.cellSize);
+            this.sketch.rect(this.cellSize * i, this.step * this.cellSize, this.cellSize, this.cellSize);
         }
         this.step++;
     }

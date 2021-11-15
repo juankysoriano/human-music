@@ -27,8 +27,8 @@ async function initPerformers(p5: P5Instance) {
 const sketch: Sketch = p5 => {
   let isSetup = false;
   let sketchElement = document.getElementById('sketch');
-  let width = sketchElement ? sketchElement.clientWidth : 0;
-  let height = sketchElement ? sketchElement.clientHeight : 0;
+  let width = sketchElement ? sketchElement.clientWidth * window.devicePixelRatio : 0;
+  let height = sketchElement ? sketchElement.clientHeight * window.devicePixelRatio : 0;
 
   p5.setup = () => {
     p5.createCanvas(width, height);
