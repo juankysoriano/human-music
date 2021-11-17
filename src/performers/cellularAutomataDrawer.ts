@@ -60,5 +60,4 @@ export class CellularAutomata1DPainter {
             return new CellularAutomata1DPainter(this.sketch!, this.automata!);
         }
     }
-
 }

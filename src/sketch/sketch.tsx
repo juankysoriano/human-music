@@ -3,14 +3,16 @@ import SketchProvider from './SketchProvider';
 import { CellularAutomata1D, DefaultAutomata } from '../cellular-automata';
 import { CellularAutomata1DPainter } from "../performers/cellularAutomataDrawer";
 import { CellularAutomata1DPlayer } from "../performers/cellularAutomataPlayer";
-import $ from 'jquery'; 
+import $ from 'jquery';
 
 let automata: CellularAutomata1D;
 let automataPainter: CellularAutomata1DPainter;
 let automataPlayer: CellularAutomata1DPlayer;
 
-async function initPerformers(p5: P5Instance) {
-  let initialAutomata = DefaultAutomata();
+async function configureSketch(p5: P5Instance, initialAutomata: CellularAutomata1D) {
+  automata = null as any;
+  automataPainter = null as any;
+  automataPlayer = null as any;
 
   let painter = new CellularAutomata1DPainter.Builder()
     .withSketch(p5)
@@ -21,31 +23,22 @@ async function initPerformers(p5: P5Instance) {
     .withAutomata(initialAutomata)
     .build();
 
-  return { initialAutomata, painter, player };
+    automata = initialAutomata;
+    automataPainter = painter;
+    automataPlayer = player;
 }
 
 const sketch: Sketch = p5 => {
-  let isSetup = false;
-  let width = $('#sketch').width()!;
-  let height = $('#sketch').height()!;
-  
   p5.setup = () => {
-    p5.createCanvas(width, height);
+    p5.createCanvas(sketchWidth(), sketchHeight());
     p5.frameRate(5);
-    initPerformers(p5).then(({ initialAutomata, painter, player }): void => {
-      automata = initialAutomata;
-      automataPainter = painter;
-      automataPlayer = player;
-      isSetup = true;
-    });
   };
 
   p5.updateWithProps = props => {
-    if (props.automata && isSetup) {
-      automata = props.automata;
-      automataPainter?.updateAutomata(automata);
-      automataPlayer?.updateAutomata(automata);
+    if (props.automata) {
+      p5.resizeCanvas(sketchWidth(), sketchHeight());
       p5.clear();
+      configureSketch(p5, props.automata);
     }
 
     p5.draw = () => {
@@ -56,12 +49,15 @@ const sketch: Sketch = p5 => {
   }
 }
 
-const sketchWidth = function() {
+const sketchWidth = function () {
   let windowWidth = Math.round((window.innerWidth) * 0.75);
   let offset = windowWidth % 30;
   return (windowWidth - offset);
 }
 
+const sketchHeight = function () {
+  return $('#sketch').height()!
+}
 
 export default function CellularAutomataSketch() {
   return (<SketchProvider.Consumer>

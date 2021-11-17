@@ -5,8 +5,8 @@ import './styles/EuterpeStyle.css'
 import { CellularAutomata, CellularAutomata1D, DefaultAutomata, Dimensions, Type, Size } from "../cellular-automata";
 import * as Tone from 'tone'
 import earth from '../resources/images/earth.png'
-
-
+import React from "react";
+import { debounce } from "ts-debounce";
 
 
 export default function Euterpe() {
@@ -33,6 +33,24 @@ export default function Euterpe() {
                 .build() as CellularAutomata1D
         );
     }
+
+    function updateAutomata(rule: number) {
+        setAutomata(
+            new CellularAutomata.Builder()
+                .withDimensions(Dimensions.UNIDIMENSIONAL)
+                .withType(Type.ELEMENTARY)
+                .withStates(2)
+                .withSize(Size.EXTRA_SMALL)
+                .withRule(rule)
+                .build() as CellularAutomata1D
+        );
+    }
+
+    React.useEffect(() => {
+        const debounced = debounce(() => { updateAutomata(rule)}, 250);
+        const handleResize = function() { debounced(); }
+        window.addEventListener('resize', handleResize)
+    });
 
     return <SketchProvider.Provider value={automata}>
         <div className="Euterpe">
