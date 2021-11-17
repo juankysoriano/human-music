@@ -13,7 +13,7 @@ let isSetup = false;
 const sketch: Sketch = p5 => {
   p5.setup = () => {
     p5.createCanvas(sketchWidth(), sketchHeight());
-    p5.frameRate(5);
+    p5.frameRate(3);
     isSetup = true;
   };
 
@@ -21,7 +21,7 @@ const sketch: Sketch = p5 => {
     if (props.automata && isSetup) {
       p5.resizeCanvas(sketchWidth(), sketchHeight());
       p5.clear();
-      
+
       updateSketch(p5, props.automata);
     }
 
