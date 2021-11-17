@@ -8,13 +8,13 @@
 
 .Euterpe .CellularAutomataSketch {
     border: 5px solid darkslategray;
-    width: 65%;
+    width: 75%;
     box-sizing: content-box;
 }
 
 .Euterpe .Panel {
     background-color: blanchedalmond;
-    width: 35%;
+    width: 25%;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -23,7 +23,8 @@
 .Euterpe .Headers {
     align-self: flex-start;
     width: 100%;
-    font-size: 1.5vw;
+    white-space: nowrap;
+    font-size: 1vw;
 }
 
 .Euterpe .EarthRadioLogo {
@@ -51,14 +52,16 @@
 
 .Euterpe .PlayingRule {
     color: black;
+    font-size:2vmin;
 }
 
 .Euterpe .ruleButton {
     width: 75%;
     color: black;
     font: inherit;
-    background-color: grey;
     padding: 10px;
+    font-size:2vmin;
+    background-color: grey;
 }
 
 .Euterpe .startButton {
@@ -66,5 +69,6 @@
     color: black;
     font: inherit;
     padding: 10px;
+    font-size:2vmin;
     background-color: grey;
 }

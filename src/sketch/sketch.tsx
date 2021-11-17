@@ -26,7 +26,7 @@ async function initPerformers(p5: P5Instance) {
 const sketch: Sketch = p5 => {
   let isSetup = false;
   let sketchElement = document.getElementById('sketch');
-  let width = sketchElement ? sketchElement.clientWidth : 0;
+  let width = sketchWidth();
   let height = sketchElement ? sketchElement.clientHeight : 0;
 
   p5.setup = () => {
@@ -57,7 +57,7 @@ const sketch: Sketch = p5 => {
 }
 
 const sketchWidth = function() {
-  let windowWidth = Math.round((window.innerWidth) * 0.65);
+  let windowWidth = Math.round((window.innerWidth) * 0.75);
   let offset = windowWidth % 30;
   return (windowWidth - offset);
 }
