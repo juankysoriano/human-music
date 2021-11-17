@@ -21,21 +21,21 @@ export default function Euterpe() {
     }
 
     async function randomiseRule() {
-        const rule = Math.round(Math.random() * 255);
+        const rule = Math.round(Math.random() * 5000);
         setRule(rule);
         setAutomata(
             new CellularAutomata.Builder()
                 .withDimensions(Dimensions.UNIDIMENSIONAL)
-                .withType(Type.ELEMENTARY)
-                .withStates(2)
-                .withSize(Size.EXTRA_SMALL)
+                .withType(Type.TOTALISTIC)
+                .withStates(3)
+                .withSize(Size.MEDIUM)
                 .withRule(rule)
                 .build() as CellularAutomata1D
         );
     }
 
     return <SketchProvider.Provider value={automata}>
-        <div className="Euterpe" onClick={start}>
+        <div className="Euterpe">
             <CellularAutomataSketch />
             <div className="Panel">
                 <div className="Headers">
