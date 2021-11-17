@@ -2,14 +2,14 @@
     text-align: center;
     background-color: black;
     height: 100vh;
-    display:flex;
+    display: flex;
     flex-direction: row;
 }
 
 .Euterpe .CellularAutomataSketch {
     border: 5px solid darkslategray;
-    float: left;
     width: 65%;
+    box-sizing: content-box;
 }
 
 .Euterpe .Panel {

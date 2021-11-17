@@ -2,14 +2,17 @@ import { useState } from "react";
 import SketchProvider from "../sketch/SketchProvider";
 import CellularAutomataSketch from "../sketch/sketch";
 import './styles/EuterpeStyle.css'
-import { CellularAutomata, CellularAutomata1D, DefaultAutomata, Dimensions, Type } from "../cellular-automata";
+import { CellularAutomata, CellularAutomata1D, DefaultAutomata, Dimensions, Type, Size } from "../cellular-automata";
 import * as Tone from 'tone'
 import earth from '../resources/images/earth.png'
+
+
+
 
 export default function Euterpe() {
     const [started, setStarted] = useState(false);
     const [rule, setRule] = useState(0);
-    const [automata, setAutomata] = useState(DefaultAutomata);
+    const [automata, setAutomata] = useState(DefaultAutomata());
 
     async function start() {
         await Tone.start();
@@ -25,14 +28,14 @@ export default function Euterpe() {
                 .withDimensions(Dimensions.UNIDIMENSIONAL)
                 .withType(Type.ELEMENTARY)
                 .withStates(2)
-                .withSize(101)
+                .withSize(Size.EXTRA_SMALL)
                 .withRule(rule)
                 .build() as CellularAutomata1D
         );
     }
 
     return <SketchProvider.Provider value={automata}>
-        <div className="Euterpe">
+        <div className="Euterpe" onClick={start}>
             <CellularAutomataSketch />
             <div className="Panel">
                 <div className="Headers">

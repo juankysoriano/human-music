@@ -1,6 +1,5 @@
 import { P5Instance, ReactP5Wrapper, Sketch } from "react-p5-wrapper";
 import SketchProvider from './SketchProvider';
-import './styles/SketchStyle.css'
 import { CellularAutomata1D, DefaultAutomata } from '../cellular-automata';
 import { CellularAutomata1DPainter } from "../performers/cellularAutomataDrawer";
 import { CellularAutomata1DPlayer } from "../performers/cellularAutomataPlayer";
@@ -10,7 +9,7 @@ let automataPainter: CellularAutomata1DPainter;
 let automataPlayer: CellularAutomata1DPlayer;
 
 async function initPerformers(p5: P5Instance) {
-  let initialAutomata = DefaultAutomata;
+  let initialAutomata = DefaultAutomata();
 
   let painter = new CellularAutomata1DPainter.Builder()
     .withSketch(p5)
@@ -27,8 +26,8 @@ async function initPerformers(p5: P5Instance) {
 const sketch: Sketch = p5 => {
   let isSetup = false;
   let sketchElement = document.getElementById('sketch');
-  let width = sketchElement ? sketchElement.clientWidth * window.devicePixelRatio : 0;
-  let height = sketchElement ? sketchElement.clientHeight * window.devicePixelRatio : 0;
+  let width = sketchElement ? sketchElement.clientWidth : 0;
+  let height = sketchElement ? sketchElement.clientHeight : 0;
 
   p5.setup = () => {
     p5.createCanvas(width, height);
@@ -57,10 +56,16 @@ const sketch: Sketch = p5 => {
   }
 }
 
+const sketchWidth = function() {
+  let windowWidth = Math.round((window.innerWidth) * 0.65);
+  let offset = windowWidth % 30;
+  return (windowWidth - offset);
+}
+
 export default function CellularAutomataSketch() {
   return (<SketchProvider.Consumer>
     {automata => (
-      <div className="CellularAutomataSketch" id="sketch">
+      <div className="CellularAutomataSketch" id="sketch" style={{ width: sketchWidth() }}>
         <ReactP5Wrapper customClass="canvas" sketch={sketch} automata={automata} />
       </div>
     )}

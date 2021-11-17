@@ -7,7 +7,6 @@ export interface CellularAutomata1D {
     readonly rule: number;
     get state(): ReadonlyArray<number>;
     evolve(): void;
-
 };
 
 export enum Dimensions {
@@ -18,6 +17,14 @@ export enum Dimensions {
 export enum Type {
     TOTALISTIC,
     ELEMENTARY
+}
+
+export enum Size {
+    EXTRA_SMALL,
+    SMALL,
+    MEDIUM,
+    LARGE,
+    EXTRA_LARGE
 }
 
 export class CellularAutomata {
@@ -50,11 +57,17 @@ export class CellularAutomata {
             return this;
         }
 
-        withSize(size: number) {
-            this.size = size;
-            if (size <= 10) {
-                throw new Error("Size of cellular automata must be greater than 10");
-            }
+        withSize(size: Size) {
+            const sketch = document.getElementById('sketch');
+            const sketchWidth = sketch === null ? 0 : sketch.clientWidth * window.devicePixelRatio;
+            
+            switch(size) {
+                case Size.EXTRA_SMALL: this.size = sketchWidth / 30; break;
+                case Size.SMALL: this.size = sketchWidth / 15; break;
+                case Size.MEDIUM: this.size = sketchWidth / 5; break;
+                case Size.LARGE: this.size = sketchWidth / 2; break;
+                case Size.EXTRA_LARGE: this.size = sketchWidth / 1; break;
+            };
             return this;
         }
 
@@ -124,13 +137,15 @@ export class CellularAutomata {
     }
 }
 
-export const DefaultAutomata = new CellularAutomata.Builder()
+export function DefaultAutomata(): CellularAutomata1D {
+    return new CellularAutomata.Builder()
     .withDimensions(Dimensions.UNIDIMENSIONAL)
     .withType(Type.ELEMENTARY)
-    .withSize(101)
+    .withSize(Size.EXTRA_SMALL)
     .withRule(0)
     .withStates(2)
     .build() as CellularAutomata1D;
+}
 
 export * from './1d/totalisticCellularAutomata1D';
 export * from './1d/elementaryCellularAutomata1D'

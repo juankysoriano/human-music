@@ -1,7 +1,7 @@
 import p5 from 'p5';
 import { CellularAutomata1D } from '../cellular-automata';
 
-const colors = ['#000000', '#e8b354', '#568140']
+const colors = ['#00000000', '#e8b354', '#568140']
 
 export class CellularAutomata1DPainter {
     private step: number = 0;
@@ -12,13 +12,13 @@ export class CellularAutomata1DPainter {
     constructor(sketch: p5, automata: CellularAutomata1D) {
         this.sketch = sketch;
         this.automata = automata;
-        this.cellSize = this.sketch.width / automata.size / window.devicePixelRatio;
+        this.cellSize = this.sketch.width / automata.size
     }
 
     updateAutomata(automata: CellularAutomata1D) {
         this.step = 0;
         this.automata = automata;
-        this.cellSize = this.sketch.width / automata.size / window.devicePixelRatio;
+        this.cellSize = this.sketch.width / automata.size;
     }
 
     draw() {
@@ -27,7 +27,13 @@ export class CellularAutomata1DPainter {
             this.sketch.fill(colors[this.automata.state[i]]);
             this.sketch.rect(this.cellSize * i, this.step * this.cellSize, this.cellSize, this.cellSize);
         }
-        this.step++;
+
+        if (this.step * this.cellSize >= this.sketch.height) {
+            this.sketch.background(0, 0, 0, 235);
+            this.step = 0;
+        } else {
+            this.step++;
+        }
     }
 
     static Builder = class {
