@@ -35,7 +35,7 @@ export default function Euterpe() {
     }
 
     return <SketchProvider.Provider value={automata}>
-        <div className="Euterpe" onClick={start}>
+        <div className="Euterpe">
             <CellularAutomataSketch />
             <div className="Panel">
                 <div className="Headers">
