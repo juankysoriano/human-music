@@ -15,13 +15,6 @@ export class CellularAutomata1DPlayer {
         this.automata = automata;
     }
 
-    updateAutomata(automata: CellularAutomata1D) {
-        this.automata = automata;
-        this.instrument.triggerRelease(this.lastNote);
-        this.note = "R";
-        this.lastNote = "R";
-    }
-
     play() {
         let livingCells = this.automata.state.filter(state => state !== 0).length;
         this.note = this.notes[livingCells % this.notes.length];
@@ -32,6 +25,12 @@ export class CellularAutomata1DPlayer {
             }
         }
         this.lastNote = this.note;
+    }
+
+    stop() {
+        this.instrument.triggerRelease(this.lastNote);
+        this.note = "R";
+        this.lastNote = "R";
     }
 
     static Builder = class {

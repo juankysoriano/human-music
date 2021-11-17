@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import SketchProvider from "../sketch/SketchProvider";
 import CellularAutomataSketch from "../sketch/sketch";
 import './styles/EuterpeStyle.css'
@@ -23,18 +23,10 @@ export default function Euterpe() {
     async function randomiseRule() {
         const rule = Math.round(Math.random() * 255);
         setRule(rule);
-        setAutomata(
-            new CellularAutomata.Builder()
-                .withDimensions(Dimensions.UNIDIMENSIONAL)
-                .withType(Type.ELEMENTARY)
-                .withStates(2)
-                .withSize(Size.EXTRA_SMALL)
-                .withRule(rule)
-                .build() as CellularAutomata1D
-        );
+        updateAutomata(rule);
     }
 
-    function updateAutomata(rule: number) {
+    async function updateAutomata(rule: number) {
         setAutomata(
             new CellularAutomata.Builder()
                 .withDimensions(Dimensions.UNIDIMENSIONAL)
@@ -47,9 +39,12 @@ export default function Euterpe() {
     }
 
     React.useEffect(() => {
-        const debounced = debounce(() => { updateAutomata(rule)}, 250);
-        const handleResize = function() { debounced(); }
-        window.addEventListener('resize', handleResize)
+        const debounced = debounce(() => {
+            updateAutomata(rule);
+            window.removeEventListener('resize', handleResize)
+        }, 250);
+        const handleResize = function () { debounced(); }
+        window.addEventListener('resize', handleResize);
     });
 
     return <SketchProvider.Provider value={automata}>

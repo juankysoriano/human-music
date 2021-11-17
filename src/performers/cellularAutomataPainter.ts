@@ -14,13 +14,7 @@ export class CellularAutomata1DPainter {
         this.automata = automata;
         this.cellSize = this.sketch.width / automata.size
     }
-
-    updateAutomata(automata: CellularAutomata1D) {
-        this.step = 0;
-        this.automata = automata;
-        this.cellSize = this.sketch.width / automata.size;
-    }
-
+    
     draw() {
         for (let i = 0; i < this.automata.size; i++) {
             this.sketch.noStroke();
