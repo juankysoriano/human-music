@@ -23,6 +23,7 @@
 .Euterpe .Headers {
     align-self: flex-start;
     width: 100%;
+    font-size: 1.5vw;
 }
 
 .Euterpe .EarthRadioLogo {
@@ -44,7 +45,7 @@
 }
 
 .Euterpe .Controllers {
-    margin-block-end: 50%;
+    margin-block-end: 100%;
     padding: 10px;
 }
 
