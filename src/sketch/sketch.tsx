@@ -3,6 +3,7 @@ import SketchProvider from './SketchProvider';
 import { CellularAutomata1D, DefaultAutomata } from '../cellular-automata';
 import { CellularAutomata1DPainter } from "../performers/cellularAutomataDrawer";
 import { CellularAutomata1DPlayer } from "../performers/cellularAutomataPlayer";
+import $ from 'jquery'; 
 
 let automata: CellularAutomata1D;
 let automataPainter: CellularAutomata1DPainter;
@@ -25,10 +26,9 @@ async function initPerformers(p5: P5Instance) {
 
 const sketch: Sketch = p5 => {
   let isSetup = false;
-  let sketchElement = document.getElementById('sketch');
-  let width = sketchWidth();
-  let height = sketchElement ? sketchElement.clientHeight : 0;
-
+  let width = $('#sketch').width()!;
+  let height = $('#sketch').height()!;
+  
   p5.setup = () => {
     p5.createCanvas(width, height);
     p5.frameRate(5);
@@ -61,6 +61,7 @@ const sketchWidth = function() {
   let offset = windowWidth % 30;
   return (windowWidth - offset);
 }
+
 
 export default function CellularAutomataSketch() {
   return (<SketchProvider.Consumer>

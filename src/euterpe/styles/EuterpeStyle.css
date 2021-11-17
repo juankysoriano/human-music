@@ -14,7 +14,7 @@
 
 .Euterpe .Panel {
     background-color: blanchedalmond;
-    width: 25%;
+    flex-grow: 1;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
