@@ -1,6 +1,5 @@
 import React from "react";
-import { DefaultAutomata } from "../cellular-automata/";
 
-const SketchProvider = React.createContext(((DefaultAutomata())));
+const SketchProvider = React.createContext(0);
 
 export default SketchProvider;

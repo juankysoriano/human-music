@@ -57,7 +57,7 @@ export class CellularAutomata {
             return this;
         }
 
-        withSize(size: Size) {
+         withSize(size: Size) {
             const sketch = document.getElementById('sketch');
             const sketchWidth = sketch === null ? 0 : sketch.clientWidth * window.devicePixelRatio;
             
@@ -68,6 +68,7 @@ export class CellularAutomata {
                 case Size.LARGE: this.size = sketchWidth / 2; break;
                 case Size.EXTRA_LARGE: this.size = sketchWidth / 1; break;
             };
+            this.size = Math.round(this.size);
             return this;
         }
 

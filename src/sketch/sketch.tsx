@@ -1,28 +1,28 @@
 import { P5Instance, ReactP5Wrapper, Sketch } from "react-p5-wrapper";
 import SketchProvider from './SketchProvider';
-import { CellularAutomata1D } from '../cellular-automata';
+import { CellularAutomata, CellularAutomata1D, Dimensions, Size, Type } from '../cellular-automata';
 import { CellularAutomata1DPainter } from "../performers/cellularAutomataPainter";
 import { CellularAutomata1DPlayer } from "../performers/cellularAutomataPlayer";
 import $ from 'jquery';
+import React, { useState } from "react";
+import { debounce } from "ts-debounce";
 
 let automata: CellularAutomata1D;
 let automataPainter: CellularAutomata1DPainter;
 let automataPlayer: CellularAutomata1DPlayer;
-let isSetup = false;
 
 const sketch: Sketch = p5 => {
   p5.setup = () => {
-    p5.createCanvas(sketchWidth(), sketchHeight());
+    p5.createCanvas(0, 0);
     p5.frameRate(3);
-    isSetup = true;
   };
 
   p5.updateWithProps = props => {
-    if (props.automata && isSetup) {
-      p5.resizeCanvas(sketchWidth(), sketchHeight());
+    if (props.rule) {
+      p5.resizeCanvas(props.width, $('#sketch').height()!);
       p5.clear();
 
-      updateSketch(p5, props.automata);
+      updateSketch(p5, props.rule);
     }
 
     p5.draw = () => {
@@ -33,38 +33,53 @@ const sketch: Sketch = p5 => {
   }
 }
 
-const sketchWidth = function () {
-  let windowWidth = Math.round((window.innerWidth) * 0.75);
-  let offset = windowWidth % 30;
-  return (windowWidth - offset);
-}
-
-const sketchHeight = function () {
-  return $('#sketch').height()!
-}
-
-async function updateSketch(p5: P5Instance, initialAutomata: CellularAutomata1D) {
+async function updateSketch(p5: P5Instance, rule: number) {
   automataPlayer?.stop();
 
   automata = null as any;
   automataPainter = null as any;
   automataPlayer = null as any;
 
-  automata = initialAutomata;
+  automata = new CellularAutomata.Builder()
+    .withDimensions(Dimensions.UNIDIMENSIONAL)
+    .withRule(rule)
+    .withSize(Size.EXTRA_SMALL)
+    .withStates(2)
+    .withType(Type.ELEMENTARY)
+    .build();
   automataPainter = new CellularAutomata1DPainter.Builder()
     .withSketch(p5)
-    .withAutomata(initialAutomata)
+    .withAutomata(automata)
     .build();;
   automataPlayer = await new CellularAutomata1DPlayer.Builder()
-    .withAutomata(initialAutomata)
-    .build();;
+    .withAutomata(automata)
+    .build();
 }
 
 export default function CellularAutomataSketch() {
+  const sketchWidth = function () {
+    let windowWidth = Math.round((window.innerWidth) * 0.75);
+    let offset = windowWidth % 30;
+    return (windowWidth - offset);
+  }
+
+  const [width, setWidth] = useState(sketchWidth());
+
+  React.useEffect(() => {
+    const debounced = debounce(() => { setWidth(sketchWidth()); }, 100);
+    const handleResize = function () { debounced(); }
+    window.addEventListener('resize', handleResize);
+
+    return (() => window.removeEventListener('resize', handleResize))
+  }, [])
+
   return (<SketchProvider.Consumer>
-    {automata => (
-      <div className="CellularAutomataSketch" id="sketch" style={{ width: sketchWidth() }}>
-        <ReactP5Wrapper customClass="canvas" sketch={sketch} automata={automata} />
+    {rule => (
+      <div className="CellularAutomataSketch" id="sketch" style={{ width: width }}>
+        <ReactP5Wrapper customClass="canvas"
+          sketch={sketch}
+          rule={rule}
+          width={width} />
       </div>
     )}
   </SketchProvider.Consumer>);
