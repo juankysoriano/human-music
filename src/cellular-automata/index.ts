@@ -138,15 +138,5 @@ export class CellularAutomata {
     }
 }
 
-export function DefaultAutomata(): CellularAutomata1D {
-    return new CellularAutomata.Builder()
-    .withDimensions(Dimensions.UNIDIMENSIONAL)
-    .withType(Type.ELEMENTARY)
-    .withSize(Size.EXTRA_SMALL)
-    .withRule(0)
-    .withStates(2)
-    .build() as CellularAutomata1D;
-}
-
 export * from './1d/totalisticCellularAutomata1D';
 export * from './1d/elementaryCellularAutomata1D'
