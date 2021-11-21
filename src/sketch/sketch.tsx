@@ -24,12 +24,12 @@ const sketch: Sketch = p5 => {
 
       updateSketch(p5, props.rule);
     }
+  }
 
-    p5.draw = () => {
-      automataPainter?.draw();
-      automataPlayer?.play();
-      automata?.evolve();
-    }
+  p5.draw = () => {
+    automataPainter?.draw();
+    automataPlayer?.play();
+    automata?.evolve();
   }
 }
 
@@ -43,14 +43,16 @@ async function updateSketch(p5: P5Instance, rule: number) {
   automata = new CellularAutomata.Builder()
     .withDimensions(Dimensions.UNIDIMENSIONAL)
     .withRule(rule)
-    .withSize(Size.EXTRA_SMALL)
+    .withSize(Size.SMALL)
     .withStates(2)
     .withType(Type.ELEMENTARY)
     .build();
+
   automataPainter = new CellularAutomata1DPainter.Builder()
     .withSketch(p5)
     .withAutomata(automata)
     .build();;
+
   automataPlayer = await new CellularAutomata1DPlayer.Builder()
     .withAutomata(automata)
     .build();
@@ -66,7 +68,7 @@ export default function CellularAutomataSketch() {
   const [width, setWidth] = useState(sketchWidth());
 
   React.useEffect(() => {
-    const debounced = debounce(() => { setWidth(sketchWidth()); }, 100);
+    const debounced = debounce(() => { setWidth(sketchWidth()); }, 200);
     const handleResize = function () { debounced(); }
     window.addEventListener('resize', handleResize);
 
