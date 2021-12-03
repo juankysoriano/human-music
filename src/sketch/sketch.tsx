@@ -28,8 +28,8 @@ const sketch: Sketch = p5 => {
 
   p5.draw = () => {
     automataPainter?.draw();
-    automataPlayer?.play();
     automata?.evolve();
+    automataPlayer?.play();
   }
 }
 
@@ -43,9 +43,9 @@ async function updateSketch(p5: P5Instance, rule: number) {
   automata = new CellularAutomata.Builder()
     .withDimensions(Dimensions.UNIDIMENSIONAL)
     .withRule(rule)
-    .withSize(Size.SMALL)
-    .withStates(2)
-    .withType(Type.ELEMENTARY)
+    .withSize(Size.MEDIUM)
+    .withStates(3)
+    .withType(Type.TOTALISTIC)
     .build();
 
   automataPainter = new CellularAutomata1DPainter.Builder()

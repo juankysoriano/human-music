@@ -25,6 +25,10 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
         return this._state;
     }
 
+    get previousState(): readonly number[] {
+        return this.tempState;
+    }
+
     evolve() {
         this.state.forEach((_, index) => {
             this.evolveCellAt(index);

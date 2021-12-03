@@ -5,7 +5,9 @@ export interface CellularAutomata1D {
     readonly radius: any;
     readonly size: number;
     readonly rule: number;
+    readonly states: number;
     get state(): ReadonlyArray<number>;
+    get previousState(): ReadonlyArray<number>;
     evolve(): void;
 };
 
@@ -69,6 +71,11 @@ export class CellularAutomata {
                 case Size.EXTRA_LARGE: this.size = sketchWidth / 1; break;
             };
             this.size = Math.round(this.size);
+            return this;
+        }
+
+        withFixedSize(size: number) {
+            this.size = size;
             return this;
         }
 
