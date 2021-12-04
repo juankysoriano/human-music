@@ -14,7 +14,7 @@ let automataPlayer: CellularAutomata1DPlayer;
 const sketch: Sketch = p5 => {
   p5.setup = () => {
     p5.createCanvas(0, 0);
-    p5.frameRate(3);
+    p5.frameRate(2.5);
   };
 
   p5.updateWithProps = props => {
@@ -44,14 +44,15 @@ async function updateSketch(p5: P5Instance, rule: number) {
     .withDimensions(Dimensions.UNIDIMENSIONAL)
     .withRule(rule)
     .withSize(Size.MEDIUM)
-    .withStates(3)
-    .withType(Type.TOTALISTIC)
+    .withStates(2)
+    //.withRandomInitialConfiguration()
+    .withType(Type.ELEMENTARY)
     .build();
 
   automataPainter = new CellularAutomata1DPainter.Builder()
     .withSketch(p5)
     .withAutomata(automata)
-    .build();;
+    .build();
 
   automataPlayer = await new CellularAutomata1DPlayer.Builder()
     .withAutomata(automata)

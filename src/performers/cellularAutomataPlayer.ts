@@ -2,16 +2,16 @@ import * as Tone from 'tone'
 import { CellularAutomata1D } from "../cellular-automata";
 import { Chord } from "@tonaljs/tonal";
 
-const NOTE_DURATION = 0.66;
+const NOTE_DURATION = 1;
 
 export class CellularAutomata1DPlayer {
     private note = "";
-    private lastNote = "R";
-    private notes = ["R", "C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"];
-    private chordNotes = ["R", "C2", "D2", "E2", "F2", "G2", "A2", "B2", "C3"];
+    private lastNote = "";
+    private notes = ["C4", "D4", "C4", "D4", "E4", "C4", "D4", "E4", "F4", "C4", "D4", "E4", "F4", "G4", "C4", "D4", "E4", "F4", "G4", "A4", "C4", "D4", "E4", "F4", "G4", "A4", "B4"]
+    private chords = ["C2major", "C2maj7", "D2m", "D2m7", "E2m", "E2m7", "F2maj7", "A2m", "A2m7", "B2m7b5", "C3major", "C3maj7", "D3m", "D3m7", "E3m", "E3m7", "F3maj7", "A3m", "A3m7", "B3m7b5"]//, "F5", "F5maj7", "G5", "G57", "A5m", "A5m7"]//, "B5°", "B5m7b5"];
     private instrument: Tone.Sampler;
     private automata: CellularAutomata1D;
-    private offset = 1;
+    private offset = 0;
     private beats = 8;
     private step = 0;
 
@@ -29,17 +29,17 @@ export class CellularAutomata1DPlayer {
 
         let targetIndex = leeDistance % (this.notes.length * 2);
         let actualIndex = targetIndex >= this.notes.length ? this.notes.length - (targetIndex % this.notes.length) - 1 : targetIndex;
-        
         this.note = this.notes[actualIndex % this.notes.length];
         if (this.note != this.lastNote) {
-            if (this.note != "R") {
-                this.instrument.triggerAttackRelease(this.note, NOTE_DURATION, undefined, 0.75);
-            }
+            this.instrument.triggerAttackRelease(this.note, NOTE_DURATION, undefined, 0.15);
         }
 
-        let chordNote = this.chordNotes[actualIndex % this.chordNotes.length];
-        if (this.step % this.beats == 0 && this.note != "R" && chordNote != "R") {
-            this.instrument.triggerAttackRelease(Chord.getChord("major", chordNote).notes, NOTE_DURATION * this.beats, undefined, 0.5);    
+        targetIndex = leeDistance % (this.chords.length * 2);
+        actualIndex = targetIndex >= this.chords.length ? this.chords.length - (targetIndex % this.chords.length) - 1 : targetIndex;
+        let chord = this.chords[actualIndex % this.chords.length];
+        if (this.step % this.beats == 0) {
+            console.log(chord)
+            this.instrument.triggerAttackRelease(Chord.get(chord).notes, NOTE_DURATION * this.beats, undefined, 0.1);    
         }
 
         this.lastNote = this.note;

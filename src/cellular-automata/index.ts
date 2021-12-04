@@ -59,11 +59,11 @@ export class CellularAutomata {
             return this;
         }
 
-         withSize(size: Size) {
+        withSize(size: Size) {
             const sketch = document.getElementById('sketch');
             const sketchWidth = sketch === null ? 0 : sketch.clientWidth * window.devicePixelRatio;
-            
-            switch(size) {
+
+            switch (size) {
                 case Size.EXTRA_SMALL: this.size = sketchWidth / 30; break;
                 case Size.SMALL: this.size = sketchWidth / 15; break;
                 case Size.MEDIUM: this.size = sketchWidth / 5; break;
@@ -104,7 +104,7 @@ export class CellularAutomata {
                 lookupTable[i] = +ruleCharacters[i] - +'0';
             }
             const initialState = this.randomInitialConfiguration
-                ? Array.from({ length: this.size }, () => Math.round(Math.random()))
+                ? this.getRandomInitialState() as number[]
                 : Array.from({ length: this.size }, (_, index) => index === Math.floor(this.size / 2) ? 1 : 0);
 
             return new TotalisticCellularAutomata1D(
@@ -130,7 +130,7 @@ export class CellularAutomata {
                 }
             }
             const initialState = this.randomInitialConfiguration
-                ? Array.from({ length: this.size }, () => Math.round(Math.random()))
+                ? this.getRandomInitialState() as number[]
                 : Array.from({ length: this.size }, (_, index) => index === Math.floor(this.size / 2) ? 1 : 0);
 
             return new ElementaryCellularAutomata1D(
@@ -141,6 +141,19 @@ export class CellularAutomata {
                 initialState,
                 lookupTable
             );
+        }
+
+        private getRandomInitialState() {
+            let option = Math.floor(3 * Math.random())
+            if (option == 0) {
+                let frequency = 50 + Math.round(Math.random() * 20);
+                return Array.from({ length: this.size }, (_, index) => index != 0 && index % frequency === 0 ? 1 : 0);
+            } else if (option == 1) {
+                let frequency = 30 + Math.round(Math.random() * 20);
+                return Array.from({ length: this.size }, (_, index) => index != 0 && index % frequency === 0 ? 1 : 0);
+            } else if (option == 2) {
+                return Array.from({ length: this.size }, (_, index) => index === Math.floor(this.size / 2) ? 1 : 0)
+            }
         }
     }
 }
