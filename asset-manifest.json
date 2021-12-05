@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/human-music/static/css/main.333bff21.chunk.css",
-    "main.js": "/human-music/static/js/main.33a1dd50.chunk.js",
-    "main.js.map": "/human-music/static/js/main.33a1dd50.chunk.js.map",
+    "main.js": "/human-music/static/js/main.8df17a37.chunk.js",
+    "main.js.map": "/human-music/static/js/main.8df17a37.chunk.js.map",
     "runtime-main.js": "/human-music/static/js/runtime-main.4e96f57e.js",
     "runtime-main.js.map": "/human-music/static/js/runtime-main.4e96f57e.js.map",
     "static/js/2.520167a7.chunk.js": "/human-music/static/js/2.520167a7.chunk.js",
@@ -16,6 +16,6 @@
     "static/js/runtime-main.4e96f57e.js",
     "static/js/2.520167a7.chunk.js",
     "static/css/main.333bff21.chunk.css",
-    "static/js/main.33a1dd50.chunk.js"
+    "static/js/main.8df17a37.chunk.js"
   ]
 }
