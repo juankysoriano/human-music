@@ -7,7 +7,7 @@ const NOTE_DURATION = 1;
 export class CellularAutomata1DPlayer {
     private note = "";
     private lastNote = "";
-    private notes = ["C4", "D4", "C4", "D4", "E4", "C4", "D4", "E4", "F4", "C4", "D4", "E4", "F4", "G4", "C4", "D4", "E4", "F4", "G4", "A4", "C4", "D4", "E4", "F4", "G4", "A4", "B4"]
+    private notes = ["C4", "D4", "C4", "D4", "E4", "C4", "D4", "E4", "F4", "C4", "D4", "E4", "F4", "G4", "C4", "D4", "E4", "F4", "G4", "A4", "B4"]
     private chords = ["C2major", "C2maj7", "D2m", "D2m7", "E2m", "E2m7", "F2maj7", "A2m", "A2m7", "B2m7b5", "C3major", "C3maj7", "D3m", "D3m7", "E3m", "E3m7", "F3maj7", "A3m", "A3m7", "B3m7b5"]//, "F5", "F5maj7", "G5", "G57", "A5m", "A5m7"]//, "B5°", "B5m7b5"];
     private instrument: Tone.Sampler;
     private automata: CellularAutomata1D;
@@ -21,11 +21,11 @@ export class CellularAutomata1DPlayer {
     }
 
     play() {
-        let leeDistance = this.automata.state.reduce((acc, _, index) => {
+        let leeDistance = Math.round(this.automata.state.reduce((acc, _, index) => {
             let euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
             let leeDistance = Math.min(euclideanDistance, this.automata.states - euclideanDistance)
             return this.automata.state[index] == 0 ? acc : acc + leeDistance;
-        }, this.offset)
+        }, this.offset) / 1)
 
         let targetIndex = leeDistance % (this.notes.length * 2);
         let actualIndex = targetIndex >= this.notes.length ? this.notes.length - (targetIndex % this.notes.length) - 1 : targetIndex;
@@ -38,7 +38,6 @@ export class CellularAutomata1DPlayer {
         actualIndex = targetIndex >= this.chords.length ? this.chords.length - (targetIndex % this.chords.length) - 1 : targetIndex;
         let chord = this.chords[actualIndex % this.chords.length];
         if (this.step % this.beats == 0) {
-            console.log(chord)
             this.instrument.triggerAttackRelease(Chord.get(chord).notes, NOTE_DURATION * this.beats, undefined, 0.1);    
         }
 
