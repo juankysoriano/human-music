@@ -43,7 +43,7 @@ async function updateSketch(p5: P5Instance, rule: number) {
   automata = new CellularAutomata.Builder()
     .withDimensions(Dimensions.UNIDIMENSIONAL)
     .withRule(rule)
-    .withSize(Size.MEDIUM)
+    .withSize(Size.LARGE)
     .withStates(2)
     //.withRandomInitialConfiguration()
     .withType(Type.ELEMENTARY)

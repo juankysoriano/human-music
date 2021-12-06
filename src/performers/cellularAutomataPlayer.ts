@@ -49,6 +49,7 @@ export class CellularAutomata1DPlayer {
         this.instrument.releaseAll();
         this.note = "R";
         this.lastNote = "R";
+        this.step = 0;
     }
 
     static Builder = class {
