@@ -21,11 +21,11 @@ export class CellularAutomata1DPlayer {
     }
 
     play() {
-        let leeDistance = Math.round(this.automata.state.reduce((acc, _, index) => {
+        let leeDistance = this.automata.state.reduce((acc, _, index) => {
             let euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
             let leeDistance = Math.min(euclideanDistance, this.automata.states - euclideanDistance)
             return this.automata.state[index] == 0 ? acc : acc + leeDistance;
-        }, this.offset) / 1)
+        }, this.offset);
 
         let targetIndex = leeDistance % (this.notes.length * 2);
         let actualIndex = targetIndex >= this.notes.length ? this.notes.length - (targetIndex % this.notes.length) - 1 : targetIndex;
@@ -47,8 +47,9 @@ export class CellularAutomata1DPlayer {
 
     stop() {
         this.instrument.releaseAll();
-        this.note = "R";
-        this.lastNote = "R";
+        this.instrument.dispose();
+        this.note = "";
+        this.lastNote = "";
         this.step = 0;
     }
 

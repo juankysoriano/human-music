@@ -34,8 +34,8 @@ const sketch: Sketch = p5 => {
 }
 
 async function updateSketch(p5: P5Instance, rule: number) {
+  p5.noLoop();
   automataPlayer?.stop();
-
   automata = null as any;
   automataPainter = null as any;
   automataPlayer = null as any;
@@ -57,6 +57,8 @@ async function updateSketch(p5: P5Instance, rule: number) {
   automataPlayer = await new CellularAutomata1DPlayer.Builder()
     .withAutomata(automata)
     .build();
+
+  p5.loop();
 }
 
 export default function CellularAutomataSketch() {
