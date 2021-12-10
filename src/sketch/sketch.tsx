@@ -6,6 +6,7 @@ import { CellularAutomata1DPlayer } from "../performers/cellularAutomataPlayer";
 import $ from 'jquery';
 import React, { useState } from "react";
 import { debounce } from "ts-debounce";
+import { off } from "process";
 
 let automata: CellularAutomata1D;
 let automataPainter: CellularAutomata1DPainter;
@@ -14,12 +15,13 @@ let automataPlayer: CellularAutomata1DPlayer;
 const sketch: Sketch = p5 => {
   p5.setup = () => {
     p5.createCanvas(0, 0);
+    p5.background(0, 0, 0);
     p5.frameRate(2.5);
   };
 
   p5.updateWithProps = props => {
     if (props.rule) {
-      p5.resizeCanvas(props.width, $('#sketch').height()!);
+      p5.resizeCanvas(props.width, props.height);
       p5.clear();
 
       updateSketch(p5, props.rule);
@@ -63,15 +65,24 @@ async function updateSketch(p5: P5Instance, rule: number) {
 
 export default function CellularAutomataSketch() {
   const sketchWidth = function () {
-    let windowWidth = Math.round((window.innerWidth) * 0.75);
+    let border = 10;
+    let windowWidth = window.innerWidth < window.innerHeight ? window.innerWidth : Math.round((window.innerWidth * 0.75) - 10);
     let offset = windowWidth % 30;
-    return (windowWidth - offset);
+    let offsetBorder = window.innerWidth < window.innerHeight ? border : 0; 
+    return windowWidth - offset - offsetBorder;
+  }
+
+  const sketchHeight = function () {
+    let windowHeight = window.innerWidth < window.innerHeight ? window.innerHeight * 0.80 : window.innerHeight;
+    return windowHeight - 10;
   }
 
   const [width, setWidth] = useState(sketchWidth());
+  const [height, setHeight] = useState(sketchHeight());
+
 
   React.useEffect(() => {
-    const debounced = debounce(() => { setWidth(sketchWidth()); }, 200);
+    const debounced = debounce(() => { setWidth(sketchWidth()); setHeight(sketchHeight()) }, 200);
     const handleResize = function () { debounced(); }
     window.addEventListener('resize', handleResize);
 
@@ -80,11 +91,12 @@ export default function CellularAutomataSketch() {
 
   return (<SketchProvider.Consumer>
     {rule => (
-      <div className="CellularAutomataSketch" id="sketch" style={{ width: width }}>
+      <div className="CellularAutomataSketch" id="sketch" style={{ width: width, height: height}}>
         <ReactP5Wrapper customClass="canvas"
           sketch={sketch}
           rule={rule}
-          width={width} />
+          width={width}
+          height={height} />
       </div>
     )}
   </SketchProvider.Consumer>);

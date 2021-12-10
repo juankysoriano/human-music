@@ -4,6 +4,7 @@ import CellularAutomataSketch from "../sketch/sketch";
 import './styles/EuterpeStyle.css'
 import * as Tone from 'tone'
 import earth from '../resources/images/earth.png'
+import github from '../resources/images/github.png'
 
 const rules = [18, 22, 20, 28, 30, 41, 45, 50, 54, 57, 60, 62, 70, 73, 75, 78, 82, 86, 89, 90, 92, 94, 99, 101, 102, 105, 109, 110, 114, 118, 122, 124, 126, 129, 131, 133, 135, 137, 141, 145, 146, 149, 150, 151, 153, 154, 157, 158, 161, 165, 167, 169, 177, 181, 182, 183, 190, 193, 195, 198, 210, 214, 225, 246, 250]
 export default function Euterpe() {
@@ -36,6 +37,12 @@ export default function Euterpe() {
                         ? <button className="ruleButton" onClick={randomiseRule}>Randomise Rule</button>
                         : <button className="startButton" onClick={start}>Start</button>
                     }
+                </div>
+                <div className="Misc">
+                <a className="GitHubLink" href="https://github.com/juankysoriano/human-music">
+                    <img className="GitHubLogo" alt="GitHub" src={github}></img>
+                </a>
+                <p className="Dad">A mi padre ♥</p>
                 </div>
             </div>
         </div>

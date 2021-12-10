@@ -1,74 +1,211 @@
-.Euterpe {
-    text-align: center;
-    background-color: black;
-    height: 100vh;
-    display: flex;
-    flex-direction: row;
+@media (orientation: landscape) {
+    .Euterpe {
+        text-align: center;
+        background-color: black;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .Euterpe .CellularAutomataSketch {
+        border: 5px solid darkslategray;
+        width: 75%;
+        height: auto;
+        box-sizing: content-box;
+    }
+
+    .Euterpe .Panel {
+        background-color: blanchedalmond;
+        flex-grow: 1;
+        width: 25%;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+    }
+
+    .Euterpe .Headers {
+        align-self: flex-start;
+        width: 100%;
+        white-space: nowrap;
+        font-size: 1vw;
+    }
+
+    .Euterpe .EarthRadioLogo {
+        margin: 0 auto;
+        margin-top: 10%;
+        width: 25%;
+        height: auto;
+    }
+
+    .Euterpe .Title {
+        color: darkslategrey;
+        margin: 0 auto;
+    }
+
+    .Euterpe .Subtitle {
+        color: black;
+        margin: 0 auto;
+        margin-left: 30%;
+    }
+
+    .Euterpe .Controllers {
+        justify-self: center;
+        padding: 10px;
+    }
+
+    .Euterpe .PlayingRule {
+        color: black;
+        font-size: 2vmin;
+    }
+
+    .Euterpe .ruleButton {
+        width: 75%;
+        color: black;
+        font: inherit;
+        padding: 10px;
+        font-size: 2vmin;
+        background-color: grey;
+    }
+
+    .Euterpe .startButton {
+        width: 75%;
+        color: black;
+        font: inherit;
+        padding: 10px;
+        font-size: 2vmin;
+        background-color: grey;
+    }
+
+    .Euterpe .Misc {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        justify-self: flex-end;
+        margin-right: 1%;
+        margin-top: 1%;
+        margin-left: auto;
+    }
+
+    .Euterpe .GitHubLink {
+        margin-left: auto;
+    }
+
+    .Euterpe .GitHubLogo {
+        width: 3vw;
+        height: auto;
+    }
+
+    .Euterpe .Dad {
+        color: black;
+        font-size: 1vw;
+        margin-top: auto;
+        align-self: end;
+    }
 }
 
-.Euterpe .CellularAutomataSketch {
-    border: 5px solid darkslategray;
-    width: 75%;
-    box-sizing: content-box;
-}
+@media (orientation: portrait) {
+    .Euterpe {
+        text-align: center;
+        background-color: black;
+        height: 100%;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+    }
 
-.Euterpe .Panel {
-    background-color: blanchedalmond;
-    flex-grow: 1;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-}
+    .Euterpe .CellularAutomataSketch {
+        border: 5px solid darkslategray;
+        background-color: black;
+        height: 80vh;
+        box-sizing: content-box;
+    }
 
-.Euterpe .Headers {
-    align-self: flex-start;
-    width: 100%;
-    white-space: nowrap;
-    font-size: 1vw;
-}
+    .Euterpe .Panel {
+        background-color: blanchedalmond;
+        width: 100%;
+        height: 18vh;
+        display: flex;
+        flex-direction: row;
+    }
 
-.Euterpe .EarthRadioLogo {
-    margin: 0 auto;
-    margin-top: 10%;
-    width: 25%;
-    height: auto;
-}
+    .Euterpe .Headers {
+        width: fit-content;
+        height: fit-content;
+        white-space: nowrap;
+        margin-left: 10%;
+        margin-top: 5%;
+        font-size: 2vw;
+    }
 
-.Euterpe .Title {
-    color: darkslategrey;
-    margin: 0 auto;
-}
+    .Euterpe .EarthRadioLogo {
+        margin: 0 auto;
+        width: 15vw;
+        height: auto;
+        align-self: center;
+    }
 
-.Euterpe .Subtitle {
-    color: black;
-    margin: 0 auto;
-    margin-left: 30%;
-}
+    .Euterpe .Title {
+        color: darkslategrey;
+        margin: 0 auto;
+    }
 
-.Euterpe .Controllers {
-    margin-block-end: 100%;
-    padding: 10px;
-}
+    .Euterpe .Subtitle {
+        color: black;
+        margin: 0 auto;
+        margin-left: 30%;
+    }
 
-.Euterpe .PlayingRule {
-    color: black;
-    font-size:2vmin;
-}
+    .Euterpe .Controllers {
+        margin-left: 5%;
+        flex-grow: 1;
+    }
 
-.Euterpe .ruleButton {
-    width: 75%;
-    color: black;
-    font: inherit;
-    padding: 10px;
-    font-size:2vmin;
-    background-color: grey;
-}
+    .Euterpe .PlayingRule {
+        color: black;
+        white-space: nowrap;
+        font-size: 2.3vmin;
+    }
 
-.Euterpe .startButton {
-    width: 75%;
-    color: black;
-    font: inherit;
-    padding: 10px;
-    font-size:2vmin;
-    background-color: grey;
+    .Euterpe .ruleButton {
+        width: 100px;
+        height: 50%;
+        color: black;
+        font: inherit;
+        font-size: 3vmin;
+        background-color: grey;
+    }
+
+    .Euterpe .startButton {
+        width: 100px;
+        height: 50%;
+        color: black;
+        font: inherit;
+        font-size: 3vmin;
+        background-color: grey;
+    }
+
+    .Euterpe .Misc {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-right: 1%;
+        margin-top: 1%;
+    }
+
+    .Euterpe .GitHubLink {
+        margin-left: auto;
+    }
+
+    .Euterpe .GitHubLogo {
+        width: 5vw;
+        height: auto;
+    }
+
+    .Euterpe .Dad {
+        color: black;
+        font-size: 2vw;
+        margin-top: auto;
+        margin-bottom: -1%;
+        align-self: stretch;
+    }
 }
