@@ -1,8 +1,8 @@
 import ReactDOM from 'react-dom';
-import Euterpe from './euterpe/euterpe';
+import HumanMusic from './human-music/human-music';
 import './styles/index.css';
 
 ReactDOM.render(
-  <Euterpe/>,
+  <HumanMusic/>,
   document.getElementById('root')
 );
