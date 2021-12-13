@@ -23,7 +23,7 @@ export default function HumanMusic() {
     }
 
     return <SketchProvider.Provider value={rule}>
-        <div className="HumanMusic">
+        <body className="HumanMusic">
             <CellularAutomataSketch />
             <div className="Panel">
                 <div className="Headers">
@@ -45,6 +45,6 @@ export default function HumanMusic() {
                 <p className="Dad">A mi padre ♥</p>
                 </div>
             </div>
-        </div>
+        </body>
     </SketchProvider.Provider>
 }

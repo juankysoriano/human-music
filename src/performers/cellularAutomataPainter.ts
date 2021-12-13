@@ -12,7 +12,7 @@ export class CellularAutomata1DPainter {
     constructor(sketch: p5, automata: CellularAutomata1D) {
         this.sketch = sketch;
         this.automata = automata;
-        this.cellSize = this.sketch.width / automata.size
+        this.cellSize = Math.round(this.sketch.width / automata.size);
     }
     
     draw() {

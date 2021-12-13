@@ -61,7 +61,7 @@ export class CellularAutomata {
 
         withSize(size: Size) {
             const sketch = document.getElementById('sketch');
-            const sketchWidth = sketch === null ? 0 : sketch.clientWidth * window.devicePixelRatio;
+            const sketchWidth = sketch === null ? 0 : sketch.clientWidth;
 
             switch (size) {
                 case Size.EXTRA_SMALL: this.size = sketchWidth / 30; break;

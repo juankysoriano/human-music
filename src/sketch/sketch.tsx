@@ -4,9 +4,8 @@ import { CellularAutomata, CellularAutomata1D, Dimensions, Size, Type } from '..
 import { CellularAutomata1DPainter } from "../performers/cellularAutomataPainter";
 import { CellularAutomata1DPlayer } from "../performers/cellularAutomataPlayer";
 import $ from 'jquery';
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import { debounce } from "ts-debounce";
-import { off } from "process";
 
 let automata: CellularAutomata1D;
 let automataPainter: CellularAutomata1DPainter;
@@ -14,16 +13,16 @@ let automataPlayer: CellularAutomata1DPlayer;
 
 const sketch: Sketch = p5 => {
   p5.setup = () => {
-    p5.createCanvas(0, 0);
+    p5.createCanvas($('#sketch').width()!, $('#sketch').height()!);
     p5.background(0, 0, 0);
     p5.frameRate(2.5);
+    p5.pixelDensity(1);
   };
 
   p5.updateWithProps = props => {
+    p5.resizeCanvas($('#sketch').width()!, $('#sketch').height()!);
     if (props.rule) {
-      p5.resizeCanvas(props.width, props.height);
       p5.clear();
-
       updateSketch(p5, props.rule);
     }
   }
@@ -64,25 +63,10 @@ async function updateSketch(p5: P5Instance, rule: number) {
 }
 
 export default function CellularAutomataSketch() {
-  const sketchWidth = function () {
-    let border = 10;
-    let windowWidth = window.innerWidth < window.innerHeight ? window.innerWidth : Math.round((window.innerWidth * 0.75) - 10);
-    let offset = windowWidth % 30;
-    let offsetBorder = window.innerWidth < window.innerHeight ? border : 0; 
-    return windowWidth - offset - offsetBorder;
-  }
-
-  const sketchHeight = function () {
-    let windowHeight = window.innerWidth < window.innerHeight ? window.innerHeight * 0.80 : window.innerHeight;
-    return windowHeight - 10;
-  }
-
-  const [width, setWidth] = useState(sketchWidth());
-  const [height, setHeight] = useState(sketchHeight());
-
+  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
 
   React.useEffect(() => {
-    const debounced = debounce(() => { setWidth(sketchWidth()); setHeight(sketchHeight()) }, 200);
+    const debounced = debounce(() => { forceUpdate(); }, 200);
     const handleResize = function () { debounced(); }
     window.addEventListener('resize', handleResize);
 
@@ -91,12 +75,11 @@ export default function CellularAutomataSketch() {
 
   return (<SketchProvider.Consumer>
     {rule => (
-      <div className="CellularAutomataSketch" id="sketch" style={{ width: width, height: height}}>
+      <div className="CellularAutomataSketch" id="sketch">
         <ReactP5Wrapper customClass="canvas"
           sketch={sketch}
           rule={rule}
-          width={width}
-          height={height} />
+          ignored={ignored} />
       </div>
     )}
   </SketchProvider.Consumer>);

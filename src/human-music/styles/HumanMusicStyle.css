@@ -2,39 +2,51 @@
     .HumanMusic {
         text-align: center;
         background-color: black;
-        height: 100%;
+        font-family: 'ChubbyChoo-Regular';
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        margin: 0%;
+        padding: 0%;
+        width: 100vw;
+        width: -webkit-fill-available;
+        height: 100vh;
+        height: -webkit-fill-available;
         display: flex;
         flex-direction: row;
     }
 
     .HumanMusic .CellularAutomataSketch {
         border: 5px solid darkslategray;
-        width: 75%;
-        height: auto;
-        box-sizing: content-box;
+        background-color: black;
+        width: 75vw;
+        height: 100vh;
+        box-sizing: border-box;
     }
 
     .HumanMusic .Panel {
         background-color: blanchedalmond;
         flex-grow: 1;
-        width: 25%;
+        width: 25vw;
+        height: 100vh;
         display: flex;
-        justify-content: space-between;
         flex-direction: column;
+        justify-content: space-between;
     }
 
     .HumanMusic .Panel .Headers {
-        align-self: flex-start;
-        width: 100%;
-        white-space: nowrap;
+        width: fit-content;
+        height: fit-content;
+        align-self: center;
+        margin-left: 3%;
+        margin-top: 3%;
         font-size: 1vw;
     }
 
     .HumanMusic .Panel .Headers .EarthRadioLogo {
         margin: 0 auto;
-        margin-top: 10%;
-        width: 25%;
-        height: auto;
+        width: auto;
+        height: 25vh;
+        align-self: center;
     }
 
     .HumanMusic .Panel .Headers .Title {
@@ -45,25 +57,34 @@
     .HumanMusic .Panel .Headers .Subtitle {
         color: black;
         margin: 0 auto;
-        margin-left: 30%;
     }
 
-    .HumanMusic .Controllers {
-        justify-self: center;
-        padding: 10px;
+    .HumanMusic .Panel .Controllers {
+        margin-top: auto;
+        margin-bottom: auto;
     }
 
-    .HumanMusic .Controllers .PlayingRule {
+    .HumanMusic .Panel .Controllers .PlayingRule {
         color: black;
+        white-space: nowrap;
         font-size: 2vmin;
     }
 
-    .HumanMusic .Controllers .ruleButton {
-        width: 75%;
+    .HumanMusic .Panel .Controllers .ruleButton {
+        width: 20vw;
+        height: 12vh;
         color: black;
         font: inherit;
-        padding: 10px;
-        font-size: 2vmin;
+        font-size: 1.7vmin;
+        background-color: grey;
+    }
+
+    .HumanMusic .Panel .Controllers .startButton {
+        width: 20vw;
+        height: 12vh;
+        color: black;
+        font: inherit;
+        font-size: 1.7vmin;
         background-color: grey;
     }
 
@@ -107,8 +128,15 @@
     .HumanMusic {
         text-align: center;
         background-color: black;
-        height: 100%;
+        font-family: 'ChubbyChoo-Regular';
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        margin: 0%;
+        padding: 0%;
         width: 100vw;
+        width: -webkit-fill-available;
+        height: 100vh;
+        height: -webkit-fill-available;
         display: flex;
         flex-direction: column;
     }
@@ -116,96 +144,93 @@
     .HumanMusic .CellularAutomataSketch {
         border: 5px solid darkslategray;
         background-color: black;
+        width: 100vw;
         height: 80vh;
-        box-sizing: content-box;
+        box-sizing: border-box;
     }
 
     .HumanMusic .Panel {
         background-color: blanchedalmond;
-        width: 100%;
-        height: 18vh;
+        width: 100vw;
+        height: 20vh;
         display: flex;
         flex-direction: row;
     }
 
-    .HumanMusic .Headers {
+    .HumanMusic .Panel .Headers {
         width: fit-content;
         height: fit-content;
-        white-space: nowrap;
-        margin-left: 10%;
-        margin-top: 5%;
+        margin-left: 3%;
+        margin-top: 3%;
         font-size: 2vw;
     }
 
-    .HumanMusic .Headers .EarthRadioLogo {
+    .HumanMusic .Panel .Headers .EarthRadioLogo {
         margin: 0 auto;
-        width: 15vw;
-        height: auto;
+        width: auto;
+        height: 10vh;
         align-self: center;
     }
 
-    .HumanMusic .Headers .Title {
+    .HumanMusic .Panel .Headers .Title {
         color: darkslategrey;
         margin: 0 auto;
     }
 
-    .HumanMusic .Headers .Subtitle {
+    .HumanMusic .Panel .Headers .Subtitle {
         color: black;
         margin: 0 auto;
-        margin-left: 30%;
     }
 
-    .HumanMusic .Controllers {
-        margin-left: 5%;
+    .HumanMusic .Panel .Controllers {
         flex-grow: 1;
     }
 
-    .HumanMusic .Controllers .PlayingRule {
+    .HumanMusic .Panel .Controllers .PlayingRule {
         color: black;
         white-space: nowrap;
         font-size: 2.3vmin;
     }
 
-    .HumanMusic .Controllers .ruleButton {
-        width: 100px;
-        height: 50%;
+    .HumanMusic .Panel .Controllers .ruleButton {
+        width: fit-content;
+        height: 12vh;
         color: black;
         font: inherit;
         font-size: 3vmin;
         background-color: grey;
     }
 
-    .HumanMusic .Controllers .startButton {
-        width: 100px;
-        height: 50%;
+    .HumanMusic .Panel .Controllers .startButton {
+        width: fit-content;
+        height: 12vh;
         color: black;
         font: inherit;
         font-size: 3vmin;
         background-color: grey;
     }
 
-    .HumanMusic .Misc {
+    .HumanMusic .Panel .Misc {
+        margin-right: 1.5%;
+        margin-top: 1.5%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        margin-right: 1%;
-        margin-top: 1%;
     }
 
-    .HumanMusic .Misc .GitHubLink {
+    .HumanMusic .Panel .Misc .GitHubLink {
         margin-left: auto;
     }
 
-    .HumanMusic .Misc .GitHubLink .GitHubLogo {
+    .HumanMusic .Panel .Misc .GitHubLink .GitHubLogo {
         width: 5vw;
         height: auto;
     }
 
-    .HumanMusic .Misc .Dad {
+    .HumanMusic .Panel .Misc .Dad {
         color: black;
         font-size: 2vw;
         margin-top: auto;
-        margin-bottom: -1%;
         align-self: stretch;
     }
 }

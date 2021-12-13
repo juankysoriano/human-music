@@ -2,9 +2,13 @@ body {
   font-family: 'ChubbyChoo-Regular';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  margin: 0;
+  margin: 0%;
   padding: 0%;
   background-color: blanchedalmond;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-width: 100vw;
+  min-width: -webkit-fill-available;
 }
 
 @font-face {
