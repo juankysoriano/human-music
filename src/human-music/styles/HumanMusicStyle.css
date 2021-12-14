@@ -5,8 +5,8 @@
         font-family: 'ChubbyChoo-Regular';
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        margin: 0%;
-        padding: 0%;
+        margin: 0;
+        padding: 0;
         width: 100vw;
         width: -webkit-fill-available;
         height: 100vh;
@@ -37,9 +37,9 @@
         width: fit-content;
         height: fit-content;
         align-self: center;
-        margin-left: 3%;
-        margin-top: 3%;
-        font-size: 1vw;
+        margin-left: 3vmin;
+        margin-top: 3vmin;
+        font-size: 1vmin;
     }
 
     .HumanMusic .Panel .Headers .EarthRadioLogo {
@@ -88,35 +88,26 @@
         background-color: grey;
     }
 
-    .HumanMusic .Controllers .startButton {
-        width: 75%;
-        color: black;
-        font: inherit;
-        padding: 10px;
-        font-size: 2vmin;
-        background-color: grey;
-    }
-
-    .HumanMusic .Misc {
+    .HumanMusic .Panel .Misc {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         justify-self: flex-end;
-        margin-right: 1%;
-        margin-top: 1%;
+        margin-right: 1vmin;
+        margin-top: 1vmin;
         margin-left: auto;
     }
 
-    .HumanMusic .Misc .GitHubLink {
+    .HumanMusic .Panel .Misc .GitHubLink {
         margin-left: auto;
     }
 
-    .HumanMusic .Misc .GitHubLink .GitHubLogo {
+    .HumanMusic .Panel .Misc .GitHubLink .GitHubLogo {
         width: 3vw;
         height: auto;
     }
 
-    .HumanMusic .Misc .Dad {
+    .HumanMusic .Panel .Misc .Dad {
         color: black;
         font-size: 1vw;
         margin-top: auto;
@@ -134,7 +125,6 @@
         margin: 0%;
         padding: 0%;
         width: 100vw;
-        width: -webkit-fill-available;
         height: 100vh;
         height: -webkit-fill-available;
         display: flex;
@@ -146,6 +136,8 @@
         background-color: black;
         width: 100vw;
         height: 80vh;
+        max-height: 80vh;
+        min-height: 80vh;
         box-sizing: border-box;
     }
 
@@ -160,15 +152,15 @@
     .HumanMusic .Panel .Headers {
         width: fit-content;
         height: fit-content;
-        margin-left: 3%;
-        margin-top: 3%;
-        font-size: 2vw;
+        margin-left: 3vmin;
+        margin-top: 3vmin;
+        font-size: 2vmin;
     }
 
     .HumanMusic .Panel .Headers .EarthRadioLogo {
         margin: 0 auto;
-        width: auto;
-        height: 10vh;
+        width: 3vh;
+        height: auto;
         align-self: center;
     }
 
@@ -184,6 +176,7 @@
 
     .HumanMusic .Panel .Controllers {
         flex-grow: 1;
+        align-self: center;
     }
 
     .HumanMusic .Panel .Controllers .PlayingRule {
@@ -194,7 +187,7 @@
 
     .HumanMusic .Panel .Controllers .ruleButton {
         width: fit-content;
-        height: 12vh;
+        height: 5vh;
         color: black;
         font: inherit;
         font-size: 3vmin;
@@ -202,8 +195,9 @@
     }
 
     .HumanMusic .Panel .Controllers .startButton {
+        min-width: 25vw;
         width: fit-content;
-        height: 12vh;
+        height: 5vh;
         color: black;
         font: inherit;
         font-size: 3vmin;
@@ -211,11 +205,10 @@
     }
 
     .HumanMusic .Panel .Misc {
-        margin-right: 1.5%;
-        margin-top: 1.5%;
+        margin-right: 1.5vmin;
+        margin-top: 1.5vmin;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
     }
 
     .HumanMusic .Panel .Misc .GitHubLink {
@@ -229,8 +222,8 @@
 
     .HumanMusic .Panel .Misc .Dad {
         color: black;
-        font-size: 2vw;
-        margin-top: auto;
+        font-size: 2vmin;
+        margin-top: 0%;
         align-self: stretch;
     }
 }
