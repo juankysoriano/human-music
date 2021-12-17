@@ -19,7 +19,7 @@ export class AutomataSelector {
         while (true) {
             let rule = Math.round(Math.random() * maxRule);
             let automata = new CellularAutomata.Builder()
-                .withSize(Size.LARGE)
+                .withSize(Size.MEDIUM)
                 .withStates(states)
                 .withType(type)
                 .withDimensions(Dimensions.UNIDIMENSIONAL)
@@ -35,7 +35,7 @@ export class AutomataSelector {
 
             if (leeValues.size >= 15) {
                 return new CellularAutomata.Builder()
-                .withSize(Size.LARGE)
+                .withSize(Size.MEDIUM)
                 .withStates(states)
                 .withType(type)
                 .withDimensions(Dimensions.UNIDIMENSIONAL)

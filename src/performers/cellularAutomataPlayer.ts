@@ -127,13 +127,7 @@ export class CellularAutomata1DPlayer {
             }
             const instrument = new Tone.Sampler({
                 urls: {
-                    "C4": "fart-c.mp3",
-                    "D4": "fart-d.mp3",
-                    "E4": "fart-e.mp3",
-                    "F4": "fart-f.mp3",
-                    "G4": "fart-g.mp3",
-                    "A4": "fart-a.mp3",
-                    "B4": "fart-b.mp3"
+                    "F4": "chicken.mp3"
                 },
                 baseUrl: process.env.PUBLIC_URL + "/sounds/",
             }).toDestination();
