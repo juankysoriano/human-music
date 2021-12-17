@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/human-music/static/css/main.c1a1a57c.chunk.css",
-    "main.js": "/human-music/static/js/main.3ee406cf.chunk.js",
-    "main.js.map": "/human-music/static/js/main.3ee406cf.chunk.js.map",
+    "main.js": "/human-music/static/js/main.edbaa445.chunk.js",
+    "main.js.map": "/human-music/static/js/main.edbaa445.chunk.js.map",
     "runtime-main.js": "/human-music/static/js/runtime-main.4e96f57e.js",
     "runtime-main.js.map": "/human-music/static/js/runtime-main.4e96f57e.js.map",
-    "static/js/2.e6e27202.chunk.js": "/human-music/static/js/2.e6e27202.chunk.js",
-    "static/js/2.e6e27202.chunk.js.map": "/human-music/static/js/2.e6e27202.chunk.js.map",
+    "static/js/2.869c785e.chunk.js": "/human-music/static/js/2.869c785e.chunk.js",
+    "static/js/2.869c785e.chunk.js.map": "/human-music/static/js/2.869c785e.chunk.js.map",
     "index.html": "/human-music/index.html",
     "static/css/main.c1a1a57c.chunk.css.map": "/human-music/static/css/main.c1a1a57c.chunk.css.map",
-    "static/js/2.e6e27202.chunk.js.LICENSE.txt": "/human-music/static/js/2.e6e27202.chunk.js.LICENSE.txt",
+    "static/js/2.869c785e.chunk.js.LICENSE.txt": "/human-music/static/js/2.869c785e.chunk.js.LICENSE.txt",
     "static/media/index.css": "/human-music/static/media/ChubbyChoo-Regular.fa2a1aa7.woff",
     "static/media/github.41bf9875.png": "/human-music/static/media/github.41bf9875.png"
   },
   "entrypoints": [
     "static/js/runtime-main.4e96f57e.js",
-    "static/js/2.e6e27202.chunk.js",
+    "static/js/2.869c785e.chunk.js",
     "static/css/main.c1a1a57c.chunk.css",
-    "static/js/main.3ee406cf.chunk.js"
+    "static/js/main.edbaa445.chunk.js"
   ]
 }
