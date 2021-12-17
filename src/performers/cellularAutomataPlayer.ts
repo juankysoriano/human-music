@@ -35,14 +35,20 @@ export class CellularAutomata1DPlayer {
         "A3m", "A3m7",
         "B3m7b5"
     ];
-    private instrument: Tone.Sampler;
+    private caca: Tone.Sampler;
+    private pedo: Tone.Sampler;
+    private pis: Tone.Sampler;
+
     private automata: CellularAutomata1D;
     private offset = 0;
     private beats = 8;
     private step = 0;
 
-    constructor(instrument: Tone.Sampler, automata: CellularAutomata1D, offset: number) {
-        this.instrument = instrument;
+    constructor(caca: Tone.Sampler,pedo: Tone.Sampler,pis: Tone.Sampler, automata: CellularAutomata1D, offset: number) {
+        this.caca = caca;
+        this.pedo = pedo;
+        this.pis = pis;
+
         this.automata = automata;
         this.offset = offset;
     }
@@ -62,7 +68,7 @@ export class CellularAutomata1DPlayer {
 
         if (this.note != this.lastNote) {
             let midiNote = Tone.Frequency(this.note).transpose(this.offset).toFrequency();
-            this.instrument.triggerAttackRelease(midiNote, NOTE_DURATION, undefined, 0.15);
+            this.caca.triggerAttackRelease(midiNote, NOTE_DURATION, undefined, 0.15);
         }
 
         this.lastNote = this.note;
@@ -75,7 +81,7 @@ export class CellularAutomata1DPlayer {
 
         if (this.step % Math.round(this.beats/2) == 0 && this.automata.states == 3 && this.voice != this.lastVoice ) {
             let midiNote = Tone.Frequency(this.voice).transpose(this.offset).toFrequency();
-            this.instrument.triggerAttackRelease(midiNote, NOTE_DURATION * 2, undefined, 0.4);
+            this.pedo.triggerAttackRelease(midiNote, NOTE_DURATION * 2, undefined, 0.4);
         }
 
         this.lastVoice = this.voice;
@@ -87,7 +93,7 @@ export class CellularAutomata1DPlayer {
         let chord = this.chords[actualIndex % this.chords.length];
         if (this.step % this.beats == 0) {
             let midiNotes = Chord.get(chord).notes.map((note) => Tone.Frequency(note).transpose(this.offset).toFrequency())
-            this.instrument.triggerAttackRelease(midiNotes, NOTE_DURATION * this.beats, undefined, 0.1);
+            this.pis.triggerAttackRelease(midiNotes, NOTE_DURATION * this.beats, undefined, 0.1);
         }
     }
 
@@ -100,8 +106,8 @@ export class CellularAutomata1DPlayer {
     }
 
     stop() {
-        this.instrument.releaseAll();
-        this.instrument.dispose();
+        this.caca.releaseAll();
+        this.caca.dispose();
         this.note = "";
         this.lastNote = "";
         this.step = 0;
@@ -125,35 +131,30 @@ export class CellularAutomata1DPlayer {
             if (this.automata === null) {
                 throw new Error("Must pass a cellular automata upon building");
             }
-            const instrument = new Tone.Sampler({
+            const caca = new Tone.Sampler({
                 urls: {
-                    "C1": "C1.mp3",
-                    "D#1": "Ds1.mp3",
-                    "F#1": "Fs1.mp3",
-                    "A1": "A1.mp3",
-                    "C2": "C2.mp3",
-                    "D#2": "Ds2.mp3",
-                    "F#2": "Fs2.mp3",
-                    "A2": "A2.mp3",
-                    "C3": "C3.mp3",
-                    "D#3": "Ds3.mp3",
-                    "F#3": "Fs3.mp3",
-                    "A3": "A3.mp3",
-                    "C4": "C4.mp3",
-                    "D#4": "Ds4.mp3",
-                    "F#4": "Fs4.mp3",
-                    "A4": "A4.mp3",
-                    "C5": "C5.mp3",
-                    "D#5": "Ds5.mp3",
-                    "F#5": "Fs5.mp3",
-                    "A5": "A5.mp3",
+                    "C4": "caca.mp3"
                 },
-                baseUrl: "https://tonejs.github.io/audio/salamander/",
+                baseUrl: "https://www.filehosting.org/file/details/973253/",
+            }).toDestination();
+
+            const pedo = new Tone.Sampler({
+                urls: {
+                    "C4": "pedo.mp3"
+                },
+                baseUrl: "https://www.filehosting.org/file/details/973254/",
+            }).toDestination();
+
+            const pis = new Tone.Sampler({
+                urls: {
+                    "C4": "pis.mp3"
+                },
+                baseUrl: "https://www.filehosting.org/file/details/973255/",
             }).toDestination();
 
             await Tone.loaded();
 
-            return new CellularAutomata1DPlayer(instrument, this.automata!, this.offset);
+            return new CellularAutomata1DPlayer(caca, pedo, pis, this.automata!, this.offset);
         }
     }
 }
