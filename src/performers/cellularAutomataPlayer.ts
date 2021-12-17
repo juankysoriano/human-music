@@ -2,7 +2,7 @@ import * as Tone from 'tone'
 import { CellularAutomata1D } from "../cellular-automata";
 import { Chord } from "@tonaljs/tonal";
 
-const NOTE_DURATION = 1;
+const NOTE_DURATION = 5;
 
 export class CellularAutomata1DPlayer {
     private note = "";
