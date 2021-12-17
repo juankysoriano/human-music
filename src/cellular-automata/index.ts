@@ -70,12 +70,7 @@ export class CellularAutomata {
                 case Size.LARGE: this.size = sketchWidth / 2; break;
                 case Size.EXTRA_LARGE: this.size = sketchWidth / 1; break;
             };
-            this.size = Math.round(this.size);
-            return this;
-        }
-
-        withFixedSize(size: number) {
-            this.size = size;
+            this.size = Math.round(this.size) * window.devicePixelRatio;
             return this;
         }
 
@@ -121,6 +116,7 @@ export class CellularAutomata {
             const radius = 1;
             const ruleCharacters = Array.from(BigInt(this.rule).toString(this.states));
             const lookupTable: number[] = Array.from({ length: ruleCharacters.length });
+
             for (let i = 0; i < ruleCharacters.length; i++) {
                 let character = ruleCharacters[i];
                 if (character >= '0' && character <= '9') {
@@ -132,7 +128,7 @@ export class CellularAutomata {
             const initialState = this.randomInitialConfiguration
                 ? Array.from({ length: this.size }, () => Math.round(Math.random()))
                 : Array.from({ length: this.size }, (_, index) => index === Math.floor(this.size / 2) ? 1 : 0);
-
+            
             return new ElementaryCellularAutomata1D(
                 this.states,
                 this.size,
