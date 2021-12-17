@@ -15,7 +15,7 @@ const sketch: Sketch = p5 => {
   p5.setup = () => {
     p5.createCanvas($('#sketch').width()!, $('#sketch').height()!);
     p5.background(0, 0, 0);
-    p5.frameRate(1);
+    p5.frameRate(2.5);
   };
 
   p5.updateWithProps = props => {

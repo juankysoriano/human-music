@@ -135,7 +135,7 @@ export class CellularAutomata1DPlayer {
                     "A4": "fart-a.mp3",
                     "B4": "fart-b.mp3"
                 },
-                baseUrl: "https://juankysoriano.github.io/human-music/sounds/",
+                baseUrl: process.env.PUBLIC_URL + "/sounds/",
             }).toDestination();
 
             await Tone.loaded();

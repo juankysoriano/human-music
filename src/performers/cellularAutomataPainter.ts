@@ -11,8 +11,6 @@ const colors = [
     ['#000000', '#ae4f2f', '#507844']
 ];
 
-
-
 export class CellularAutomata1DPainter {
     private step: number = 0;
     private cellSize: number;
