@@ -16,7 +16,7 @@
     }
 
     .HumanMusic .CellularAutomataSketch {
-        border: 5px solid darkslategray;
+        border: 1px solid black;
         background-color: black;
         width: 75vw;
         height: 100vh;
@@ -132,7 +132,7 @@
     }
 
     .HumanMusic .CellularAutomataSketch {
-        border: 5px solid darkslategray;
+        border: 1px solid black;
         background-color: black;
         width: 100vw;
         height: 80vh;

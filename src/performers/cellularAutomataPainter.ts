@@ -3,12 +3,12 @@ import { off } from 'process';
 import { CellularAutomata1D } from '../cellular-automata';
 
 const colors = [
-    ['#000000', '#e8b354', '#c23b22'],
-    ['#000000', '#fbe4d1', '#93ab8f'],
-    ['#000000', '#2000ff', '#ff68a3'],
-    ['#000000', '#fbf9f4', '#97e1ff'],
-    ['#000000', '#ff4950', '#ffbeea'],
-    ['#000000', '#ae4f2f', '#507844']
+    ['#00000035', '#fae2b735', '#49719d35'],
+    ['#000000', '#ff5789', '#e8b354'],
+    ['#000000', '#49719d', '#e8b354'],
+    ['#000000', '#c23b22', '#e8b354'],
+    ['#000000', '#e8b354', '#49719d'],
+    ['#000000', '#fae2b7', '#d62828']
 ];
 
 
@@ -29,9 +29,15 @@ export class CellularAutomata1DPainter {
 
     draw() {
         for (let i = 0; i < this.automata.size; i++) {
-            this.sketch.noStroke();
-            this.sketch.fill(colors[this.offset][this.automata.state[i]]);
-            this.sketch.rect(this.cellSize * i, this.step * this.cellSize, this.cellSize, this.cellSize);
+            this.sketch.noFill();
+            this.sketch.stroke(colors[0][this.automata.state[i]]);
+            for (let lines = 0; lines < 32; lines++) {
+                this.sketch.line(
+                    this.cellSize * i + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize),
+                    this.cellSize * this.step + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize), 
+                    this.cellSize * i + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize), 
+                    this.cellSize * this.step + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize));
+            }
         }
 
         if (this.step * this.cellSize >= this.sketch.height) {

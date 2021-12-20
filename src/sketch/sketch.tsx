@@ -22,6 +22,7 @@ const sketch: Sketch = p5 => {
     p5.resizeCanvas($('#sketch').width()!, $('#sketch').height()!);
     if (props.newAutomata) {
       p5.clear();
+      p5.background(0, 0, 0);
       updateSketch(p5, props.newAutomata);
     }
   }
