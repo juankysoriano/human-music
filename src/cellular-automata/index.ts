@@ -70,7 +70,7 @@ export class CellularAutomata {
                 case Size.LARGE: this.size = sketchWidth / 2; break;
                 case Size.EXTRA_LARGE: this.size = sketchWidth / 1; break;
             };
-            this.size = Math.round(this.size) * window.devicePixelRatio;
+            this.size = 151;
             return this;
         }
 

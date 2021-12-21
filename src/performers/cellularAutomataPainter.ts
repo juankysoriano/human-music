@@ -31,7 +31,7 @@ export class CellularAutomata1DPainter {
         for (let i = 0; i < this.automata.size; i++) {
             this.sketch.noFill();
             this.sketch.stroke(colors[0][this.automata.state[i]]);
-            for (let lines = 0; lines < 32; lines++) {
+            for (let lines = 0; lines < 32 / window.devicePixelRatio; lines++) {
                 this.sketch.line(
                     this.cellSize * i + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize),
                     this.cellSize * this.step + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize), 

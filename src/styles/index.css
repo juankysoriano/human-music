@@ -4,9 +4,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin: 0%;
   padding: 0%;
-  background-color: blanchedalmond;
-  height: 100%;
-  min-width: 100%;
+  background-color: black;
+  width: 100vw;
+  height: 100vh;
 }
 
 @font-face {
