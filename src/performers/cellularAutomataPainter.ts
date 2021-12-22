@@ -3,7 +3,7 @@ import { off } from 'process';
 import { CellularAutomata1D } from '../cellular-automata';
 
 const colors = [
-    ['#00000035', '#fae2b735', '#49719d35'],
+    ['#09090935', '#fae2b735', '#49719d35'],
     ['#000000', '#ff5789', '#e8b354'],
     ['#000000', '#49719d', '#e8b354'],
     ['#000000', '#c23b22', '#e8b354'],
@@ -41,7 +41,7 @@ export class CellularAutomata1DPainter {
         }
 
         if (this.step * this.cellSize >= this.sketch.height) {
-            this.sketch.background(0, 0, 0, 235);
+            this.sketch.background(9, 9, 9, 235);
             this.step = 0;
         } else {
             this.step++;

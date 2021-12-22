@@ -26,6 +26,7 @@ export default function HumanMusic() {
     }
 
     return <SketchProvider.Provider value={automata}>
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, viewport-fit=cover"/> 
         <body className="HumanMusic">
             <div className="Headers">
                 <img src={earth} className="EarthRadioLogo" alt="Earth" />

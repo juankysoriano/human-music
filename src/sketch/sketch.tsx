@@ -14,7 +14,7 @@ let automataPlayer: CellularAutomata1DPlayer;
 const sketch: Sketch = p5 => {
   p5.setup = () => {
     p5.createCanvas($('#sketch').width()!, $('#sketch').height()!);
-    p5.background(0, 0, 0);
+    p5.background(9, 9, 9);
     p5.frameRate(2);
   };
 
@@ -22,7 +22,7 @@ const sketch: Sketch = p5 => {
     p5.resizeCanvas($('#sketch').width()!, $('#sketch').height()!);
     if (props.newAutomata) {
       p5.clear();
-      p5.background(0, 0, 0);
+      p5.background(9, 9, 9);
       updateSketch(p5, props.newAutomata);
     }
   }
