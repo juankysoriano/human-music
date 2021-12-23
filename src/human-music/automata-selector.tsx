@@ -36,10 +36,10 @@ export class AutomataSelector {
             if (leeValues.size >= 15) {
                 return new CellularAutomata.Builder()
                 .withSize(Size.LARGE)
-                .withStates(2)
-                .withType(Type.ELEMENTARY)
+                .withStates(states)
+                .withType(type)
                 .withDimensions(Dimensions.UNIDIMENSIONAL)
-                .withRule(90)
+                .withRule(rule)
                 .build();
             }
         }
