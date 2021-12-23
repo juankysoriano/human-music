@@ -3,7 +3,7 @@ import { off } from 'process';
 import { CellularAutomata1D } from '../cellular-automata';
 
 const colors = [
-    ['#09090935', '#fae2b735', '#49719d35'],
+    ['#09090935', '#542c0a35', '#3c201135'],
     ['#000000', '#ff5789', '#e8b354'],
     ['#000000', '#49719d', '#e8b354'],
     ['#000000', '#c23b22', '#e8b354'],

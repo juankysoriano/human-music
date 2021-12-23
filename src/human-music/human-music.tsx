@@ -30,8 +30,8 @@ export default function HumanMusic() {
         <body className="HumanMusic">
             <div className="Headers">
                 <img src={earth} className="EarthRadioLogo" alt="Earth" />
-                <h1 className="Title">Human Music</h1>
-                <h2 className="Subtitle">by Earth Radio</h2>
+                <h1 className="Title">Los Pedos</h1>
+                <h2 className="Subtitle">de Bruno</h2>
             </div>
             <div className="Automata">
                 <div className="flip-card">

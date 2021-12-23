@@ -51,7 +51,7 @@ export class CellularAutomata1DPlayer {
 
     play() {
         this.playNote();
-        this.playVoice();
+        //this.playVoice();
         this.playChord();
 
         this.step++;
@@ -129,13 +129,13 @@ export class CellularAutomata1DPlayer {
             }
             const instrument = new Tone.Sampler({
                 urls: {
-                    "C4": "fart-c.mp3",
-                    "D4": "fart-d.mp3",
-                    "E4": "fart-e.mp3",
-                    "F4": "fart-f.mp3",
-                    "G4": "fart-g.mp3",
-                    "A4": "fart-a.mp3",
-                    "B4": "fart-b.mp3"
+                    "C4": "pedo.mp3",
+                    "D4": "pedo.mp3",
+                    "E4": "pedo.mp3",
+                    "F4": "pedo.mp3",
+                    "G4": "pedo.mp3",
+                    "A4": "pedo.mp3",
+                    "B4": "pedo.mp3"
                 },
                 baseUrl: process.env.PUBLIC_URL + "/sounds/",
             }).toDestination();
