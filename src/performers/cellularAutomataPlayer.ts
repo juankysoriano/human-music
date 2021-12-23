@@ -2,7 +2,7 @@ import * as Tone from 'tone'
 import { CellularAutomata1D } from "../cellular-automata";
 import { Chord } from "@tonaljs/tonal";
 
-const NOTE_DURATION = 40;
+const NOTE_DURATION = 4;
 
 export class CellularAutomata1DPlayer {
     private note = "";
@@ -51,7 +51,7 @@ export class CellularAutomata1DPlayer {
 
     play() {
         this.playNote();
-        //this.playVoice();
+        this.playVoice();
         this.playChord();
 
         this.step++;
@@ -129,13 +129,7 @@ export class CellularAutomata1DPlayer {
             }
             const instrument = new Tone.Sampler({
                 urls: {
-                    "C4": "pedo.mp3",
-                    "D4": "pedo.mp3",
-                    "E4": "pedo.mp3",
-                    "F4": "pedo.mp3",
-                    "G4": "pedo.mp3",
-                    "A4": "pedo.mp3",
-                    "B4": "pedo.mp3"
+                    "C4": "fart-c.mp3"
                 },
                 baseUrl: process.env.PUBLIC_URL + "/sounds/",
             }).toDestination();
