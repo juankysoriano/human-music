@@ -22,6 +22,7 @@ export class AutomataSelector {
                 .withSize(Size.MEDIUM)
                 .withStates(states)
                 .withType(type)
+                .withRandomInitialConfiguration()
                 .withDimensions(Dimensions.UNIDIMENSIONAL)
                 .withRule(rule)
                 .build();
@@ -33,14 +34,17 @@ export class AutomataSelector {
                 automata.evolve();
             }
 
-            if (leeValues.size >= 15) {
-                return new CellularAutomata.Builder()
+            if (leeValues.size >= 20 && leeValues.size <= 50) {
+                let result = new CellularAutomata.Builder()
                     .withSize(Size.MEDIUM)
                     .withStates(states)
                     .withType(type)
+                    .withRandomInitialConfiguration()
                     .withDimensions(Dimensions.UNIDIMENSIONAL)
                     .withRule(rule)
                     .build();
+
+                return result;
             }
         }
     }

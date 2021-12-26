@@ -15,7 +15,7 @@ const sketch: Sketch = p5 => {
   p5.setup = () => {
     p5.createCanvas($('#sketch').width()!, $('#sketch').height()!);
     p5.background(9, 9, 9);
-    p5.frameRate(2);
+    p5.frameRate(3);
   };
 
   p5.updateWithProps = props => {
@@ -48,12 +48,10 @@ async function updateSketch(p5: P5Instance, newAutomata: CellularAutomata1D) {
   automataPainter = new CellularAutomata1DPainter.Builder()
     .withSketch(p5)
     .withAutomata(newAutomata)
-    .withOffset(offset)
     .build();
 
   automataPlayer = await new CellularAutomata1DPlayer.Builder()
     .withAutomata(automata)
-    .withOffset(offset)
     .build();
 
   p5.loop();
