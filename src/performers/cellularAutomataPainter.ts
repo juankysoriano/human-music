@@ -1,7 +1,7 @@
 import p5 from 'p5';
 import { CellularAutomata1D } from '../cellular-automata';
 
-const colors = ['#09090935', '#fae2b735', '#49719d35'];
+const colors = ['#09090935', '#fae2b735', '#a71c1c35'];
 
 
 

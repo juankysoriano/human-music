@@ -11,11 +11,15 @@ export class CellularAutomata1DPlayer {
     private lastVoice = "";
     private currentChord = "";
     private chords = [""];
+    private playedChords = [] as string[]
+    private chordsTracker = 0;
+    private playedNotes = [] as string[]
+    private notesTracker = 0;
     private instrument: Tone.Sampler;
     private automata: CellularAutomata1D;
     private chordsDistance = 8;
-    private voicesDistance = 4;
-    private noteDistance = 1;
+    private voicesDistance = 1;
+    private noteDistance = 2;
     private chordOctave = 3;
     private voiceOctave = 5;
     private noteOctave = 4;
@@ -32,41 +36,52 @@ export class CellularAutomata1DPlayer {
 
     play() {
         this.playChord();
-        this.playNote();
         this.playVoice();
+        this.playNote();
 
         this.step++;
     }
 
     private playNote() {
+        if (this.leeDistance(2) == 0) {
+            return;
+        }
+
+        let notes = Chord.get(this.currentChord).notes;
+        let targetIndex = this.leeDistance(2) % (notes.length * 2);
+        let actualIndex = targetIndex >= notes.length ? notes.length - (targetIndex % notes.length) - 1 : targetIndex;
+        this.note = notes[actualIndex % notes.length];
+
+        if (this.step % this.noteDistance == 0) {
+            if (this.playedNotes.length == 16) {
+                this.note = this.playedNotes[this.notesTracker % this.playedNotes.length];
+                this.notesTracker++;
+            } else {
+                this.playedNotes.push(this.note);
+            }
+            if (this.note != this.lastNote) {
+                console.log(this.playedNotes);
+                console.log(this.note);
+                let midiNote = Tone.Frequency(this.note).transpose(this.noteOctave * 12).toFrequency();
+                this.instrument.triggerAttackRelease(midiNote, NOTE_DURATION, undefined, 0.5);
+                this.lastNote = this.note;
+            }
+        }
+
+    }
+
+    private playVoice() {
         if (this.leeDistance(1) == 0) {
             return;
         }
         let notes = Chord.get(this.currentChord).notes;
         let targetIndex = this.leeDistance(1) % (notes.length * 2);
         let actualIndex = targetIndex >= notes.length ? notes.length - (targetIndex % notes.length) - 1 : targetIndex;
-        this.note = notes[actualIndex % notes.length];
-
-        if (this.step % this.noteDistance == 0 && this.note != this.lastNote) {
-            let midiNote = Tone.Frequency(this.note).transpose(this.noteOctave * 12).toFrequency();
-            this.instrument.triggerAttackRelease(midiNote, NOTE_DURATION, undefined, 0.75);
-            this.lastNote = this.note;
-        }
-
-    }
-
-    private playVoice() {
-        if (this.leeDistance(2) == 0) {
-            return;
-        }
-        let notes = Chord.get(this.currentChord).notes;
-        let targetIndex = this.leeDistance(2) % (notes.length * 2);
-        let actualIndex = targetIndex >= notes.length ? notes.length - (targetIndex % notes.length) - 1 : targetIndex;
         this.voice = notes[actualIndex % notes.length];
 
-        if (this.step % this.voicesDistance == 0 && this.automata.states == 3 && this.voice != this.lastVoice) {
+        if (this.step % this.voicesDistance == 0 && this.voice != this.lastVoice) {
             let midiNote = Tone.Frequency(this.voice).transpose(this.voiceOctave * 12).toFrequency();
-            this.instrument.triggerAttackRelease(midiNote, NOTE_DURATION, undefined, 0.5);
+            this.instrument.triggerAttackRelease(midiNote, NOTE_DURATION, undefined, 0.3);
         }
 
         this.lastVoice = this.voice;
@@ -77,9 +92,17 @@ export class CellularAutomata1DPlayer {
         let actualIndex = targetIndex >= this.chords.length ? this.chords.length - (targetIndex % this.chords.length) - 1 : targetIndex;
         let chord = this.chords[actualIndex % this.chords.length];
         if (this.step % this.chordsDistance == 0) {
+            if (this.playedChords.length == 4) {
+                chord = this.playedChords[this.chordsTracker % this.playedChords.length];
+                this.chordsTracker++;
+            } else {
+                this.playedChords.push(chord);
+            }
+            console.log(this.playedChords);
+            console.log(chord);
             this.currentChord = chord;
             let midiNotes = Chord.get(chord).notes.map((note) => Tone.Frequency(note).transpose(this.chordOctave * 12).toFrequency())
-            this.instrument.triggerAttackRelease(midiNotes, NOTE_DURATION, undefined, 0.25);
+            this.instrument.triggerAttackRelease(midiNotes, NOTE_DURATION, undefined, 0.);
         }
     }
 
@@ -164,8 +187,8 @@ export class CellularAutomata1DPlayer {
 
             let chord = this.chords[Math.floor(Math.random() * this.chords.length)];
             let chordOctave = Math.round(Math.random() * 2) + 2
-            let voiceOctave = Math.round(Math.random() * 2) + 2
-            let noteOctave = Math.round(Math.random() * 2) + 2
+            let voiceOctave = Math.round(Math.random()) + 4
+            let noteOctave = Math.round(Math.random() * 2) + 3
             return new CellularAutomata1DPlayer(instrument, this.automata!, noteOctave, voiceOctave, chordOctave, chord);
         }
     }
