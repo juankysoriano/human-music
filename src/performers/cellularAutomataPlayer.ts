@@ -25,7 +25,7 @@ export class CellularAutomata1DPlayer {
     private voice = 0;
     private lastVoice = 0;
     private currentChord = 0;
-    private chords = [""];
+    private chords = [] as number[][];
     private progressionChords = [] as number[]
     private chordsTracker = 0;
     private progressionNotes = [] as number[]
@@ -65,7 +65,7 @@ export class CellularAutomata1DPlayer {
         chordsDuration: number,
         voicesDuration: number,
         notesDuration: number,
-        chords: string[],
+        chords: number[][],
         progressionLength: number,
         progressionsToTransformation: number
     ) {
@@ -105,6 +105,9 @@ export class CellularAutomata1DPlayer {
         if (this.progressionChords.length == this.progressionLength) {
             this.currentChord = this.progressionChords[this.chordsTracker % this.progressionChords.length];
             this.chordsTracker++;
+        } else if (this.playedChords == 0) {
+            this.currentChord = 0;
+            this.progressionChords.push(this.currentChord);
         } else {
             let targetIndex = this.leeDistance(0) % (this.chords.length * 2);
             let actualIndex = targetIndex >= this.chords.length ? this.chords.length - (targetIndex % this.chords.length) - 1 : targetIndex;
@@ -112,8 +115,7 @@ export class CellularAutomata1DPlayer {
             this.progressionChords.push(this.currentChord);
         }
 
-        console.log(this.chords[this.currentChord % this.chords.length])
-        let midiNotes = Chord.get(this.chords[this.currentChord % this.chords.length]).notes.map((note) => Tone.Frequency(note).transpose(this.chordsOctave * 12).toFrequency())
+        let midiNotes = this.chords[this.currentChord % this.chords.length].map((note) => Tone.Frequency(note, "midi").transpose(this.chordsOctave * 12).toFrequency())
         this.instrument.triggerAttackRelease(midiNotes, NOTE_DURATION, undefined, 0.15);
         this.playedChords++;
     }
@@ -123,13 +125,13 @@ export class CellularAutomata1DPlayer {
             return;
         }
 
-        let notes = Chord.get(this.chords[this.currentChord % this.chords.length]).notes;
+        let notes = this.chords[this.currentChord % this.chords.length];
         let targetIndex = this.leeDistance(1) % (notes.length * 2);
         let actualIndex = targetIndex >= notes.length ? notes.length - (targetIndex % notes.length) - 1 : targetIndex;
         this.voice = actualIndex % notes.length;
 
         if (this.voice != this.lastVoice) {
-            let midiNote = Tone.Frequency(notes[this.voice]).transpose(this.voicesOctave * 12).toFrequency();
+            let midiNote = Tone.Frequency(notes[this.voice], "midi").transpose(this.voicesOctave * 12).toFrequency();
             this.instrument.triggerAttackRelease(midiNote, NOTE_DURATION, undefined, 0.4);
             this.lastVoice = this.voice;
         }
@@ -146,7 +148,7 @@ export class CellularAutomata1DPlayer {
             this.note = this.progressionNotes[this.notesTracker % this.progressionNotes.length];
             this.notesTracker++;
         } else {
-            let notes = Chord.get(this.chords[this.currentChord % this.chords.length]).notes;
+            let notes = this.chords[this.currentChord % this.chords.length];
             let targetIndex = this.leeDistance(state) % (notes.length * 2);
             let actualIndex = targetIndex >= notes.length ? notes.length - (targetIndex % notes.length) - 1 : targetIndex;
             this.note = actualIndex % notes.length;
@@ -154,8 +156,8 @@ export class CellularAutomata1DPlayer {
         }
 
         if (this.note != this.lastNote) {
-            let notes = Chord.get(this.chords[this.currentChord % this.chords.length]).notes;
-            let midiNote = Tone.Frequency(notes[Math.min(this.note, notes.length - 1)]).transpose(this.notesOctave * 12).toFrequency();
+            let notes = this.chords[this.currentChord % this.chords.length];
+            let midiNote = Tone.Frequency(notes[this.note], "midi").transpose(this.notesOctave * 12).toFrequency();
             this.instrument.triggerAttackRelease(midiNote, NOTE_DURATION, undefined, 0.2);
             this.lastNote = this.note;
         }
@@ -266,13 +268,20 @@ export class CellularAutomata1DPlayer {
     static Builder = class {
         private automata?: CellularAutomata1D;
         private chords = [
-            ["C0major", "D0m", "E0m", "F0major", "G0major", "A0m", "C0maj7", "D0m7", "E0m7", "F0maj7", "G0maj7", "A0m7"],
-            ["D0major", "E0m", "F#0m", "G0major", "A0major", "B0m", "D0maj7", "E0m7", "F#0m7", "G0maj7", "A0maj7", "B0m7"],
-            ["E0major", "F#0m", "G#0m", "A0major", "B0major", "C#1m", "E0maj7", "F#0m7", "G#0m7", "A0maj7", "B0maj7", "C#1m7"],
-            ["F#0major", "G#0m", "A#0m", "B0major", "C#1major", "Eb1m", "F#0maj7", "G#0m7", "A#0m7", "B0maj7", "C#1maj7"],
-            ["G0major", "C0major", "D0major", "A0m", "E0m", "B0m", "G0maj7", "C0maj7", "D0maj7", "A0m7", "E0m7", "B0m7"],
-            ["A0major", "C#1m", "D1major", "E1major", "F#1m", "B1m", "A0maj7", "C#1m7", "D1maj7", "E1major7", "F#1m7"],
-            ["B0major", "C#1m", "D#1m", "E1major", "F#1major", "G#1m", "B0maj7", "C#1m7", "D#1m7", "E1maj7", "F#1maj7", "G#1m7"],
+            [[0, 4, 7], [2, 5, 9], [4, 7, 11], [5, 9, 12], [7, 11, 14], [9, 12, 16], [11, 14, 17], [0, 4, 7, 11], [2, 5, 9, 12], [4, 7, 11, 14], [5, 9, 12, 16], [7, 11, 14, 17], [9, 12, 16, 19], [11, 14, 17, 21]], //mayor
+            [[0, 3, 7], [2, 5, 8], [3, 7, 10], [5, 8, 12], [7, 10, 14], [8, 12, 15], [10, 14, 17], [0, 3, 7, 10], [2, 5, 8, 12], [3, 7, 10, 14], [5, 8, 12, 15], [7, 10, 14, 17], [8, 12, 15, 19], [10, 14, 17, 20]],  //minor
+            [[0, 3, 7], [2, 5, 9], [3, 7, 10], [5, 9, 12], [7, 10, 14], [9, 12, 15], [10, 14, 17], [0, 3, 7, 10], [2, 5, 9, 12], [3, 7, 10, 14], [5, 9, 12, 15], [7, 10, 14, 17], [9, 12, 15, 19], [10, 14, 17, 21]], //doryan
+            [[0, 3, 7], [1, 5, 8], [3, 7, 10], [5, 8, 12], [7, 10, 13], [8, 12, 15], [10, 13, 17], [0, 3, 7, 10], [1, 5, 8, 12], [3, 7, 10, 13], [5, 8, 12, 15], [7, 10, 13, 17], [8, 12, 15, 19], [10, 13, 17, 20]],  //phygrian
+            [[0, 4, 7], [2, 6, 9], [4, 7, 11], [6, 9, 12], [7, 11, 14], [9, 12, 16], [11, 14, 18], [0, 4, 7, 11], [2, 6, 9, 12], [4, 7, 11, 14], [6, 9, 12, 16], [7, 11, 14, 18], [9, 12, 16, 19], [11, 14, 18, 21]], //lydian
+            [[0, 4, 7], [2, 5, 9], [4, 7, 10], [5, 9, 12], [7, 10, 14], [9, 12, 16], [10, 14, 17], [0, 4, 7, 10], [2, 5, 9, 12], [4, 7, 10, 14], [5, 9, 12, 16], [7, 10, 14, 17], [9, 12, 16, 19], [10, 14, 17, 21]], //mixolydian
+            [[0, 3, 6], [1, 5, 8], [3, 6, 10], [5, 8, 12], [6, 10, 13], [8, 12, 15], [10, 13, 17], [0, 3, 6, 10], [1, 5, 8, 12], [3, 6, 10, 13], [5, 8, 12, 15], [6, 10, 13, 17], [8, 12, 15, 18], [10, 13, 17, 20]], //locrian
+            [[0, 4, 9], [2, 7, 12], [4, 9, 14], [7, 12, 16], [9, 14, 19], [0, 4, 9, 14], [2, 7, 12, 16], [4, 9, 14, 19], [7, 12, 16, 21], [9, 14, 19, 24]], //pentatonic
+            [[0, 5, 10], [3, 7, 12], [5, 10, 15], [7, 12, 17], [10, 15, 19], [0, 5, 10, 15], [3, 7, 12, 17], [5, 10, 15, 19], [7, 12, 17, 22], [10, 15, 19, 24]], //minor pentatonic
+            [[0, 5, 7], [3, 6, 10], [5, 7, 12], [6, 10, 15], [7, 12, 17], [10, 15, 18], [0, 5, 7, 12], [3, 6, 10, 15], [5, 7, 12, 17], [6, 10, 15, 18], [7, 12, 17, 19], [10, 15, 18, 22]], //blues
+            [[0, 4, 8], [1, 6, 10], [4, 8, 11], [6, 10, 12], [8, 11, 13], [10, 12, 16], [11, 13, 18], [0, 4, 8, 11], [1, 6, 10, 12], [4, 8, 11, 13], [6, 10, 12, 16], [8, 11, 13, 18], [10, 12, 16, 20], [11, 13, 18, 22]], //enigmatic
+            [[0, 4, 7], [1, 5, 8], [4, 7, 11], [5, 8, 12], [7, 11, 13], [8, 12, 16], [11, 13, 17], [0, 4, 7, 11], [1, 5, 8, 12], [4, 7, 11, 13], [5, 8, 12, 16], [7, 11, 13, 17], [8, 12, 16, 19], [11, 13, 17, 20]], //flamenco
+            [[0, 3, 7], [2, 6, 8], [3, 7, 11], [6, 8, 12], [7, 11, 14], [8, 12, 15], [11, 14, 17], [12, 15, 19], [14, 17, 20], [15, 19, 23], [0, 3, 7, 11], [2, 6, 8, 12], [3, 7, 11, 14], [6, 8, 12, 15], [7, 11, 14, 17], [8, 12, 15, 19], [11, 14, 17, 20], [12, 15, 19, 23], [14, 17, 20, 24], [15, 19, 23, 25]],  //algerian
+            [[0, 6, 11], [4, 7, 12], [6, 11, 16], [7, 12, 18], [11, 16, 19], [0, 6, 11, 16], [4, 7, 12, 18], [6, 11, 16, 19], [7, 12, 18, 23], [11, 16, 19, 24]] //hirajoshi
         ];
 
         withAutomata(automata: CellularAutomata1D) {
@@ -312,10 +321,11 @@ export class CellularAutomata1DPlayer {
 
             await Tone.loaded();
 
-            let chord = this.chords[Math.floor(Math.random() * this.chords.length)];
-            let chordOctave = Math.round(Math.random() * 2) + 2;
-            let voiceOctave = Math.round(Math.random()) + 3;
-            let noteOctave = Math.round(Math.random()) + 3;
+            let tone = Math.floor(Math.random() * 12);
+            let chord = this.chords[5].map(chord => chord.map(interval => interval + tone));
+            let chordOctave = Math.round(Math.random() * 2) + 3;
+            let voiceOctave = Math.round(Math.random()) + 4;
+            let noteOctave = Math.round(Math.random()) + 4;
 
             let chordsDurations = [3, 4, 6, 8, 10];
             let notesDurations = [2, 3, 4, 5, 6];
@@ -347,3 +357,52 @@ export class CellularAutomata1DPlayer {
         }
     }
 }
+
+
+/**
+ *          let mayor = [2, 2, 1, 2, 2, 2, 1]
+            let minor = [2, 1, 2, 2, 1, 2, 2]
+            let dorian = [2, 1, 2, 2, 2, 1, 2]
+            let phrygian = [1, 2, 2, 2, 1, 2, 2]
+            let lydian = [2, 2, 2, 1, 2, 2, 1]
+            let mixolydian = [2, 2, 1, 2, 2, 1, 2]
+            let locrian = [1, 2, 2, 1, 2, 2, 2]
+            let pentatonic = [2, 2, 3, 2, 3]
+            let minor_pentatonic = [3, 2, 2, 3, 2]
+            let blues = [3, 2, 1, 1, 3, 2]
+            let enigmatic = [1, 3, 2, 2, 2, 1, 1]
+            let flamenco = [1, 3, 1, 2, 1, 3, 1]
+            let algerian = [2, 1, 3, 1, 1, 3, 1, 2, 1, 2]
+            let hirajoshi = [4, 2, 1, 4, 1]
+
+
+            let scale = hirajoshi
+            let copy = [...scale]
+            console.log(
+                scale.map((value, index) => {
+                    let scale = [] as number[]
+                    let sumBefore = 0
+                    for (let i = 0; i < index; i++) {
+                        sumBefore += copy[i]
+                    }
+                    scale.push(sumBefore)
+                    scale.push(sumBefore + copy[index] + copy[(index + 1) % copy.length])
+                    scale.push(sumBefore + copy[index] + copy[(index + 1) % copy.length] + copy[(index + 2) % copy.length] + copy[(index + 3) % copy.length])
+                    return scale.toString()
+                })
+            )
+            console.log(
+                scale.map((value, index) => {
+                    let scale = [] as number[]
+                    let sumBefore = 0
+                    for (let i = 0; i < index; i++) {
+                        sumBefore += copy[i]
+                    }
+                    scale.push(sumBefore)
+                    scale.push(sumBefore + copy[index] + copy[(index + 1) % copy.length])
+                    scale.push(sumBefore + copy[index] + copy[(index + 1) % copy.length] + copy[(index + 2) % copy.length] + copy[(index + 3) % copy.length])
+                    scale.push(sumBefore + copy[index] + copy[(index + 1) % copy.length] + copy[(index + 2) % copy.length] + copy[(index + 3) % copy.length] + copy[(index + 4) % copy.length] + copy[(index + 4) % copy.length])
+                    return scale.toString()
+                })
+            )
+ */
