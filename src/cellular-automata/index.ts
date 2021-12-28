@@ -98,7 +98,7 @@ export class CellularAutomata {
             for (let i = 0; i < ruleCharacters.length; i++) {
                 lookupTable[i] = +ruleCharacters[i] - +'0';
             }
-            const initialState = this.randomInitialConfiguration && Math.random() > 0.5
+            const initialState = this.randomInitialConfiguration
                 ? Array.from({ length: this.size }, () => Math.round(Math.random()))
                 : Array.from({ length: this.size }, (_, index) => index === Math.floor(this.size / 2) ? 1 : 0);
 
@@ -125,7 +125,7 @@ export class CellularAutomata {
                     lookupTable[i] = +ruleCharacters[i] - +'W'
                 }
             }
-            const initialState = this.randomInitialConfiguration && Math.random() > 0.5
+            const initialState = this.randomInitialConfiguration
                 ? Array.from({ length: this.size }, () => Math.round(Math.random()))
                 : Array.from({ length: this.size }, (_, index) => index === Math.floor(this.size / 2) ? 1 : 0);
             

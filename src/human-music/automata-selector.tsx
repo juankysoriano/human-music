@@ -5,7 +5,7 @@ export class AutomataSelector {
     randomAutomata() {
         let radius = 1;
         let type = Math.random() < 0.5 ? Type.ELEMENTARY : Type.TOTALISTIC;
-        let states = 1 + Math.ceil(Math.random() * 2);
+        let states = 3//1 + Math.ceil(Math.random() * 2);
         let maxRule = 0;
         switch (type) {
             case Type.ELEMENTARY:
