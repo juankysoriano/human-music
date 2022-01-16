@@ -50,8 +50,8 @@
         align-self: center;
         justify-self: center;
         background-color: transparent;
-        width: 40vw;
-        height: 40vw;
+        width: 70vh;
+        height: 70vh;
         perspective: 2000px;
         /* Remove this if you don't want the 3D effect */
     }
