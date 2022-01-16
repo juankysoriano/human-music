@@ -5,14 +5,16 @@ export class AutomataSelector {
     randomAutomata() {
         let radius = 1;
         let type = Math.random() < 0.5 ? Type.ELEMENTARY : Type.TOTALISTIC;
-        let states = 3//1 + Math.ceil(Math.random() * 2);
+        let states = 3;
         let maxRule = 0;
         switch (type) {
             case Type.ELEMENTARY:
-                maxRule = Math.pow(states, Math.pow(states, (2 * radius + 1))) - 1;
+                var combinations = Math.pow(states, (2 * radius + 1));
+                maxRule = Math.pow(states, combinations) - 1;
                 break;
             case Type.TOTALISTIC:
-                maxRule = Math.pow(states, (states * (2 * radius + 1))) - 1;
+                var combinations = (states - 1) * (2 * radius + 1) + 1;
+                maxRule = Math.pow(states, combinations) - 1;
                 break;
         }
 

@@ -30,9 +30,7 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
     }
 
     evolve() {
-        this.state.forEach((_, index) => {
-            this.evolveCellAt(index);
-        });
+        this.state.forEach((_, index) => { this.evolveCellAt(index); });
         const stateSave = this.tempState;
         this.tempState = this._state;
         this._state = stateSave;
@@ -45,7 +43,7 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
 
     private computeCodeFor(index: number) {
         let lookUpIndex: number;
-        let numberOfInvolvedCells = 2 * this.radius + 1;
+        let numberOfInvolvedCells = 2 * this.radius + 1 - this.radius;
         let code = 0;
         if (index === 0) {
             for (let i = -this.radius; i < numberOfInvolvedCells; i++) {
@@ -66,4 +64,5 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
     private wrappedIndex(index: number) {
         return index < 0 ? index + this.size : index >= this.size ? index - this.size : index;
     }
+
 }
