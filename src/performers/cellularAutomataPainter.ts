@@ -24,8 +24,8 @@ export class CellularAutomata1DPainter {
             for (let lines = 0; lines < 25 / window.devicePixelRatio; lines++) {
                 this.sketch.line(
                     this.cellSize * i + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize),
-                    this.cellSize * this.step + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize), 
-                    this.cellSize * i + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize), 
+                    this.cellSize * this.step + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize),
+                    this.cellSize * i + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize),
                     this.cellSize * this.step + this.cellSize / 2 + (Math.random() * 2 * this.cellSize - this.cellSize));
             }
         }

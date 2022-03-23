@@ -128,7 +128,7 @@ export class CellularAutomata {
             const initialState = this.randomInitialConfiguration
                 ? Array.from({ length: this.size }, () => Math.round(Math.random()))
                 : Array.from({ length: this.size }, (_, index) => index === Math.floor(this.size / 2) ? 1 : 0);
-            
+
             return new ElementaryCellularAutomata1D(
                 this.states,
                 this.size,

@@ -1,5 +1,5 @@
 body {
-  font-family: 'ChubbyChoo-Regular';
+  font-family: "ChubbyChoo-Regular";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0%;
@@ -11,8 +11,9 @@ body {
 }
 
 @font-face {
-  font-family: 'ChubbyChoo-Regular';
-  src: local('ChubbyChoo-Regular'), url(../resources/fonts/ChubbyChoo-Regular.woff) format('woff');
+  font-family: "ChubbyChoo-Regular";
+  src: local("ChubbyChoo-Regular"),
+    url(../resources/fonts/ChubbyChoo-Regular.woff) format("woff");
   /* other formats include: 'woff2', 'truetype, 'opentype',
                             'embedded-opentype', and 'svg' */
 }

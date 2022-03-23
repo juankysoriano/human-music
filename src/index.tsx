@@ -3,6 +3,6 @@ import HumanMusic from './human-music/human-music';
 import './styles/index.css';
 
 ReactDOM.render(
-  <HumanMusic/>,
+  <HumanMusic />,
   document.getElementById('root')
 );

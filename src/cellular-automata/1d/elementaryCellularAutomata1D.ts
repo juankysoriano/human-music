@@ -122,7 +122,7 @@ export class ElementaryCellularAutomata1D implements CellularAutomata1D {
                 this.states,
                 this.size,
                 radius,
-                this.rule,  
+                this.rule,
                 initialState,
                 lookupTable
             );
