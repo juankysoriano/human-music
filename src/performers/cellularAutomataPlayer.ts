@@ -1,22 +1,32 @@
 import * as Tone from 'tone'
 import { CellularAutomata1D } from "../cellular-automata";
 import { Chord } from "@tonaljs/tonal";
+import { sign } from 'crypto';
 
 const NOTE_DURATION = 5;
 export class CellularAutomata1DPlayer {
     private instrument!: Tone.Sampler
     private music!: Music
+    private lastValue: number = 0
     constructor(instrument: Tone.Sampler, music: Music
     ) {
        this.instrument = instrument;
        this.music = music;
     }
 
-    play() {
-        this.music.notes().forEach(notes => {
+    async play() {
+        this.music.notes().forEach((notes, index) => {
             if (notes != null) {
                 var midiNotes = notes.map(note => Tone.Frequency(note.value, "midi").toFrequency())
-                this.instrument.triggerAttackRelease(midiNotes, 5, undefined, 0.1);
+                var attack = 0.025 * (index * 2 + 1)
+                if (index == 1) {
+                    if (this.lastValue != midiNotes[0]) {
+                        this.instrument.triggerAttackRelease(midiNotes, 5, undefined, attack);
+                        this.lastValue = midiNotes[0]
+                    }
+                } else {
+                    this.instrument.triggerAttackRelease(midiNotes, 5, undefined, attack);
+                }
             }
         })
     }
@@ -81,13 +91,40 @@ export class CellularAutomata1DPlayer {
             }).toDestination();
 
             await Tone.loaded();
-            var durationsLarge = [4, 4, 8, 16]//, 4, 4, 4, 4, 8, 4, 4, 4, 4, 16];
-            var durationsShort = [1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 2]//, 1, 2, 1, 2, 2,1, 2, 1, 2, 2, 1, 2, 1, 2, 2,1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 2]
-            var durationsFree = [2, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1]
+
+            var beatDuration = 4 * (2 + Math.floor(Math.random() * 3))
+            var progressions = (2 + Math.floor(Math.random() * 3))
+            var availableDurationsLong = [4, 8, 16].filter(duration => duration <= beatDuration)
+            var availableDurationsShort = [1, 2, 4]
+            var durationsLong: number[] = []
+            for (let i = 0; i < progressions; i++) {
+                var sum = 0;
+                while(sum != beatDuration) {
+                    var nextDuration = availableDurationsLong[Math.floor(Math.random() * availableDurationsLong.length)]
+                    if (sum + nextDuration <= beatDuration) {
+                        durationsLong.push(nextDuration)
+                        sum += nextDuration
+                    }
+                }
+            }
+            var durationsShort: number[] = []
+            for (let i = 0; i < progressions; i++) {
+                var sum = 0;
+                while(sum != beatDuration) {
+                    var nextDuration = availableDurationsShort[Math.floor(Math.random() * availableDurationsShort.length)]
+                    if (sum + nextDuration <= beatDuration) {
+                        durationsShort.push(nextDuration)
+                        sum += nextDuration
+                    }
+                }
+            }
+
+            var chord = Math.floor(Math.random() * this.chords.length)
+
             var music = new Music(
-                new ChordsGeneratorVoice(durationsLarge, this.automata!, 4, this.chords[0]),
-                new ChordsFollowerVoice(durationsShort, this.automata!, 6, this.chords[0]),
-                new FreeVoice(2, 1, this.automata!)
+                new ChordsGeneratorVoice(durationsLong, this.automata!, 4, this.chords[0]),
+                new ChordsFollowerVoice(durationsShort, this.automata!, 5, this.chords[0]),
+                new FreeVoice(6, 1, this.automata!)
             );
 
             return new CellularAutomata1DPlayer(
@@ -99,29 +136,29 @@ export class CellularAutomata1DPlayer {
 }
 
 class Music {
-    private largeDurationVoice!: Voice;
-    private lowDurationVoice!: Voice;
+    private longDurationVoice!: Voice;
+    private shortDurationVoice!: Voice;
     private freeVoice!: Voice;
 
-    constructor (largeDurationVoice: Voice, lowDurationVoice: Voice, freeVoice: Voice) {
-        this.largeDurationVoice = largeDurationVoice;
-        this.lowDurationVoice = lowDurationVoice;
+    constructor (longDurationVoice: Voice, shortDurationVoice: Voice, freeVoice: Voice) {
+        this.longDurationVoice = longDurationVoice;
+        this.shortDurationVoice = shortDurationVoice;
         this.freeVoice = freeVoice;
     }
 
     notes(): (Note[] | null)[] {
-        var largeDurationNotes = this.largeDurationVoice.newNote();
-        var currentChord = this.largeDurationVoice.currentChord;
-        this.lowDurationVoice.updateCurrentChord(currentChord);
+        var largeDurationNotes = this.longDurationVoice.newNote();
+        var currentChord = this.longDurationVoice.currentChord;
+        this.shortDurationVoice.updateCurrentChord(currentChord);
         this.freeVoice.updateCurrentChord(currentChord)
-        var lowDurationNotes = this.lowDurationVoice.newNote(); 
+        var shortDurationNotes = this.shortDurationVoice.newNote(); 
         var freeNotes = this.freeVoice.newNote();
 
-        this.largeDurationVoice.tick();
-        this.lowDurationVoice.tick();
+        this.longDurationVoice.tick();
+        this.shortDurationVoice.tick();
         this.freeVoice.tick();
         
-        return [largeDurationNotes, lowDurationNotes, freeNotes];
+        return [largeDurationNotes, shortDurationNotes]//, freeNotes];
     }
 }
 
@@ -289,4 +326,8 @@ class Note {
         this.value = value;
         this.duration = duration;
     }
+}
+
+function delay(arg0: number) {
+    throw new Error('Function not implemented.');
 }

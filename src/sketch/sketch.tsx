@@ -15,7 +15,7 @@ const sketch: Sketch = p5 => {
   p5.setup = () => {
     p5.createCanvas($('#sketch').width()!, $('#sketch').height()!);
     p5.background(9, 9, 9);
-    p5.frameRate(3);
+    p5.frameRate((3 + Math.floor(Math.random() * 4)));
   };
 
   p5.updateWithProps = props => {
@@ -23,6 +23,7 @@ const sketch: Sketch = p5 => {
     if (props.newAutomata) {
       p5.clear();
       p5.background(9, 9, 9);
+      p5.frameRate((3 + Math.floor(Math.random() * 4)));
       updateSketch(p5, props.newAutomata);
     }
   }
@@ -30,7 +31,7 @@ const sketch: Sketch = p5 => {
   p5.draw = () => {
     automataPainter?.draw();
     automata?.evolve();
-    automataPlayer?.play();
+    automataPlayer?.play(); 
   }
 }
 
