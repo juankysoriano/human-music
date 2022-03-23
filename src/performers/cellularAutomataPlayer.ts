@@ -10,8 +10,8 @@ export class CellularAutomata1DPlayer {
     private lastValue: number = 0
     constructor(instrument: Tone.Sampler, music: Music
     ) {
-       this.instrument = instrument;
-       this.music = music;
+        this.instrument = instrument;
+        this.music = music;
     }
 
     async play() {
@@ -99,7 +99,7 @@ export class CellularAutomata1DPlayer {
             var durationsLong: number[] = []
             for (let i = 0; i < progressions; i++) {
                 var sum = 0;
-                while(sum != beatDuration) {
+                while (sum != beatDuration) {
                     var nextDuration = availableDurationsLong[Math.floor(Math.random() * availableDurationsLong.length)]
                     if (sum + nextDuration <= beatDuration) {
                         durationsLong.push(nextDuration)
@@ -110,7 +110,7 @@ export class CellularAutomata1DPlayer {
             var durationsShort: number[] = []
             for (let i = 0; i < progressions; i++) {
                 var sum = 0;
-                while(sum != beatDuration) {
+                while (sum != beatDuration) {
                     var nextDuration = availableDurationsShort[Math.floor(Math.random() * availableDurationsShort.length)]
                     if (sum + nextDuration <= beatDuration) {
                         durationsShort.push(nextDuration)
@@ -140,7 +140,7 @@ class Music {
     private shortDurationVoice!: Voice;
     private freeVoice!: Voice;
 
-    constructor (longDurationVoice: Voice, shortDurationVoice: Voice, freeVoice: Voice) {
+    constructor(longDurationVoice: Voice, shortDurationVoice: Voice, freeVoice: Voice) {
         this.longDurationVoice = longDurationVoice;
         this.shortDurationVoice = shortDurationVoice;
         this.freeVoice = freeVoice;
@@ -151,13 +151,13 @@ class Music {
         var currentChord = this.longDurationVoice.currentChord;
         this.shortDurationVoice.updateCurrentChord(currentChord);
         this.freeVoice.updateCurrentChord(currentChord)
-        var shortDurationNotes = this.shortDurationVoice.newNote(); 
+        var shortDurationNotes = this.shortDurationVoice.newNote();
         var freeNotes = this.freeVoice.newNote();
 
         this.longDurationVoice.tick();
         this.shortDurationVoice.tick();
         this.freeVoice.tick();
-        
+
         return [largeDurationNotes, shortDurationNotes]//, freeNotes];
     }
 }
@@ -169,7 +169,7 @@ abstract class Voice {
     protected automata!: CellularAutomata1D;
     protected octave!: number;
     protected remainingDuration: number = 0;
-    
+
     tick(): void {
         this.remainingDuration--;
     }
@@ -187,7 +187,7 @@ abstract class Voice {
 
 class ChordsGeneratorVoice extends Voice {
     private durations!: number[];
-    private recordingLimit : number
+    private recordingLimit: number
     private record: Note[][] = [];
 
     constructor(durations: number[], automata: CellularAutomata1D, octave: number, chords: number[][]) {
@@ -210,20 +210,20 @@ class ChordsGeneratorVoice extends Voice {
         if (this.timeToNote()) {
             if (this.finishedRecording()) {
                 this.currentNote = this.record.shift() as Note[];
-                this.currentChord = this.currentNote.map(note => note.value - this.octave*12);
+                this.currentChord = this.currentNote.map(note => note.value - this.octave * 12);
                 this.remainingDuration = this.currentNote[0].duration;
                 this.record.push(this.currentNote);
                 return this.currentNote;
             } else {
                 this.currentChord = this.chords[this.leeDistance(0) % this.chords.length];
-                this.currentNote = this.currentChord.map(value => new Note(this.octave*12 + value, this.durations[this.record.length]));
+                this.currentNote = this.currentChord.map(value => new Note(this.octave * 12 + value, this.durations[this.record.length]));
                 this.remainingDuration = this.currentNote[0].duration;
                 this.record.push(this.currentNote);
                 return this.currentNote
             }
         } else {
             return null;
-        }      
+        }
     }
 
     private leeDistance(state: number) {
@@ -273,7 +273,7 @@ class ChordsFollowerVoice extends Voice {
             }
         } else {
             return null;
-        }      
+        }
     }
 
     private leeDistance(state: number) {
@@ -302,7 +302,7 @@ class FreeVoice extends Voice {
                 return null
             } else {
                 this.currentNote = newNote;
-                return this.currentNote   
+                return this.currentNote
             }
         } else {
             return null;

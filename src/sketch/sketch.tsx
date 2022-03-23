@@ -31,7 +31,7 @@ const sketch: Sketch = p5 => {
   p5.draw = () => {
     automataPainter?.draw();
     automata?.evolve();
-    automataPlayer?.play(); 
+    automataPlayer?.play();
   }
 }
 
