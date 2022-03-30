@@ -10,7 +10,7 @@ export function start() {
 export function loadMidi() {
   window.MIDI = MIDI;
   MIDI.loadPlugin({
-    soundfontUrl: "https://gleitz.github.io/midi-js-soundfonts/MusyngKite/",
+    soundfontUrl: "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/",
     instrument: [
       "electric_guitar_jazz",
       "electric_guitar_clean",
@@ -18,8 +18,8 @@ export function loadMidi() {
     ],
     onsuccess: function () {
       MIDI.programChange(0, MIDI.GM.byName["electric_guitar_jazz"].program);
-      MIDI.programChange(1, MIDI.GM.byName["electric_guitar_clean"].program);
-      MIDI.programChange(2, MIDI.GM.byName["electric_guitar_muted"].program);
+      MIDI.programChange(2, MIDI.GM.byName["electric_guitar_clean"].program);
+      MIDI.programChange(1, MIDI.GM.byName["electric_guitar_muted"].program);
     },
   });
 }
@@ -29,7 +29,7 @@ export function noteOn(instrument, note) {
 }
 
 export function noteOff(instrument, note) {
-  MIDI.noteOff(instrument, note, 0);
+  MIDI.noteOff(instrument, note, 0.5);
 }
 
 export function stopAll() {

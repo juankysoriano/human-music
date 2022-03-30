@@ -47,9 +47,9 @@ export class CellularAutomata1DPlayer {
             }
 
             const music = new Music([
-                new Voice(2, this.scales[0], 3, this.automata!),
+                new Voice(2, this.scales[0], 5, this.automata!),
                 new Voice(1, this.scales[0], 4, this.automata!),
-                new Voice(0, this.scales[0], 5, this.automata!)
+                new Voice(0, this.scales[0], 3, this.automata!)
             ]);
 
             return new CellularAutomata1DPlayer(
@@ -63,17 +63,14 @@ class Music {
     private durationTransformation = new DurationTransformation();
     private pitchTransformation = new PitchTransformation();;
     readonly voices: Voice[];
-    private beatDuration: number = 64;
-    private currentBeat: number = 64;
+    private beatDuration: number = 128;
+    private currentBeat: number = 128;
 
     constructor(voices: Voice[]) {
         this.voices = voices;
     }
 
     async play() {
-        this.voices.forEach((voice, index) => {
-            console.log(index + ": " + voice.currentNote.duration);
-        })
         if (this.beatDuration == this.currentBeat) {
             this.currentBeat = 0;
             this.durationTransformation.restore();
@@ -113,7 +110,30 @@ class Voice {
 
     async play() {
         if (this.currentNote.isFinished()) {
-            let midiNote = this.scale[(this.leeDistance() + this.toneOffset) % this.scale.length] + this.octave * 12;
+            let index = (this.leeDistance()) % (this.scale.length * 2);
+            let octave = this.octave;
+
+            if (index == this.scale.length) {
+                index = 1;
+                octave++;
+            } else if (index > this.scale.length) {
+                index = this.scale.length * 2 - index;
+            }
+            index = this.scale[index] == -1 ? -1 : index + this.toneOffset;
+            if (this.scale[index] != -1) {
+                while (index >= this.scale.length) {
+                    index = index - this.scale.length + 1;
+                    octave++;
+                }
+                while (index <= 0) {
+                    index = index + this.scale.length - 1;
+                    octave--;
+                }
+                octave = Math.min(Math.max(1, octave), 10);
+            }
+
+            let midiNote = this.scale[index] + octave * 12;
+
             if (this.currentNote.value != midiNote) {
                 MIDI.noteOff(this.instrument, this.currentNote.value);
                 this.currentNote = new Note(midiNote, this.notesDuration);
@@ -135,7 +155,7 @@ class Voice {
     private leeDistance() {
         return this.automata.state.reduce((acc, _, index) => {
             let euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
-            let leeDistance = Math.min(euclideanDistance, this.automata.states - euclideanDistance)
+            let leeDistance = this.automata.state[index] > 0 && euclideanDistance > 0 ? Math.min(euclideanDistance, this.automata.states - euclideanDistance) : 0;
             return acc + leeDistance;
         }, 0);
     }
