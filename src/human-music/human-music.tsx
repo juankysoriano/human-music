@@ -1,21 +1,22 @@
 import { useState } from "react";
-import SketchProvider from "../sketch/SketchProvider";
-import CellularAutomataSketch from "../sketch/sketch";
-import './styles/HumanMusicStyle.css'
-import * as Tone from 'tone'
-import earth from '../resources/images/earth.png'
-import github from '../resources/images/github.png'
-import { AutomataSelector } from "./automata-selector";
 import { CellularAutomata1D } from "../cellular-automata";
+import * as MIDI from '../performers/MIDI';
+import earth from '../resources/images/earth.png';
+import github from '../resources/images/github.png';
+import CellularAutomataSketch from "../sketch/sketch";
+import SketchProvider from "../sketch/SketchProvider";
+import { AutomataSelector } from "./automata-selector";
+import './styles/HumanMusicStyle.css';
 
 export default function HumanMusic() {
     const [started, setStarted] = useState(false);
     const [automata, setAutomata] = useState(null as unknown as CellularAutomata1D);
 
     let ruleSelector = new AutomataSelector();
+    MIDI.loadMidi();
 
     async function start() {
-        await Tone.start();
+        MIDI.start();
         setStarted(true);
         randomiseAutomata();
     }

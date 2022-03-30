@@ -1,11 +1,11 @@
-import { P5Instance, ReactP5Wrapper, Sketch } from "react-p5-wrapper";
-import SketchProvider from './SketchProvider';
-import { CellularAutomata, CellularAutomata1D, Dimensions, Size, Type } from '../cellular-automata';
-import { CellularAutomata1DPainter } from "../performers/cellularAutomataPainter";
-import { CellularAutomata1DPlayer } from "../performers/cellularAutomataPlayer";
 import $ from 'jquery';
 import React, { useReducer } from "react";
+import { P5Instance, ReactP5Wrapper, Sketch } from "react-p5-wrapper";
 import { debounce } from "ts-debounce";
+import { CellularAutomata1D } from '../cellular-automata';
+import { CellularAutomata1DPainter } from "../performers/cellularAutomataPainter";
+import { CellularAutomata1DPlayer } from "../performers/cellularAutomataPlayer";
+import SketchProvider from './SketchProvider';
 
 let automata: CellularAutomata1D;
 let automataPainter: CellularAutomata1DPainter;
@@ -15,7 +15,7 @@ const sketch: Sketch = p5 => {
   p5.setup = () => {
     p5.createCanvas($('#sketch').width()!, $('#sketch').height()!);
     p5.background(9, 9, 9);
-    p5.frameRate((3 + Math.floor(Math.random() * 4)));
+    p5.frameRate(16);
   };
 
   p5.updateWithProps = props => {
@@ -23,7 +23,6 @@ const sketch: Sketch = p5 => {
     if (props.newAutomata) {
       p5.clear();
       p5.background(9, 9, 9);
-      p5.frameRate((3 + Math.floor(Math.random() * 4)));
       updateSketch(p5, props.newAutomata);
     }
   }

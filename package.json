@@ -16,6 +16,7 @@
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
     "@types/react-redux": "^7.1.20",
+    "midicube": "^0.6.1",
     "p5": "^0.10.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
