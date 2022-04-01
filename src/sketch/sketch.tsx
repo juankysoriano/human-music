@@ -43,8 +43,6 @@ async function updateSketch(p5: P5Instance, newAutomata: CellularAutomata1D) {
 
   automata = newAutomata;
 
-  let offset = Math.floor(Math.random() * 6);
-
   automataPainter = new CellularAutomata1DPainter.Builder()
     .withSketch(p5)
     .withAutomata(newAutomata)

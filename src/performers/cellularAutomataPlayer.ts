@@ -1,6 +1,5 @@
 import { CellularAutomata1D } from "../cellular-automata";
 import * as MIDI from './MIDI';
-const NOTE_DURATION = 5;
 export class CellularAutomata1DPlayer {
     private music!: Music
     constructor(music: Music
@@ -18,7 +17,7 @@ export class CellularAutomata1DPlayer {
 
     static Builder = class {
         private automata?: CellularAutomata1D;
-        private scales = [[-1, 0, 2, 4, 5, 7, 9, 11]] // mayor
+
         private chords = [
             [[0, 4, 7], [2, 5, 9], [4, 7, 11], [5, 9, 12], [7, 11, 14], [9, 12, 16], [0, 4, 7, 11], [2, 5, 9, 12], [4, 7, 11, 14], [5, 9, 12, 16], [7, 11, 14, 17], [9, 12, 16, 19]], //mayor
             [[0, 3, 7], [2, 5, 8], [3, 7, 10], [5, 8, 12], [7, 10, 14], [8, 12, 15], [0, 3, 7, 10], [2, 5, 8, 12], [3, 7, 10, 14], [5, 8, 12, 15], [7, 10, 14, 17], [8, 12, 15, 19]],  //minor
@@ -46,46 +45,59 @@ export class CellularAutomata1DPlayer {
                 throw new Error("Must pass a cellular automata upon building");
             }
 
-            const music = new Music([
-                new Voice(2, this.scales[0], 5, this.automata!),
-                new Voice(1, this.scales[0], 4, this.automata!),
-                new Voice(0, this.scales[0], 3, this.automata!)
-            ]);
-
-            return new CellularAutomata1DPlayer(
-                music
+            const music = new Music(
+                this.automata!,
+                [new Voice(2, 5), new Voice(1, 4), new Voice(0, 3)]
             );
+
+            return new CellularAutomata1DPlayer(music);
         }
     }
 }
 
 class Music {
-    private durationTransformation = new DurationTransformation();
-    private pitchTransformation = new PitchTransformation();;
-    readonly voices: Voice[];
-    private beatDuration: number = 128;
-    private currentBeat: number = 128;
+    private durationTransformation: DurationTransformation;
+    private pitchTransformation: PitchTransformation;
+    private noteGenerator: NoteGenerator;
+    private beatDuration: number = 256;
+    private currentBeat: number = 256;
 
-    constructor(voices: Voice[]) {
+    readonly voices: Voice[];
+
+    constructor(automata: CellularAutomata1D, voices: Voice[]) {
         this.voices = voices;
+        this.durationTransformation = new DurationTransformation(automata);
+        this.pitchTransformation = new PitchTransformation(automata);
+        this.noteGenerator = new NoteGenerator(automata);
     }
 
     async play() {
-        if (this.beatDuration == this.currentBeat) {
-            this.currentBeat = 0;
+        if (this.beatQuarter()) {
+            this.noteGenerator.nextChord();
+        }
+        if (this.finishedBeat()) {
             this.durationTransformation.restore();
             this.pitchTransformation.restore();
+            this.noteGenerator.restore();
             this.voices.forEach(voice => {
                 voice.stop();
                 this.durationTransformation.mutate(voice);
                 this.pitchTransformation.mutate(voice);
             });
         }
+
         this.voices.forEach(voice => {
-            voice.play();
+            let attack = this.currentBeat == 0 ? 96 : 64;
+            voice.play(this.noteGenerator.generateNote(voice), attack);
+            voice.tick();
         });
+
         this.currentBeat++;
     }
+
+    private finishedBeat = () => this.currentBeat % this.beatDuration == 0;
+
+    private beatQuarter = () => this.currentBeat % (this.beatDuration / 4) == 0;
 
     release(): void {
         MIDI.stopAll();
@@ -93,71 +105,35 @@ class Music {
 }
 
 class Voice {
-    private scale: number[];
-    readonly octave: number;
-    toneOffset: number = 0;
-    notesDuration: number = 0;
-    readonly automata: CellularAutomata1D;
-    currentNote: Note = new Note(0, 0)
+    private currentNote: Note = new Note(0, 0)
     private instrument;
 
-    constructor(instrument: number, scale: number[], octave: number, automata: CellularAutomata1D) {
+    readonly octave: number;
+    notesDuration: number = 0;
+    toneOffset: number = 0;
+
+    constructor(instrument: number, octave: number) {
         this.instrument = instrument;
-        this.scale = scale;
         this.octave = octave;
-        this.automata = automata;
     }
 
-    async play() {
+    async play(baseNote: number, attack: number) {
         if (this.currentNote.isFinished()) {
-            let index = (this.leeDistance()) % (this.scale.length * 2);
-            let octave = this.octave;
-
-            if (index == this.scale.length) {
-                index = 1;
-                octave++;
-            } else if (index > this.scale.length) {
-                index = this.scale.length * 2 - index;
-            }
-            index = this.scale[index] == -1 ? -1 : index + this.toneOffset;
-            if (this.scale[index] != -1) {
-                while (index >= this.scale.length) {
-                    index = index - this.scale.length + 1;
-                    octave++;
-                }
-                while (index <= 0) {
-                    index = index + this.scale.length - 1;
-                    octave--;
-                }
-                octave = Math.min(Math.max(1, octave), 10);
-            }
-
-            let midiNote = this.scale[index] + octave * 12;
-
+            let midiNote = baseNote + this.octave * 12;
             if (this.currentNote.value != midiNote) {
                 MIDI.noteOff(this.instrument, this.currentNote.value);
-                this.currentNote = new Note(midiNote, this.notesDuration);
-                if (this.currentNote.value != -1) {
-                    MIDI.noteOn(this.instrument, this.currentNote.value);
-                }
-            } else {
-                this.currentNote = new Note(midiNote, this.notesDuration);
+                MIDI.noteOn(this.instrument, Math.max(midiNote, 0), attack);
             }
-
+            this.currentNote = new Note(midiNote, this.notesDuration);
         }
+    }
+
+    async tick() {
         this.currentNote.tick();
     }
 
     async stop() {
         this.currentNote = new Note(0, 0);
-    }
-
-    private leeDistance() {
-        return this.automata.state.reduce((acc, _, index) => {
-            let euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
-            let leeDistance = this.automata.state[index] > 0 && euclideanDistance > 0 ? Math.min(euclideanDistance, this.automata.states - euclideanDistance) : 0;
-            return acc + leeDistance;
-        }, 0);
     }
 }
 
@@ -169,8 +145,14 @@ interface Transformation {
 class DurationTransformation implements Transformation {
     private staticDurations: number[] = shuffle([4, 8, 16, 32]);
     private durations: number[] = [...this.staticDurations];
+    private automata: CellularAutomata1D;
+
+    constructor(automata: CellularAutomata1D) {
+        this.automata = automata;
+    }
+
     mutate(voice: Voice): void {
-        let index = this.leeDistance(voice) % this.durations.length;
+        let index = this.leeDistance() % this.durations.length;
         voice.notesDuration = this.durations[index];
         this.durations.splice(index, 1);
     }
@@ -179,20 +161,26 @@ class DurationTransformation implements Transformation {
         this.durations = [...this.staticDurations];
     }
 
-    private leeDistance(voice: Voice): number {
-        return voice.automata.state.reduce((acc, _, index) => {
-            let euclideanDistance = Math.abs(voice.automata.state[index] - voice.automata.previousState[index])
-            let leeDistance = Math.min(euclideanDistance, voice.automata.states - euclideanDistance)
+    private leeDistance(): number {
+        return this.automata.state.reduce((acc, _, index) => {
+            let euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
+            let leeDistance = this.automata.state[index] > 0 && euclideanDistance > 0 ? Math.min(euclideanDistance, this.automata.states - euclideanDistance) : 0;
             return acc + leeDistance;
         }, 0);
     }
 }
 
 class PitchTransformation implements Transformation {
-    private staticOffsets: number[] = shuffle([0, +2, +4]);
+    private staticOffsets: number[] = shuffle([0, +1, +2]);
     private offsets: number[] = [...this.staticOffsets];
+    private automata: CellularAutomata1D;
+
+    constructor(automata: CellularAutomata1D) {
+        this.automata = automata;
+    }
+
     mutate(voice: Voice): void {
-        let index = this.leeDistance(voice) % this.offsets.length;
+        let index = this.leeDistance() % this.offsets.length;
         voice.toneOffset = this.offsets[index];
         this.offsets.splice(index, 1);
     }
@@ -201,10 +189,41 @@ class PitchTransformation implements Transformation {
         this.offsets = [...this.staticOffsets];
     }
 
-    private leeDistance(voice: Voice): number {
-        return voice.automata.state.reduce((acc, _, index) => {
-            let euclideanDistance = Math.abs(voice.automata.state[index] - voice.automata.previousState[index])
-            let leeDistance = Math.min(euclideanDistance, voice.automata.states - euclideanDistance)
+    private leeDistance(): number {
+        return this.automata.state.reduce((acc, _, index) => {
+            let euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
+            let leeDistance = this.automata.state[index] > 0 && euclideanDistance > 0 ? Math.min(euclideanDistance, this.automata.states - euclideanDistance) : 0;
+            return acc + leeDistance;
+        }, 0);
+    }
+}
+
+class NoteGenerator {
+    private staticChords: number[][] = shuffle([[0, 3, 7], [2, 5, 8], [7, 10, 14, 17], [8, 12, 15, 19]]);
+    private chords: number[][] = [...this.staticChords];
+    private currentChord: number[] = [];
+    private automata: CellularAutomata1D;
+
+    constructor(automata: CellularAutomata1D) {
+        this.automata = automata;
+    }
+
+    nextChord() {
+        let index = this.leeDistance() % this.chords.length;
+        this.currentChord = this.chords[index];
+        this.chords.splice(index, 1);
+    }
+
+    generateNote = (voice: Voice) => this.currentChord[(this.leeDistance() + voice.toneOffset) % this.currentChord.length];
+
+    restore() {
+        this.chords = [...this.staticChords];
+    }
+
+    private leeDistance(): number {
+        return this.automata.state.reduce((acc, _, index) => {
+            let euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
+            let leeDistance = this.automata.state[index] > 0 && euclideanDistance > 0 ? Math.min(euclideanDistance, this.automata.states - euclideanDistance) : 0;
             return acc + leeDistance;
         }, 0);
     }
@@ -241,7 +260,5 @@ class Note {
         this.duration--;
     }
 
-    isFinished(): boolean {
-        return this.duration <= 0;
-    }
+    isFinished = () => this.duration <= 0;
 }
