@@ -201,27 +201,25 @@ class PitchTransformation implements Transformation {
 class NoteGenerator {
     private track = 0;
     private empty = []
-    private firstMinor = [0, 3, 7]
-    //private secondMinorDiminished = [2, 5, 8]
-    private thirdMajor = [3, 7, 10]
-    private fourthMinor = [5, 7, 12]
-    private fithMinor = [7, 10, 14]
-    //private fifthMajor = [7, 11, 14]
-    //private fithMajor7 = [7, 11, 14, 17]
-    private sixthMajor = [8, 12, 15]
-    private seventhMajor = [10, 14, 17]
-    //private seventhMinorDiminished = [11, 14, 17]
+    private first = [0, 3, 7]
+    private second = [2, 5, 8]
+    private third = [3, 7, 10]
+    private fourth = [5, 7, 12]
+    private fifth = [7, 10, 14]
+    private sixth = [8, 12, 15]
+    private seventh = [10, 14, 17]
     private recorded: number[][] = [];
     private currentChord: number[] = this.empty;
     private progressionsMap = new Map<number[], number[][]>(
         [
-            [this.empty, [this.firstMinor]],
-            [this.firstMinor, shuffle([this.thirdMajor, this.fourthMinor, this.fithMinor, this.sixthMajor, this.seventhMajor])],
-            [this.thirdMajor, shuffle([this.fourthMinor, this.sixthMajor, this.seventhMajor])],
-            [this.fourthMinor, shuffle([this.firstMinor, this.thirdMajor, this.fithMinor, this.sixthMajor])],
-            [this.fithMinor, [this.firstMinor]],
-            [this.sixthMajor, shuffle([this.thirdMajor, this.fithMinor, this.seventhMajor])],
-            [this.seventhMajor, shuffle([this.firstMinor, this.sixthMajor])]
+            [this.empty, shuffle([this.first, this.third, this.sixth])],
+            [this.first, shuffle([this.second, this.third, this.fourth, this.fifth, this.sixth, this.seventh])],
+            [this.second, shuffle([this.first, this.third, this.fifth, this.sixth, this.seventh])],
+            [this.third, shuffle([this.first, this.fourth, this.fifth, this.sixth, this.seventh])],
+            [this.fourth, shuffle([this.first, this.third, this.fifth, this.sixth, this.seventh])],
+            [this.fifth, shuffle([this.first, this.third, this.sixth, this.seventh])],
+            [this.sixth, shuffle([this.first, this.second, this.third, this.fourth, this.fifth, this.seventh])],
+            [this.seventh, shuffle([this.first, this.third, this.fifth, this.sixth])]
         ]
     );
 
