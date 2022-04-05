@@ -199,9 +199,32 @@ class PitchTransformation implements Transformation {
 }
 
 class NoteGenerator {
-    private staticChords: number[][] = shuffle([[0, 3, 7], [2, 5, 8], [7, 10, 14, 17], [8, 12, 15, 19]]);
-    private chords: number[][] = [...this.staticChords];
-    private currentChord: number[] = [];
+    private track = 0;
+    private empty = []
+    private firstMinor = [0, 3, 7]
+    //private secondMinorDiminished = [2, 5, 8]
+    private thirdMajor = [3, 7, 10]
+    private fourthMinor = [5, 7, 12]
+    private fithMinor = [7, 10, 14]
+    //private fifthMajor = [7, 11, 14]
+    //private fithMajor7 = [7, 11, 14, 17]
+    private sixthMajor = [8, 12, 15]
+    private seventhMajor = [10, 14, 17]
+    //private seventhMinorDiminished = [11, 14, 17]
+    private recorded: number[][] = [];
+    private currentChord: number[] = this.empty;
+    private progressionsMap = new Map<number[], number[][]>(
+        [
+            [this.empty, [this.firstMinor]],
+            [this.firstMinor, shuffle([this.thirdMajor, this.fourthMinor, this.fithMinor, this.sixthMajor, this.seventhMajor])],
+            [this.thirdMajor, shuffle([this.fourthMinor, this.sixthMajor, this.seventhMajor])],
+            [this.fourthMinor, shuffle([this.firstMinor, this.thirdMajor, this.fithMinor, this.sixthMajor])],
+            [this.fithMinor, [this.firstMinor]],
+            [this.sixthMajor, shuffle([this.thirdMajor, this.fithMinor, this.seventhMajor])],
+            [this.seventhMajor, shuffle([this.firstMinor, this.sixthMajor])]
+        ]
+    );
+
     private automata: CellularAutomata1D;
 
     constructor(automata: CellularAutomata1D) {
@@ -209,15 +232,23 @@ class NoteGenerator {
     }
 
     nextChord() {
-        let index = this.leeDistance() % this.chords.length;
-        this.currentChord = this.chords[index];
-        this.chords.splice(index, 1);
+        if (this.recorded.length < 4) {
+            let candidates = this.progressionsMap.get(this.currentChord) as number[][];
+            let index = this.leeDistance() % candidates.length;
+            this.currentChord = candidates[index];
+            this.recorded.push(this.currentChord);
+        } else {
+            this.currentChord = this.recorded[this.track % this.recorded.length]
+            this.track++;
+        }
+
+        console.log("Selected: " + this.currentChord);
     }
 
-    generateNote = (voice: Voice) => this.currentChord[(this.leeDistance() + voice.toneOffset) % this.currentChord.length];
+    generateNote = (voice: Voice) => this.currentChord[(this.leeDistance() + voice.toneOffset) % this.currentChord.length] + 6;
 
     restore() {
-        this.chords = [...this.staticChords];
+        //this.currentChord = Array.from(this.progressionsMap.keys())[1];
     }
 
     private leeDistance(): number {

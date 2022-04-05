@@ -7,7 +7,7 @@ export class AutomataSelector {
             .withStates(2)
             .withType(Type.ELEMENTARY)
             .withDimensions(Dimensions.UNIDIMENSIONAL)
-            .withRule(169)
+            .withRule(90)
             .build();
     }
 }
