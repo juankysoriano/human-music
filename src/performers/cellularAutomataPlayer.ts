@@ -58,9 +58,9 @@ export class CellularAutomata1DPlayer {
 class Music {
     private durationTransformation: DurationTransformation
     private pitchTransformation: PitchTransformation
-    private noteGenerator: NoteGenerator
-    private beatDuration: number = 256
-    private currentBeat: number = 256
+    private chordsGenerator: ChordsGenerator
+    private beatDuration: number = 64
+    private currentBeat: number = 0
 
     readonly voices: Voice[]
 
@@ -68,17 +68,14 @@ class Music {
         this.voices = voices
         this.durationTransformation = new DurationTransformation(automata)
         this.pitchTransformation = new PitchTransformation(automata)
-        this.noteGenerator = new NoteGenerator(automata)
+        this.chordsGenerator = new ChordsGenerator(automata)
     }
 
     async play() {
-        if (this.beatQuarter()) {
-            this.noteGenerator.nextChord()
-        }
-        if (this.finishedBeat()) {
+        if (this.isNewBeat() && this.chordsGenerator.isNewProgression() || this.currentBeat == 0) {
+            console.log("STUFF")
             this.durationTransformation.restore()
             this.pitchTransformation.restore()
-            this.noteGenerator.restore()
 
             this.voices.forEach(voice => {
                 voice.stop()
@@ -87,18 +84,20 @@ class Music {
             })
         }
 
+        if (this.isNewBeat()) {
+            this.chordsGenerator.nextChord()
+        }
+
         this.voices.forEach(voice => {
-            let attack = this.currentBeat == 0 ? 96 : 64
-            voice.play(this.noteGenerator.generateNote(voice), attack)
+            let attack = this.currentBeat === 0 ? 96 : 64
+            voice.play(this.chordsGenerator.generateNote(voice), attack)
             voice.tick()
         })
 
         this.currentBeat++
     }
 
-    private finishedBeat = () => this.currentBeat % this.beatDuration == 0
-
-    private beatQuarter = () => this.currentBeat % (this.beatDuration / 4) == 0
+    private isNewBeat = () => this.currentBeat % this.beatDuration === 0
 
     async release() {
         this.voices.forEach(voice => voice.stop())
@@ -120,7 +119,7 @@ class Voice {
 
     async play(midiNote: number, attack: number) {
         if (this.currentNote.isFinished()) {
-            if (this.currentNote.value != midiNote) {
+            if (this.currentNote.value !== midiNote) {
                 MIDI.noteOff(this.instrument, this.currentNote.value)
                 MIDI.noteOn(this.instrument, Math.max(midiNote, 0), attack)
             }
@@ -144,7 +143,7 @@ interface Transformation {
 }
 
 class DurationTransformation implements Transformation {
-    private staticDurations: number[] = shuffle([4, 8, 16, 32])
+    private staticDurations: number[] = [4, 8, 16, 32].shuffle()
     private durations: number[] = [...this.staticDurations]
     private automata: CellularAutomata1D
 
@@ -172,7 +171,7 @@ class DurationTransformation implements Transformation {
 }
 
 class PitchTransformation implements Transformation {
-    private staticPositionsInChord: number[] = shuffle([0, +1, +2])
+    private staticPositionsInChord: number[] = [0, +1, +2].shuffle()
     private positionsInChord: number[] = [...this.staticPositionsInChord]
     private automata: CellularAutomata1D
 
@@ -199,7 +198,7 @@ class PitchTransformation implements Transformation {
     }
 }
 
-class NoteGenerator {
+class ChordsGenerator {
     private tone: number
 
     private startedRecording = false
@@ -207,59 +206,54 @@ class NoteGenerator {
     private isPlayingRecord = false
     private empty = []
 
-    private start_first = [0, 4, 7]
-    private start_second = [2, 5, 9]
-    private start_third = [4, 7, 11]
-    private start_fourth = [5, 9, 12]
-    private start_fifth = [7, 11, 14]
-    private start_sixth = [9, 12, 16]
+    private opening_first = [0, 4, 7] // Tonic
+    private opening_second = [2, 5, 9] // SubDominant
+    private opening_third = [4, 7, 11] // Tonic
+    private opening_fourth = [5, 9, 12] // SubDominant
+    private opening_fifth = [7, 11, 14] // Dominant
+    private opening_sixth = [9, 12, 16] // Tonic
 
-    private initial = shuffle([this.start_first, this.start_first, this.start_third, this.start_sixth])[0]
+    private initial = [this.opening_first, this.opening_first, this.opening_third, this.opening_sixth].shuffle()[0]
 
-    private end_first = [0, 4, 7]
-    private end_second = [2, 5, 9]
-    private end_third = [4, 7, 11]
-    private end_fourth = [5, 9, 12]
-    private end_fifth = [7, 11, 14]
-    private end_sixth = [9, 12, 16]
+    private closing_first = [...this.opening_first]
+    private closing_second = [...this.opening_second]
+    private closing_third = [...this.opening_third]
+    private closing_fourth = [...this.opening_fourth]
+    private closing_fifth = [...this.opening_fifth]
+    private closing_sixth = [...this.opening_sixth]
 
-    private final = this.start_first
-    //private end_seventh = [11, 14, 17]
-
+    private final = this.opening_first
 
     private recorded: number[][] = []
     private currentChord: number[] = this.empty
     private progressionsMap = new Map<number[], number[][]>(
         [
             [this.empty, [this.initial]],
-            [this.start_first, shuffle([this.start_second, this.start_third, this.start_fourth, this.end_fifth, this.start_sixth])],//, this.end_seventh])],
-            [this.start_second, shuffle([this.start_fourth, this.end_fifth, this.end_fifth])],
-            [this.start_third, shuffle([this.start_fourth, this.start_sixth])],
-            [this.start_fourth, shuffle([this.end_second, this.end_fifth, this.end_fifth, this.end_sixth])],
-            [this.start_sixth, shuffle([this.start_third, this.start_fourth, this.end_fifth])],//, this.end_seventh])],
-            [this.end_second, shuffle([this.final, this.final, this.end_third])],
-            [this.end_third, shuffle([this.final, this.final, this.end_sixth])],
-            [this.end_fourth, shuffle([this.final, this.final, this.end_third])],
-            [this.end_fifth, shuffle([this.final, this.end_fourth, this.end_sixth])],
-            [this.end_sixth, shuffle([this.final, this.final, this.end_third, this.end_fourth])],
-            //[this.end_seventh, shuffle([this.end_first, this.end_fourth, this.end_sixth])]
+            [this.opening_first, [this.opening_second, this.opening_third, this.opening_fourth, this.closing_fifth, this.opening_sixth].shuffle()],
+            [this.opening_second, [this.opening_fourth, this.closing_fifth, this.closing_fifth].shuffle()],
+            [this.opening_third, [this.opening_fourth, this.opening_sixth].shuffle()],
+            [this.opening_fourth, [this.closing_second, this.closing_fifth, this.closing_fifth, this.closing_sixth].shuffle()],
+            [this.opening_sixth, [this.opening_third, this.opening_fourth, this.closing_fifth].shuffle()],
+            [this.closing_second, [this.final, this.final, this.closing_third].shuffle()],
+            [this.closing_third, [this.final, this.final, this.closing_sixth].shuffle()],
+            [this.closing_fourth, [this.final, this.final, this.closing_third].shuffle()],
+            [this.closing_fifth, [this.final, this.closing_fourth, this.closing_sixth].shuffle()],
+            [this.closing_sixth, [this.final, this.final, this.closing_third, this.closing_fourth].shuffle()],
         ]
     )
     private labels = new Map<number[], String>(
-        [[this.start_first, "I - start"],
-        [this.start_second, "ii - start"],
-        [this.start_third, "iii - start"],
-        [this.start_fourth, "IV - start"],
-        [this.start_fifth, "V - start"],
-        [this.start_sixth, "vi - start"],
-        [this.end_first, "I - end"],
-        [this.end_second, "ii - end"],
-        [this.end_third, "iii - end"],
-        [this.end_fourth, "IV - end"],
-        [this.end_fifth, "V - end"],
-        [this.end_sixth, "vi - end"],
-            //[this.end_seventh, "vii_o - end"]
-        ]
+        [[this.opening_first, "I - start"],
+        [this.opening_second, "ii - start"],
+        [this.opening_third, "iii - start"],
+        [this.opening_fourth, "IV - start"],
+        [this.opening_fifth, "V - start"],
+        [this.opening_sixth, "vi - start"],
+        [this.closing_first, "I - end"],
+        [this.closing_second, "ii - end"],
+        [this.closing_third, "iii - end"],
+        [this.closing_fourth, "IV - end"],
+        [this.closing_fifth, "V - end"],
+        [this.closing_sixth, "vi - end"]]
     )
 
     private automata: CellularAutomata1D
@@ -270,10 +264,10 @@ class NoteGenerator {
     }
 
     nextChord() {
-        this.finishedRecording = this.currentChord == this.final && this.startedRecording || this.finishedRecording
-        if (this.finishedRecording && this.initial == this.final && !this.isPlayingRecord) {
+        this.finishedRecording = (this.currentChord === this.final && this.startedRecording) || this.finishedRecording
+        if (this.finishedRecording && (this.initial === this.final) && !this.isPlayingRecord) {
             this.recorded.pop()
-            this.recorded = rotate(this.recorded)
+            this.recorded = this.recorded.rotate()
         }
 
         if (!this.finishedRecording) {
@@ -285,18 +279,16 @@ class NoteGenerator {
 
         } else {
             this.currentChord = this.recorded[0]
-            this.recorded = rotate(this.recorded)
+            this.recorded = this.recorded.rotate()
             this.isPlayingRecord = true
         }
 
         console.log("Selected: " + this.labels.get(this.currentChord))
     }
 
-    generateNote = (voice: Voice) => this.currentChord[(this.leeDistance() + voice.positionInChord) % this.currentChord.length] + voice.octave * 12 + this.tone
+    isNewProgression = () => this.initial == this.opening_first && this.currentChord === this.initial && this.finishedRecording || this.currentChord == this.opening_first && this.isPlayingRecord
 
-    restore() {
-        //this.currentChord = Array.from(this.progressionsMap.keys())[1]
-    }
+    generateNote = (voice: Voice) => this.currentChord[(this.leeDistance() + voice.positionInChord) % this.currentChord.length] + voice.octave * 12 + this.tone
 
     private leeDistance(): number {
         return this.automata.state.reduce((acc, _, index) => {
@@ -306,25 +298,6 @@ class NoteGenerator {
         }, 0)
     }
 }
-
-function shuffle(array: any[]): any[] {
-    let currentIndex = array.length, randomIndex
-
-    // While there remain elements to shuffle...
-    while (currentIndex != 0) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex)
-        currentIndex--
-
-        // And swap it with the current element.
-        [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex], array[currentIndex]]
-    }
-
-    return array
-}
-
 class Note {
     readonly value!: number
     duration!: number
@@ -334,13 +307,7 @@ class Note {
         this.duration = duration
     }
 
-    tick(): void {
-        this.duration--
-    }
+    tick = () => this.duration--
 
     isFinished = () => this.duration <= 0
-}
-
-function rotate(array: any[]) {
-    return array.slice(1, array.length).concat(array.slice(0, 1))
 }
