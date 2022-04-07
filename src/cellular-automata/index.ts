@@ -1,16 +1,6 @@
 import { ElementaryCellularAutomata1D } from './1d/elementaryCellularAutomata1D'
 import { TotalisticCellularAutomata1D } from './1d/totalisticCellularAutomata1D'
 
-export interface CellularAutomata1D {
-    readonly radius: any
-    readonly size: number
-    readonly rule: number
-    readonly states: number
-    get state(): ReadonlyArray<number>
-    get previousState(): ReadonlyArray<number>
-    evolve(): void
-}
-
 export enum Dimensions {
     UNIDIMENSIONAL,
     BIDIMENSIONAL

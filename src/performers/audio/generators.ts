@@ -1,5 +1,5 @@
-import { CellularAutomata1D } from "../../cellular-automata"
-import { Voice } from "./music-models"
+import { CellularAutomata1D } from '../../cellular-automata/1d/cellularAutomata1D';
+import { Voice } from "./music-models";
 
 export class ChordsGenerator {
     private tone: number
@@ -75,7 +75,7 @@ export class ChordsGenerator {
             this.track++
         } else {
             const candidates = this.progressionsMap.get(this.currentChord) as number[][]
-            const index = this.leeDistance() % candidates.length
+            const index = this.automata.leeDistance() % candidates.length
             this.currentChord = candidates[index]
             this.record.push(this.currentChord)
 
@@ -90,13 +90,5 @@ export class ChordsGenerator {
         return this.finishedRecording && isFirstChord
     }
 
-    generateNote = (voice: Voice) => this.currentChord[(this.leeDistance() + voice.positionInChord) % this.currentChord.length] + voice.octave * 12 + this.tone
-
-    private leeDistance(): number {
-        return this.automata.state.reduce((acc, _, index) => {
-            const euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
-            const leeDistance = this.automata.state[index] > 0 && euclideanDistance > 0 ? Math.min(euclideanDistance, this.automata.states - euclideanDistance) : 0
-            return acc + leeDistance
-        }, 0)
-    }
+    generateNote = (voice: Voice) => this.currentChord[(this.automata.leeDistance() + voice.positionInChord) % this.currentChord.length] + voice.octave * 12 + this.tone
 }

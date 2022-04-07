@@ -2,7 +2,7 @@ import $ from 'jquery'
 import React, { useReducer } from "react"
 import { P5Instance, ReactP5Wrapper, Sketch } from "react-p5-wrapper"
 import { debounce } from "ts-debounce"
-import { CellularAutomata1D } from '../cellular-automata'
+import { CellularAutomata1D } from '../cellular-automata/1d/cellularAutomata1D'
 import { Player } from "../performers/audio/player"
 import { Painter } from "../performers/graphics/painter"
 import SketchProvider from './SketchProvider'
@@ -27,7 +27,7 @@ const sketch: Sketch = p5 => {
     }
   }
 
-  p5.draw = () => {
+  p5.draw = async () => {
     automataPainter?.draw()
     automata?.evolve()
     automataPlayer?.play()
@@ -48,7 +48,7 @@ async function updateSketch(p5: P5Instance, newAutomata: CellularAutomata1D) {
     .withAutomata(newAutomata)
     .build()
 
-  automataPlayer = await new Player.Builder()
+  automataPlayer = new Player.Builder()
     .withAutomata(automata)
     .build()
 

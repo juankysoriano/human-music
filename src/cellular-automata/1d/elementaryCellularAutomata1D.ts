@@ -1,4 +1,4 @@
-import { CellularAutomata1D } from './cellularAutomata1D'
+import { CellularAutomata1D, leeDistance } from './cellularAutomata1D'
 
 export class ElementaryCellularAutomata1D implements CellularAutomata1D {
     readonly states: number
@@ -53,9 +53,9 @@ export class ElementaryCellularAutomata1D implements CellularAutomata1D {
             }
         } else {
             lookUpIndex = this.wrappedIndex(index - this.radius - 1)
-            let offsetA = exponential * this._state[lookUpIndex]
+            const offsetA = exponential * this._state[lookUpIndex]
             lookUpIndex = this.wrappedIndex(index + this.radius)
-            let offsetB = this._state[lookUpIndex]
+            const offsetB = this._state[lookUpIndex]
             code = (this.neighbourhoodCode[index - 1] - offsetA) * this.states + offsetB
         }
         this.neighbourhoodCode[index] = code
@@ -66,6 +66,9 @@ export class ElementaryCellularAutomata1D implements CellularAutomata1D {
         return index < 0 ? index + this.size : index >= this.size ? index - this.size : index
     }
 
+    leeDistance(): number {
+        return leeDistance(this)
+    }
 
     static Builder = class {
         private states: number = 2

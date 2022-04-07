@@ -1,14 +1,14 @@
-import { CellularAutomata1D } from "../../cellular-automata"
-import { Music, Voice } from "./music-models"
+import { CellularAutomata1D } from '../../cellular-automata/1d/cellularAutomata1D';
+import { Music, Voice } from "./music-models";
 export class Player {
     private music: Music
     constructor(music: Music) { this.music = music }
 
-    async play() {
+    play() {
         this.music.play()
     }
 
-    async stop() {
+    stop() {
         this.music.release()
     }
 
@@ -37,7 +37,7 @@ export class Player {
             return this
         }
 
-        async build() {
+        build() {
             if (this.automata === null) {
                 throw new Error("Must pass a cellular automata upon building")
             }

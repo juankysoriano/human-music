@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { CellularAutomata1D } from "../cellular-automata"
+import { CellularAutomata1D } from "../cellular-automata/1d/cellularAutomata1D"
 import * as MIDI from '../performers/audio/MIDI'
 import earth from '../resources/images/earth.png'
 import github from '../resources/images/github.png'
@@ -10,11 +10,16 @@ import './styles/HumanMusicStyle.css'
 
 export default function HumanMusic() {
     const [started, setStarted] = useState(false)
+    const [loaded, setLoaded] = useState(false)
     const [automata, setAutomata] = useState(null as unknown as CellularAutomata1D)
 
-    let ruleSelector = new AutomataSelector()
-    MIDI.loadMidi()
+    const ruleSelector = new AutomataSelector()
 
+    load()
+
+    async function load() {
+        MIDI.loadMidi(() => { setLoaded(true) })
+    }
     async function start() {
         MIDI.start()
         setStarted(true)
@@ -28,7 +33,7 @@ export default function HumanMusic() {
 
     return <SketchProvider.Provider value={automata}>
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, viewport-fit=cover" />
-        <body className="HumanMusic">
+        <div className="HumanMusic">
             <div className="Headers">
                 <img src={earth} className="EarthRadioLogo" alt="Earth" />
                 <h1 className="Title">Human Music</h1>
@@ -38,26 +43,31 @@ export default function HumanMusic() {
                 <div className="flip-card">
                     <div className="flip-card-inner">
                         <div className="flip-card-front">
-                            <CellularAutomataSketch />
+                            {loaded
+                                ? <CellularAutomataSketch />
+                                : <div className="Loading">
+                                    <p className="LoadingText">{`Loading`}</p>
+                                </div>
+                            }
                         </div>
                         <div className="flip-card-back">
-                            <p className="PlayingRule">{started ? "Playing rule: " + automata?.rule : "--"}</p>
+                            <p className="PlayingRule">{started ? `Playing rule: ${automata?.rule}` : "--"}</p>
                         </div>
                     </div>
                 </div>
-                <div className="Controllers">
+                <div className="Controllers" style={{ visibility: loaded ? 'visible' : 'hidden' }}>
                     {started
-                        ? <button className="ruleButton" onClick={randomiseAutomata}>Randomise</button>
+                        ? <button className="ruleButton" onClick={randomiseAutomata} >Randomise</button>
                         : <button className="startButton" onClick={start}>Start</button>
                     }
                 </div>
             </div>
             <div className="Misc">
                 <a className="GitHubLink" href="https://github.com/juankysoriano/human-music">
-                    <img className="GitHubLogo" alt="GitHub" src={github}></img>
+                    <img className="GitHubLogo" alt="GitHub" src={github} />
                 </a>
                 <p className="Dad">A mi padre ♥</p>
             </div>
-        </body>
+        </div>
     </SketchProvider.Provider>
 }

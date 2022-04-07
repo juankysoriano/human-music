@@ -11,7 +11,7 @@ declare global {
   interface Window { MIDI: any }
 }
 
-export function loadMidi() {
+export function loadMidi(loaded: () => void) {
   window.MIDI = MIDI || {}
   const instruments = [
     "acoustic_grand_piano",
@@ -19,13 +19,14 @@ export function loadMidi() {
     "acoustic_grand_piano",
   ]
   MIDI.loadPlugin({
-    soundfontUrl: "https://gleitz.github.io/midi-js-soundfonts/MusyngKite/",
+    soundfontUrl: "https://juankysoriano.github.io/midi-js-soundfonts/MusyngKite/",
     targetFormat: "mp3",
     instrument: instruments,
     onsuccess() {
       instruments.forEach((instrument, index) => {
         MIDI.programChange(index, MIDI.GM.byName[instrument].program)
       })
+      loaded()
     },
   })
 }

@@ -1,4 +1,4 @@
-import { CellularAutomata1D } from "./cellularAutomata1D"
+import { CellularAutomata1D, leeDistance } from "./cellularAutomata1D"
 
 export class TotalisticCellularAutomata1D implements CellularAutomata1D {
     readonly states: number
@@ -43,7 +43,7 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
 
     private computeCodeFor(index: number) {
         let lookUpIndex: number
-        let numberOfInvolvedCells = 2 * this.radius + 1 - this.radius
+        const numberOfInvolvedCells = 2 * this.radius + 1 - this.radius
         let code = 0
         if (index === 0) {
             for (let i = -this.radius; i < numberOfInvolvedCells; i++) {
@@ -52,9 +52,9 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
             }
         } else {
             lookUpIndex = this.wrappedIndex(index - this.radius - 1)
-            let offsetA = this._state[lookUpIndex]
+            const offsetA = this._state[lookUpIndex]
             lookUpIndex = this.wrappedIndex(index + this.radius)
-            let offsetB = this._state[lookUpIndex]
+            const offsetB = this._state[lookUpIndex]
             code = this.neighbourhoodCode[index - 1] - offsetA + offsetB
         }
         this.neighbourhoodCode[index] = code
@@ -65,4 +65,7 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
         return index < 0 ? index + this.size : index >= this.size ? index - this.size : index
     }
 
+    leeDistance(): number {
+        return leeDistance(this)
+    }
 }

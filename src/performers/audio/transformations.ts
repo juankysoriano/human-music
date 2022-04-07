@@ -16,21 +16,13 @@ export class DurationTransformation implements Transformation {
     }
 
     mutate(voice: Voice): void {
-        const index = this.leeDistance() % this.durations.length
+        const index = this.automata.leeDistance() % this.durations.length
         voice.notesDuration = this.durations[index]
         this.durations.splice(index, 1)
     }
 
     restore(): void {
         this.durations = [...this.staticDurations]
-    }
-
-    private leeDistance(): number {
-        return this.automata.state.reduce((acc, _, index) => {
-            const euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
-            const leeDistance = this.automata.state[index] > 0 && euclideanDistance > 0 ? Math.min(euclideanDistance, this.automata.states - euclideanDistance) : 0
-            return acc + leeDistance
-        }, 0)
     }
 }
 
@@ -44,20 +36,12 @@ export class PitchTransformation implements Transformation {
     }
 
     mutate(voice: Voice): void {
-        let index = this.leeDistance() % this.positionsInChord.length
+        const index = this.automata.leeDistance() % this.positionsInChord.length
         voice.positionInChord = this.positionsInChord[index]
         this.positionsInChord.splice(index, 1)
     }
 
     restore(): void {
         this.positionsInChord = [...this.staticPositionsInChord]
-    }
-
-    private leeDistance(): number {
-        return this.automata.state.reduce((acc, _, index) => {
-            const euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
-            const leeDistance = this.automata.state[index] > 0 && euclideanDistance > 0 ? Math.min(euclideanDistance, this.automata.states - euclideanDistance) : 0
-            return acc + leeDistance
-        }, 0)
     }
 }

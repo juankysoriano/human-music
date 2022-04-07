@@ -19,7 +19,7 @@ export class Music {
         this.chordsGenerator = new ChordsGenerator(automata)
     }
 
-    async play() {
+    play() {
         if (this.isNewBeat()) {
             this.chordsGenerator.nextChord()
         }
@@ -46,7 +46,7 @@ export class Music {
 
     private isNewBeat = () => this.currentBeat % this.beatDuration === 0
 
-    async release() {
+    release() {
         this.voices.forEach(voice => voice.stop())
     }
 }
@@ -64,7 +64,7 @@ export class Voice {
         this.octave = octave
     }
 
-    async play(midiNote: number, attack: number) {
+    play(midiNote: number, attack: number) {
         if (this.currentNote.isFinished()) {
             if (this.currentNote.value !== midiNote) {
                 MIDI.noteOff(this.instrument, this.currentNote.value)
@@ -74,11 +74,11 @@ export class Voice {
         }
     }
 
-    async tick() {
+    tick() {
         this.currentNote.tick()
     }
 
-    async stop() {
+    stop() {
         MIDI.noteOff(this.instrument, this.currentNote.value)
         this.currentNote = new Note(0, 0)
     }
