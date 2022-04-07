@@ -3,13 +3,13 @@ import React, { useReducer } from "react";
 import { P5Instance, ReactP5Wrapper, Sketch } from "react-p5-wrapper";
 import { debounce } from "ts-debounce";
 import { CellularAutomata1D } from '../cellular-automata';
-import { CellularAutomata1DPainter } from "../performers/cellularAutomataPainter";
-import { CellularAutomata1DPlayer } from "../performers/cellularAutomataPlayer";
+import { Painter } from "../performers/graphics/painter";
+import { Player } from "../performers/audio/player";
 import SketchProvider from './SketchProvider';
 
 let automata: CellularAutomata1D;
-let automataPainter: CellularAutomata1DPainter;
-let automataPlayer: CellularAutomata1DPlayer;
+let automataPainter: Painter;
+let automataPlayer: Player;
 
 const sketch: Sketch = p5 => {
   p5.setup = () => {
@@ -43,12 +43,12 @@ async function updateSketch(p5: P5Instance, newAutomata: CellularAutomata1D) {
 
   automata = newAutomata;
 
-  automataPainter = new CellularAutomata1DPainter.Builder()
+  automataPainter = new Painter.Builder()
     .withSketch(p5)
     .withAutomata(newAutomata)
     .build();
 
-  automataPlayer = await new CellularAutomata1DPlayer.Builder()
+  automataPlayer = await new Player.Builder()
     .withAutomata(automata)
     .build();
 

@@ -1,11 +1,9 @@
 import p5 from 'p5';
-import { CellularAutomata1D } from '../cellular-automata';
+import { CellularAutomata1D } from '../../cellular-automata';
 
 const colors = ['#09090935', '#ffffff35', '#a71c1c35'];
 
-
-
-export class CellularAutomata1DPainter {
+export class Painter {
     private step: number = 0;
     private cellSize: number;
     private sketch: p5;
@@ -59,7 +57,7 @@ export class CellularAutomata1DPainter {
             if (this.sketch === null) {
                 throw new Error("Must pass a p5 sketch upon building");
             }
-            return new CellularAutomata1DPainter(this.sketch!, this.automata!);
+            return new Painter(this.sketch!, this.automata!);
         }
     }
 }

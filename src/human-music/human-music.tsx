@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CellularAutomata1D } from "../cellular-automata";
-import * as MIDI from '../performers/MIDI';
+import * as MIDI from '../performers/audio/MIDI';
 import earth from '../resources/images/earth.png';
 import github from '../resources/images/github.png';
 import CellularAutomataSketch from "../sketch/sketch";
