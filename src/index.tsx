@@ -1,3 +1,4 @@
+/* eslint-disable no-extend-native */
 import ReactDOM from 'react-dom'
 import HumanMusic from './human-music/human-music'
 import './styles/index.css'
@@ -21,8 +22,9 @@ Array.prototype.rotate = function <T>(this: T[]) {
 }
 
 Array.prototype.shuffle = function <T>(this: T[]) {
-  let currentIndex = this.length, randomIndex
-  let array = [...this]
+  let currentIndex = this.length;
+  let randomIndex;
+  const array = [...this]
   while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex)
     currentIndex--

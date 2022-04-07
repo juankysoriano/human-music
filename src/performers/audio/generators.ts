@@ -82,7 +82,7 @@ export class ChordsGenerator {
             this.finishedRecording = (this.currentChord === this.final && this.record.length > 1) || this.finishedRecording
         }
 
-        console.log("Selected: " + this.labels.get(this.currentChord))
+        console.log(`Selected: ${this.labels.get(this.currentChord)}`)
     }
 
     isNewProgression = () => {
