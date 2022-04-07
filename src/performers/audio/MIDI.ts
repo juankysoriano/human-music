@@ -31,10 +31,10 @@ export function loadMidi() {
 }
 
 export const noteOn = (instrument: number, note: number, velocity: number) =>
-  MIDI.noteOn(instrument, note, velocity + randomNumber(-5, 5), 0);
+  MIDI.noteOn(instrument, note, velocity + randomNumber(-5, 5), 0)
 
 export const noteOff = (instrument: number, note: number) =>
-  MIDI.noteOff(instrument, note, 0.2 + randomNumber(-0.05, 0.05));
+  MIDI.noteOff(instrument, note, 0.2 + randomNumber(-0.05, 0.05))
 
 const randomNumber = (min: number, max: number) =>
-  Math.random() * (max - min) + min;
+  Math.random() * (max - min) + min

@@ -1,4 +1,4 @@
-import { CellularAutomata, Dimensions, Size, Type } from "../cellular-automata";
+import { CellularAutomata, Dimensions, Size, Type } from "../cellular-automata"
 
 export class AutomataSelector {
     randomAutomata() {
@@ -8,6 +8,6 @@ export class AutomataSelector {
             .withType(Type.ELEMENTARY)
             .withDimensions(Dimensions.UNIDIMENSIONAL)
             .withRule(90)
-            .build();
+            .build()
     }
 }
