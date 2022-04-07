@@ -70,23 +70,23 @@ export class ChordsGenerator {
     nextChord() {
         if (this.finishedRecording) {
             this.track = this.track % this.record.length !== 0 ? this.track : this.final === this.initial ? 1 : 0
-            let index = this.track % this.record.length
+            const index = this.track % this.record.length
             this.currentChord = this.record[index]
             this.track++
         } else {
-            let candidates = this.progressionsMap.get(this.currentChord) as number[][]
-            let index = this.leeDistance() % candidates.length
+            const candidates = this.progressionsMap.get(this.currentChord) as number[][]
+            const index = this.leeDistance() % candidates.length
             this.currentChord = candidates[index]
             this.record.push(this.currentChord)
 
-            this.finishedRecording = (this.currentChord === this.final && this.record.length > 0) || this.finishedRecording
+            this.finishedRecording = (this.currentChord === this.final && this.record.length > 1) || this.finishedRecording
         }
 
         console.log("Selected: " + this.labels.get(this.currentChord))
     }
 
     isNewProgression = () => {
-        let isFirstChord = (this.final === this.initial ? this.track : this.track - 1) % this.record.length === 0
+        const isFirstChord = (this.final === this.initial ? this.track : this.track - 1) % this.record.length === 0
         return this.finishedRecording && isFirstChord
     }
 
@@ -94,8 +94,8 @@ export class ChordsGenerator {
 
     private leeDistance(): number {
         return this.automata.state.reduce((acc, _, index) => {
-            let euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
-            let leeDistance = this.automata.state[index] > 0 && euclideanDistance > 0 ? Math.min(euclideanDistance, this.automata.states - euclideanDistance) : 0
+            const euclideanDistance = Math.abs(this.automata.state[index] - this.automata.previousState[index])
+            const leeDistance = this.automata.state[index] > 0 && euclideanDistance > 0 ? Math.min(euclideanDistance, this.automata.states - euclideanDistance) : 0
             return acc + leeDistance
         }, 0)
     }

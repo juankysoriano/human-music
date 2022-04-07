@@ -13,7 +13,7 @@ declare global {
 
 export function loadMidi() {
   window.MIDI = MIDI || {}
-  let instruments = [
+  const instruments = [
     "acoustic_grand_piano",
     "acoustic_grand_piano",
     "acoustic_grand_piano",
@@ -22,7 +22,7 @@ export function loadMidi() {
     soundfontUrl: "https://gleitz.github.io/midi-js-soundfonts/MusyngKite/",
     targetFormat: "mp3",
     instrument: instruments,
-    onsuccess: function () {
+    onsuccess() {
       instruments.forEach((instrument, index) => {
         MIDI.programChange(index, MIDI.GM.byName[instrument].program)
       })
