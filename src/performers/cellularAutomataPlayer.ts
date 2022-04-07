@@ -72,8 +72,11 @@ class Music {
     }
 
     async play() {
+        if (this.isNewBeat()) {
+            this.chordsGenerator.nextChord()
+        }
+
         if (this.isNewBeat() && this.chordsGenerator.isNewProgression() || this.currentBeat == 0) {
-            console.log("STUFF")
             this.durationTransformation.restore()
             this.pitchTransformation.restore()
 
@@ -84,12 +87,8 @@ class Music {
             })
         }
 
-        if (this.isNewBeat()) {
-            this.chordsGenerator.nextChord()
-        }
-
         this.voices.forEach(voice => {
-            let attack = this.currentBeat === 0 ? 96 : 64
+            let attack = this.currentBeat % this.beatDuration === 0 ? 96 : 64
             voice.play(this.chordsGenerator.generateNote(voice), attack)
             voice.tick()
         })
@@ -201,9 +200,8 @@ class PitchTransformation implements Transformation {
 class ChordsGenerator {
     private tone: number
 
-    private startedRecording = false
+    private track = 0;
     private finishedRecording = false
-    private isPlayingRecord = false
     private empty = []
 
     private opening_first = [0, 4, 7] // Tonic
@@ -224,7 +222,7 @@ class ChordsGenerator {
 
     private final = this.opening_first
 
-    private recorded: number[][] = []
+    private record: number[][] = []
     private currentChord: number[] = this.empty
     private progressionsMap = new Map<number[], number[][]>(
         [
@@ -241,6 +239,8 @@ class ChordsGenerator {
             [this.closing_sixth, [this.final, this.final, this.closing_third, this.closing_fourth].shuffle()],
         ]
     )
+
+
     private labels = new Map<number[], String>(
         [[this.opening_first, "I - start"],
         [this.opening_second, "ii - start"],
@@ -264,29 +264,28 @@ class ChordsGenerator {
     }
 
     nextChord() {
-        this.finishedRecording = (this.currentChord === this.final && this.startedRecording) || this.finishedRecording
-        if (this.finishedRecording && (this.initial === this.final) && !this.isPlayingRecord) {
-            this.recorded.pop()
-            this.recorded = this.recorded.rotate()
-        }
-
         if (!this.finishedRecording) {
             let candidates = this.progressionsMap.get(this.currentChord) as number[][]
             let index = this.leeDistance() % candidates.length
             this.currentChord = candidates[index]
-            this.recorded.push(this.currentChord)
-            this.startedRecording = this.startedRecording || this.currentChord !== this.initial
-
+            this.finishedRecording = this.currentChord === this.final && this.record.length > 0
+            this.record.push(this.currentChord)
         } else {
-            this.currentChord = this.recorded[0]
-            this.recorded = this.recorded.rotate()
-            this.isPlayingRecord = true
+            if (this.track % this.record.length == 0 && this.final == this.initial) {
+                this.track++;
+            }
+            let index = this.track % this.record.length
+            this.currentChord = this.record[index]
+            this.track++;
         }
 
         console.log("Selected: " + this.labels.get(this.currentChord))
     }
 
-    isNewProgression = () => this.initial == this.opening_first && this.currentChord === this.initial && this.finishedRecording || this.currentChord == this.opening_first && this.isPlayingRecord
+    isNewProgression = () => {
+        let position = this.final == this.initial ? this.track : this.track - 1
+        return this.finishedRecording && position % this.record.length == 0
+    }
 
     generateNote = (voice: Voice) => this.currentChord[(this.leeDistance() + voice.positionInChord) % this.currentChord.length] + voice.octave * 12 + this.tone
 
