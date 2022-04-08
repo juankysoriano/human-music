@@ -45,7 +45,7 @@ export class Player {
             return new Player(
                 new Music(
                     this.automata!,
-                    [new Voice(2, 5), new Voice(1, 4), new Voice(0, 3)]
+                    [new Voice(0, 3), new Voice(1, 4), new Voice(2, 5)]
                 )
             )
         }
