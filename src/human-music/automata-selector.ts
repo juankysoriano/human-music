@@ -1,4 +1,4 @@
-import { CellularAutomata, Dimensions, Size, Type } from "../cellular-automata"
+import { CellularAutomata, Dimensions, Size, Type } from "./cellular-automata"
 
 export class AutomataSelector {
     randomAutomata() {

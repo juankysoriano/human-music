@@ -7,7 +7,7 @@ export class Music {
     private durationTransformation: DurationTransformation
     private pitchTransformation: PitchTransformation
     private chordsGenerator: ChordsGenerator
-    private beatDuration: number = 64
+    private beatDuration: number = 32
     private currentBeat: number = 0
 
     readonly voices: Voice[]
@@ -83,8 +83,6 @@ export class Voice {
         this.currentNote = new Note(0, 0)
     }
 }
-
-
 
 class Note {
     readonly value!: number

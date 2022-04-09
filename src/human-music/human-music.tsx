@@ -1,10 +1,10 @@
 import { useState } from "react"
-import { CellularAutomata1D } from "../cellular-automata/1d/cellularAutomata1D"
-import * as MIDI from '../performers/audio/MIDI'
+import { CellularAutomata1D } from "./cellular-automata/1d/cellularAutomata1D"
+import * as MIDI from './performers/audio/MIDI'
 import earth from '../resources/images/earth.png'
 import github from '../resources/images/github.png'
-import CellularAutomataSketch from "../sketch/sketch"
-import SketchProvider from "../sketch/SketchProvider"
+import CellularAutomataSketch from "./sketch/sketch"
+import SketchProvider from "./sketch/SketchProvider"
 import { AutomataSelector } from "./automata-selector"
 import './styles/HumanMusicStyle.css'
 
