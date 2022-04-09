@@ -42,12 +42,12 @@ export class ChordsGenerator {
             [this.opening_II, [this.opening_IV, this.closing_V, this.closing_V].shuffle()],
             [this.opening_III, [this.opening_IV, this.opening_VI].shuffle()],
             [this.opening_IV, [this.closing_II, this.closing_V, this.closing_V, this.closing_VI].shuffle()],
-            [this.opening_VI, [this.opening_III, this.opening_IV, this.closing_V].shuffle()],
+            [this.opening_VI, [this.opening_IV, this.closing_V, this.closing_V].shuffle()],
             [this.closing_II, [this.final, this.final, this.closing_III].shuffle()],
-            [this.closing_III, [this.final, this.final, this.closing_VI].shuffle()],
-            [this.closing_IV, [this.final, this.final, this.closing_III].shuffle()],
-            [this.closing_V, [this.final, this.closing_IV, this.closing_VI].shuffle()],
-            [this.closing_VI, [this.final, this.final, this.closing_III, this.closing_IV].shuffle()],
+            [this.closing_III, [this.final, this.final, this.closing_VI, this.closing_V].shuffle()],
+            [this.closing_IV, [this.final, this.final, this.closing_III, this.closing_V].shuffle()],
+            [this.closing_V, [this.final, this.final, this.closing_IV].shuffle()],
+            [this.closing_VI, [this.final, this.final, this.closing_III, this.closing_IV, this.closing_V].shuffle()],
         ]
     )
 
