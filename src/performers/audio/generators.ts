@@ -8,56 +8,63 @@ export class ChordsGenerator {
     private finishedRecording = false
     private empty = []
 
-    private opening_tonic_1 = [0, 4, 7] // Tonic
-    private opening_subdominant_1 = [2, 5, 9] // SubDominant
-    private opening_tonic_2 = [4, 7, 11] // Tonic
-    private opening_subdominant_2 = [5, 9, 12] // SubDominant
-    private opening_dominant_1 = [7, 11, 14] // Dominant
-    private opening_tonic_3 = [9, 12, 16] // Tonic
+    private opening_I = [0, 3, 7] // Tonic
+    private opening_II = [10, 14, 17] // SubDominant
+    private opening_III = [3, 7, 10] // Tonic
+    private opening_IV = [5, 8, 12] // SubDominant
+    private opening_V = [7, 10, 14] // Dominant
+    private opening_VI = [8, 12, 15] // Tonic
 
-    private initial = [this.opening_tonic_1, this.opening_tonic_1, this.opening_tonic_2, this.opening_tonic_3].shuffle()[0]
+    //private opening_I = [0, 4, 7] // Tonic
+    //private opening_II = [2, 5, 9] // SubDominant
+    //private opening_III = [4, 7, 11] // Tonic
+    //private opening_IV = [5, 9, 12] // SubDominant
+    //private opening_V = [7, 11, 14] // Dominant
+    //private opening_VI = [9, 12, 16] // Tonic
 
-    private closing_tonic_1 = [...this.opening_tonic_1]
-    private closing_subdominant_1 = [...this.opening_subdominant_1]
-    private closing_tonic_2 = [...this.opening_tonic_2]
-    private closing_subdominant_2 = [...this.opening_subdominant_2]
-    private closing_dominant_1 = [...this.opening_dominant_1]
-    private closing_tonic_3 = [...this.opening_tonic_3]
+    private initial = [this.opening_I, this.opening_I, this.opening_III, this.opening_VI].shuffle()[0]
 
-    private final = this.opening_tonic_1
+    private closing_I = [...this.opening_I]
+    private closing_II = [...this.opening_II]
+    private closing_III = [...this.opening_III]
+    private closing_IV = [...this.opening_IV]
+    private closing_V = [...this.opening_V]
+    private closing_VI = [...this.opening_VI]
+
+    private final = this.opening_I
 
     private record: number[][] = []
     private currentChord: number[] = this.empty
     private progressionsMap = new Map<number[], number[][]>(
         [
             [this.empty, [this.initial]],
-            [this.opening_tonic_1, [this.opening_subdominant_1, this.opening_tonic_2, this.opening_subdominant_2, this.closing_dominant_1, this.opening_tonic_3].shuffle()],
-            [this.opening_subdominant_1, [this.opening_subdominant_2, this.closing_dominant_1, this.closing_dominant_1].shuffle()],
-            [this.opening_tonic_2, [this.opening_subdominant_2, this.opening_tonic_3].shuffle()],
-            [this.opening_subdominant_2, [this.closing_subdominant_1, this.closing_dominant_1, this.closing_dominant_1, this.closing_tonic_3].shuffle()],
-            [this.opening_tonic_3, [this.opening_tonic_2, this.opening_subdominant_2, this.closing_dominant_1].shuffle()],
-            [this.closing_subdominant_1, [this.final, this.final, this.closing_tonic_2].shuffle()],
-            [this.closing_tonic_2, [this.final, this.final, this.closing_tonic_3].shuffle()],
-            [this.closing_subdominant_2, [this.final, this.final, this.closing_tonic_2].shuffle()],
-            [this.closing_dominant_1, [this.final, this.closing_subdominant_2, this.closing_tonic_3].shuffle()],
-            [this.closing_tonic_3, [this.final, this.final, this.closing_tonic_2, this.closing_subdominant_2].shuffle()],
+            [this.opening_I, [this.opening_II, this.opening_III, this.opening_IV, this.closing_V, this.opening_VI].shuffle()],
+            [this.opening_II, [this.opening_IV, this.closing_V, this.closing_V].shuffle()],
+            [this.opening_III, [this.opening_IV, this.opening_VI].shuffle()],
+            [this.opening_IV, [this.closing_II, this.closing_V, this.closing_V, this.closing_VI].shuffle()],
+            [this.opening_VI, [this.opening_III, this.opening_IV, this.closing_V].shuffle()],
+            [this.closing_II, [this.final, this.final, this.closing_III].shuffle()],
+            [this.closing_III, [this.final, this.final, this.closing_VI].shuffle()],
+            [this.closing_IV, [this.final, this.final, this.closing_III].shuffle()],
+            [this.closing_V, [this.final, this.closing_IV, this.closing_VI].shuffle()],
+            [this.closing_VI, [this.final, this.final, this.closing_III, this.closing_IV].shuffle()],
         ]
     )
 
 
     private labels = new Map<number[], String>(
-        [[this.opening_tonic_1, "I - start"],
-        [this.opening_subdominant_1, "ii - start"],
-        [this.opening_tonic_2, "iii - start"],
-        [this.opening_subdominant_2, "IV - start"],
-        [this.opening_dominant_1, "V - start"],
-        [this.opening_tonic_3, "vi - start"],
-        [this.closing_tonic_1, "I - end"],
-        [this.closing_subdominant_1, "ii - end"],
-        [this.closing_tonic_2, "iii - end"],
-        [this.closing_subdominant_2, "IV - end"],
-        [this.closing_dominant_1, "V - end"],
-        [this.closing_tonic_3, "vi - end"]]
+        [[this.opening_I, "I - start"],
+        [this.opening_II, "ii - start"],
+        [this.opening_III, "iii - start"],
+        [this.opening_IV, "IV - start"],
+        [this.opening_V, "V - start"],
+        [this.opening_VI, "vi - start"],
+        [this.closing_I, "I - end"],
+        [this.closing_II, "ii - end"],
+        [this.closing_III, "iii - end"],
+        [this.closing_IV, "IV - end"],
+        [this.closing_V, "V - end"],
+        [this.closing_VI, "vi - end"]]
     )
 
     private automata: CellularAutomata1D
