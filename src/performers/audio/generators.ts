@@ -8,56 +8,56 @@ export class ChordsGenerator {
     private finishedRecording = false
     private empty = []
 
-    private opening_first = [0, 4, 7] // Tonic
-    private opening_second = [2, 5, 9] // SubDominant
-    private opening_third = [4, 7, 11] // Tonic
-    private opening_fourth = [5, 9, 12] // SubDominant
-    private opening_fifth = [7, 11, 14] // Dominant
-    private opening_sixth = [9, 12, 16] // Tonic
+    private opening_tonic_1 = [0, 4, 7] // Tonic
+    private opening_subdominant_1 = [2, 5, 9] // SubDominant
+    private opening_tonic_2 = [4, 7, 11] // Tonic
+    private opening_subdominant_2 = [5, 9, 12] // SubDominant
+    private opening_dominant_1 = [7, 11, 14] // Dominant
+    private opening_tonic_3 = [9, 12, 16] // Tonic
 
-    private initial = [this.opening_first, this.opening_first, this.opening_third, this.opening_sixth].shuffle()[0]
+    private initial = [this.opening_tonic_1, this.opening_tonic_1, this.opening_tonic_2, this.opening_tonic_3].shuffle()[0]
 
-    private closing_first = [...this.opening_first]
-    private closing_second = [...this.opening_second]
-    private closing_third = [...this.opening_third]
-    private closing_fourth = [...this.opening_fourth]
-    private closing_fifth = [...this.opening_fifth]
-    private closing_sixth = [...this.opening_sixth]
+    private closing_tonic_1 = [...this.opening_tonic_1]
+    private closing_subdominant_1 = [...this.opening_subdominant_1]
+    private closing_tonic_2 = [...this.opening_tonic_2]
+    private closing_subdominant_2 = [...this.opening_subdominant_2]
+    private closing_dominant_1 = [...this.opening_dominant_1]
+    private closing_tonic_3 = [...this.opening_tonic_3]
 
-    private final = this.opening_first
+    private final = this.opening_tonic_1
 
     private record: number[][] = []
     private currentChord: number[] = this.empty
     private progressionsMap = new Map<number[], number[][]>(
         [
             [this.empty, [this.initial]],
-            [this.opening_first, [this.opening_second, this.opening_third, this.opening_fourth, this.closing_fifth, this.opening_sixth].shuffle()],
-            [this.opening_second, [this.opening_fourth, this.closing_fifth, this.closing_fifth].shuffle()],
-            [this.opening_third, [this.opening_fourth, this.opening_sixth].shuffle()],
-            [this.opening_fourth, [this.closing_second, this.closing_fifth, this.closing_fifth, this.closing_sixth].shuffle()],
-            [this.opening_sixth, [this.opening_third, this.opening_fourth, this.closing_fifth].shuffle()],
-            [this.closing_second, [this.final, this.final, this.closing_third].shuffle()],
-            [this.closing_third, [this.final, this.final, this.closing_sixth].shuffle()],
-            [this.closing_fourth, [this.final, this.final, this.closing_third].shuffle()],
-            [this.closing_fifth, [this.final, this.closing_fourth, this.closing_sixth].shuffle()],
-            [this.closing_sixth, [this.final, this.final, this.closing_third, this.closing_fourth].shuffle()],
+            [this.opening_tonic_1, [this.opening_subdominant_1, this.opening_tonic_2, this.opening_subdominant_2, this.closing_dominant_1, this.opening_tonic_3].shuffle()],
+            [this.opening_subdominant_1, [this.opening_subdominant_2, this.closing_dominant_1, this.closing_dominant_1].shuffle()],
+            [this.opening_tonic_2, [this.opening_subdominant_2, this.opening_tonic_3].shuffle()],
+            [this.opening_subdominant_2, [this.closing_subdominant_1, this.closing_dominant_1, this.closing_dominant_1, this.closing_tonic_3].shuffle()],
+            [this.opening_tonic_3, [this.opening_tonic_2, this.opening_subdominant_2, this.closing_dominant_1].shuffle()],
+            [this.closing_subdominant_1, [this.final, this.final, this.closing_tonic_2].shuffle()],
+            [this.closing_tonic_2, [this.final, this.final, this.closing_tonic_3].shuffle()],
+            [this.closing_subdominant_2, [this.final, this.final, this.closing_tonic_2].shuffle()],
+            [this.closing_dominant_1, [this.final, this.closing_subdominant_2, this.closing_tonic_3].shuffle()],
+            [this.closing_tonic_3, [this.final, this.final, this.closing_tonic_2, this.closing_subdominant_2].shuffle()],
         ]
     )
 
 
     private labels = new Map<number[], String>(
-        [[this.opening_first, "I - start"],
-        [this.opening_second, "ii - start"],
-        [this.opening_third, "iii - start"],
-        [this.opening_fourth, "IV - start"],
-        [this.opening_fifth, "V - start"],
-        [this.opening_sixth, "vi - start"],
-        [this.closing_first, "I - end"],
-        [this.closing_second, "ii - end"],
-        [this.closing_third, "iii - end"],
-        [this.closing_fourth, "IV - end"],
-        [this.closing_fifth, "V - end"],
-        [this.closing_sixth, "vi - end"]]
+        [[this.opening_tonic_1, "I - start"],
+        [this.opening_subdominant_1, "ii - start"],
+        [this.opening_tonic_2, "iii - start"],
+        [this.opening_subdominant_2, "IV - start"],
+        [this.opening_dominant_1, "V - start"],
+        [this.opening_tonic_3, "vi - start"],
+        [this.closing_tonic_1, "I - end"],
+        [this.closing_subdominant_1, "ii - end"],
+        [this.closing_tonic_2, "iii - end"],
+        [this.closing_subdominant_2, "IV - end"],
+        [this.closing_dominant_1, "V - end"],
+        [this.closing_tonic_3, "vi - end"]]
     )
 
     private automata: CellularAutomata1D
