@@ -7,8 +7,7 @@ declare global {
     }
 
     interface String {
-        toNode(): TreeNode<Chord>
-        toChord(): Chord
+        node(): TreeNode<Chord>
     }
 }
 
@@ -18,20 +17,15 @@ Array.prototype.shuffle = function <T>(this: T[]) {
 }
 
 // eslint-disable-next-line no-extend-native
-String.prototype.toNode = function (this: string) {
-    return new TreeNode<Chord>(this.toChord())
-}
-
-// eslint-disable-next-line no-extend-native
-String.prototype.toChord = function (this: String) {
-    return new Chord(Progression.fromRomanNumerals("C", [this.toString()])
+String.prototype.node = function (this: string) {
+    const chord = new Chord(Progression.fromRomanNumerals("C", [this.toString()])
         .map(note => TonalChord.get(note).notes)[0]
         .map(note => Note.midi(`${note}0`) as number - 12)
         .map((note, index, array) => {
             array[index] = index > 0 && array[index - 1] >= note ? note + 12 : note
             return array[index]
         }), this.toString())
-
+    return new TreeNode<Chord>(chord)
 }
 
 export class TreeNode<T> {
@@ -50,7 +44,7 @@ export class TreeNode<T> {
         return this.children.length === 0
     }
 
-    node(node: TreeNode<T>): TreeNode<T> {
+    add(node: TreeNode<T>): TreeNode<T> {
         this.children.push(node)
         return this;
     }

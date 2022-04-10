@@ -17,7 +17,7 @@ export class ChordsGenerator {
 
     nextChord() {
         if (this.isNewProgression) {
-            console.log("----- progression -----")
+            console.log("-----------")
         }
 
         if (this.finishedRecording) {
@@ -31,7 +31,7 @@ export class ChordsGenerator {
             this.finishedRecording = this.currentNode.isLeaf
         }
 
-        console.log(`Selected: ${this.currentNode.value.label}`)
+        console.log(this.currentNode.value.label)
     }
 
     get isNewProgression(): boolean {
