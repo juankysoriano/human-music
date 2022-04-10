@@ -24,7 +24,7 @@ String.prototype.node = function (this: string) {
         .map((note, index, array) => {
             array[index] = index > 0 && array[index - 1] >= note ? note + 12 : note
             return array[index]
-        }), this.toString())
+        }).shuffle(), this.toString())
     return new TreeNode<Chord>(chord)
 }
 
@@ -54,14 +54,18 @@ export class TreeNode<T> {
     }
 
     filter(predicate: (value: T) => boolean): TreeNode<T> {
-        this._children = this._children.filter(child => predicate(child.value))
-        this._children = this._children.map(child => child.filter(predicate))
+        this._children.map((child, _, array) => {
+            this._children = array.filter(element => predicate(element.value))
+            return child.filter(predicate)
+        })
         return this;
     }
 
     shuffle(): TreeNode<T> {
-        this._children = this._children.shuffle()
-        this._children = this._children.map(child => child.shuffle())
+        this._children.map((child, _, array) => {
+            this._children = array.shuffle()
+            return child.shuffle()
+        })
         return this;
     }
 }

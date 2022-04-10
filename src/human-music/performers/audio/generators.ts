@@ -10,16 +10,11 @@ export class ChordsGenerator {
     private automata: CellularAutomata1D
 
     constructor(automata: CellularAutomata1D) {
-        console.log(progressions.count(node => node.isLeaf))
         this.automata = automata
         this.tone = Math.floor(Math.random() * 13)
     }
 
     nextChord() {
-        if (this.isNewProgression) {
-            console.log("-----------")
-        }
-
         if (this.finishedRecording) {
             const index = this.track % this.record.length
             this.currentNode = this.record[index]
@@ -31,17 +26,19 @@ export class ChordsGenerator {
             this.finishedRecording = this.currentNode.isLeaf
         }
 
-        console.log(this.currentNode.value.label)
     }
 
     get isNewProgression(): boolean {
         const isFirstChord = (this.track - 1) % this.record.length === 0
-        return (this.finishedRecording && isFirstChord) || this.record.length === 0
+        return (this.finishedRecording && isFirstChord)
     }
 
-    generateNote = (voice: Voice) => this.currentNode.value.notes[
-        (this.automata.leeDistance() + voice.positionInChord) % this.currentNode.value.notes.length
-    ] + voice.octave * 12 + this.tone
+    generateNote = (voice: Voice) => {
+        console.log(this.currentNode.value.label)
+        return this.currentNode.value.notes[
+            (this.automata.leeDistance() + voice.positionInChord) % this.currentNode.value.notes.length
+        ] + voice.octave * 12 + this.tone;
+    }
 }
 
 
