@@ -1,5 +1,5 @@
 import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1D"
-import { TreeNode } from "../../utils/data-structures/TreeNode"
+import { TreeNode } from "../../utils/data-structures/TreeNote"
 import { ChordsGenerator } from "./generators"
 import * as MIDI from './MIDI'
 import { DurationTransformation, PitchTransformation } from "./transformations"
@@ -25,7 +25,7 @@ export class Music {
             this.chordsGenerator.nextChord()
         }
 
-        if ((this.isNewBeat() && this.chordsGenerator.isNewProgression()) || this.currentBeat === 0) {
+        if ((this.isNewBeat() && this.chordsGenerator.isNewProgression) || this.currentBeat === 0) {
             this.durationTransformation.restore()
             this.pitchTransformation.restore()
 
@@ -247,7 +247,7 @@ export const progressions =
                     .node("VIm".toNode()
                         .node("#IVo".toNode()
                             .node("V".toNode()))))))
-        .filter(value => value.notes.length !== 0)
+        .filter(value => !value.label.startsWith('b') && value.notes.length === 3) // TODO change to allow seventh chords
 class Note {
     readonly value!: number
     duration!: number

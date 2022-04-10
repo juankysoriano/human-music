@@ -1,5 +1,5 @@
 import { CellularAutomata1D } from '../../cellular-automata/1d/cellularAutomata1D';
-import { TreeNode } from '../../utils/data-structures/TreeNode';
+import { TreeNode } from '../../utils/data-structures/TreeNote';
 import { Chord, progressions, Voice } from './music-models';
 export class ChordsGenerator {
     private tone: number
@@ -10,11 +10,16 @@ export class ChordsGenerator {
     private automata: CellularAutomata1D
 
     constructor(automata: CellularAutomata1D) {
+        console.log(progressions.count(node => node.isLeaf))
         this.automata = automata
         this.tone = Math.floor(Math.random() * 13)
     }
 
     nextChord() {
+        if (this.isNewProgression) {
+            console.log("----- progression -----")
+        }
+
         if (this.finishedRecording) {
             const index = this.track % this.record.length
             this.currentNode = this.record[index]
@@ -29,9 +34,9 @@ export class ChordsGenerator {
         console.log(`Selected: ${this.currentNode.value.label}`)
     }
 
-    isNewProgression = () => {
+    get isNewProgression(): boolean {
         const isFirstChord = (this.track - 1) % this.record.length === 0
-        return this.finishedRecording && isFirstChord
+        return (this.finishedRecording && isFirstChord) || this.record.length === 0
     }
 
     generateNote = (voice: Voice) => this.currentNode.value.notes[

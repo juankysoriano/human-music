@@ -55,6 +55,10 @@ export class TreeNode<T> {
         return this;
     }
 
+    count(predicate: (child: TreeNode<T>) => boolean): number {
+        return this._children.reduce((count, child) => count + child.count(predicate), predicate(this) ? 1 : 0)
+    }
+
     filter(predicate: (value: T) => boolean): TreeNode<T> {
         this._children = this._children.filter(child => predicate(child.value))
         this._children = this._children.map(child => child.filter(predicate))
