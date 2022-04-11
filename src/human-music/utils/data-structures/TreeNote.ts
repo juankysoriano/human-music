@@ -7,7 +7,7 @@ declare global {
     }
 
     interface String {
-        node(): TreeNode<Chord>
+        node(isLeaf: boolean): TreeNode<Chord>
     }
 }
 
@@ -17,7 +17,7 @@ Array.prototype.shuffle = function <T>(this: T[]) {
 }
 
 // eslint-disable-next-line no-extend-native
-String.prototype.node = function (this: string) {
+String.prototype.node = function (this: string, isLeaf: boolean = false) {
     const chord = new Chord(Progression.fromRomanNumerals("C", [this.toString()])
         .map(note => TonalChord.get(note).notes)[0]
         .map(note => Note.midi(`${note}0`) as number - 12)
@@ -25,28 +25,34 @@ String.prototype.node = function (this: string) {
             array[index] = index > 0 && array[index - 1] >= note ? note + 12 : note
             return array[index]
         }).shuffle(), this.toString())
-    return new TreeNode<Chord>(chord)
+    const node = new TreeNode<Chord>(chord, isLeaf)
+    if (node.value.notes.length === 0) {
+        console.log("Problem with chord: " + node.value.label)
+    }
+    return node
 }
 
 export class TreeNode<T> {
+    readonly isLeaf: boolean;
     readonly value: T
     private _children: TreeNode<T>[] = []
 
-    constructor(value: T) {
+    constructor(value: T, isLeaf: boolean = false) {
         this.value = value
+        this.isLeaf = isLeaf
     }
 
     public get children(): TreeNode<T>[] {
         return this._children
     }
 
-    public get isLeaf(): boolean {
-        return this.children.length === 0
-    }
-
     add(node: TreeNode<T>): TreeNode<T> {
         this.children.push(node)
         return this;
+    }
+
+    hasDirectChild(value: T): boolean {
+        return this.children.map(child => child.value).includes(value)
     }
 
     count(predicate: (child: TreeNode<T>) => boolean): number {
