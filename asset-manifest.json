@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/human-music/static/css/main.3a1b2515.css",
-    "main.js": "/human-music/static/js/main.64c8bda2.js",
+    "main.js": "/human-music/static/js/main.e9cd69e1.js",
     "static/media/github.png": "/human-music/static/media/github.41bf98757324c33fba78.png",
     "static/media/ChubbyChoo-Regular.woff": "/human-music/static/media/ChubbyChoo-Regular.fa2a1aa7a00a5ca3a31a.woff",
     "index.html": "/human-music/index.html",
     "main.3a1b2515.css.map": "/human-music/static/css/main.3a1b2515.css.map",
-    "main.64c8bda2.js.map": "/human-music/static/js/main.64c8bda2.js.map"
+    "main.e9cd69e1.js.map": "/human-music/static/js/main.e9cd69e1.js.map"
   },
   "entrypoints": [
     "static/css/main.3a1b2515.css",
-    "static/js/main.64c8bda2.js"
+    "static/js/main.e9cd69e1.js"
   ]
 }
