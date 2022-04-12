@@ -11,7 +11,7 @@ export class ChordsGenerator {
 
     constructor(automata: CellularAutomata1D) {
         this.automata = automata
-        this.tone = Math.floor(Math.random() * 13)
+        this.tone = Math.floor(Math.random() * 13) - 6
     }
 
     nextChord() {
@@ -25,7 +25,7 @@ export class ChordsGenerator {
             this.record.push(this.currentNode)
             this.finishedRecording = this.currentNode.isLeaf
         }
-
+        console.log(`ID: ${this.currentNode.value.label} Notes: ${this.currentNode.value.notes.map(note => note - 6)}`)
     }
 
     get isNewProgression(): boolean {
@@ -34,10 +34,9 @@ export class ChordsGenerator {
     }
 
     generateNote = (voice: Voice) => {
-        console.log(this.currentNode.value.label)
         return this.currentNode.value.notes[
             (this.automata.leeDistance() + voice.positionInChord) % this.currentNode.value.notes.length
-        ] + voice.octave * 12 + this.tone;
+        ] + voice.octave * 12 + this.tone
     }
 }
 

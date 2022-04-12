@@ -8,7 +8,7 @@ export class Music {
     private durationTransformation: DurationTransformation
     private pitchTransformation: PitchTransformation
     private chordsGenerator: ChordsGenerator
-    private beatDuration: number = 64
+    private beatDuration: number = 32
     private currentBeat: number = 0
 
     readonly voices: Voice[]
@@ -26,7 +26,6 @@ export class Music {
         }
 
         if ((this.isNewBeat() && this.chordsGenerator.isNewProgression) || this.currentBeat === 0) {
-            console.log("-----------")
             this.durationTransformation.restore()
             this.pitchTransformation.restore()
 
@@ -38,7 +37,7 @@ export class Music {
         }
 
         this.voices.forEach(voice => {
-            const attack = this.currentBeat % this.beatDuration === 0 ? 96 : 64
+            const attack = this.currentBeat % this.beatDuration === 0 ? 32 : 32
             voice.play(this.chordsGenerator.generateNote(voice), attack)
             voice.tick()
         })
@@ -70,7 +69,7 @@ export class Voice {
         if (this.currentNote.isFinished()) {
             if (this.currentNote.value !== midiNote) {
                 MIDI.noteOff(this.instrument, this.currentNote.value)
-                MIDI.noteOn(this.instrument, Math.max(midiNote, 0), attack)
+                MIDI.noteOn(this.instrument, midiNote, attack)
             }
             this.currentNote = new Note(midiNote, this.notesDuration)
         }
@@ -115,4 +114,4 @@ class Note {
 
 export const progressions = convertToTree(progressions_list)
     .filter(value => value.isTriad)
-    .filter(value => !value.label.startsWith('b'))
+    //.filter(value => !value.label.startsWith('b'))
