@@ -108,12 +108,8 @@ export class CellularAutomata {
             const lookupTable: number[] = Array.from({ length: ruleCharacters.length })
 
             for (let i = 0; i < ruleCharacters.length; i++) {
-                let character = ruleCharacters[i]
-                if (character >= '0' && character <= '9') {
-                    lookupTable[i] = +ruleCharacters[i] - +'0'
-                } else {
-                    lookupTable[i] = +ruleCharacters[i] - +'W'
-                }
+                const character = ruleCharacters[i]
+                lookupTable[i] = character >= '0' && character <= '9' ? +ruleCharacters[i] - +'0' : +ruleCharacters[i] - +'W';
             }
             const initialState = this.randomInitialConfiguration
                 ? Array.from({ length: this.size }, () => Math.round(Math.random()))
