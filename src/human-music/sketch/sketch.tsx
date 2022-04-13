@@ -21,9 +21,8 @@ const sketch: Sketch = (p5) => {
   p5.updateWithProps = (props) => {
     p5.resizeCanvas($("#sketch").width()!, $("#sketch").height()!);
     if (props.newAutomata) {
-      p5.clear();
       p5.background(9, 9, 9);
-      updateSketch(p5, props.newAutomata);
+      updateSketch(p5, props.newAutomata as CellularAutomata1D);
     }
   };
 
