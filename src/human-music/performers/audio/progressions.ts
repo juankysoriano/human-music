@@ -1,5 +1,7 @@
 import { TreeNode } from '../../utils/data-structures/TreeNote';
+import '../../utils/extensions';
 import { Chord } from "./music-models";
+
 export const progressions_list: string[] = [
     // ### MAJOR ###
     //"bIIIm IIm bIIm I",
@@ -111,7 +113,7 @@ export const progressions_list: string[] = [
 ]
 
 export function convertToTree(progressions: string[]): TreeNode<Chord> {
-    const root: TreeNode<Chord> = "root".node({ isLeaf: false });
+    const root: TreeNode<Chord> = TreeNode.root();
     progressions.removeDuplicates().forEach(progression => {
         let currentNode = root;
         progression.split(" ").map((chord, index, array) => chord.node({ isLeaf: index === array.length - 1 }))

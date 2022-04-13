@@ -19,7 +19,7 @@ export function loadMidi(loaded: () => void) {
     "acoustic_grand_piano",
   ]
   MIDI.loadPlugin({
-    soundfontUrl: "https://juankysoriano.github.io/midi-js-soundfonts/MusyngKite/",
+    soundfontUrl: "https://juankysoriano.github.io/midi-js-soundfonts/8MBGSFX/",
     targetFormat: "mp3",
     instrument: instruments,
     onsuccess() {
