@@ -111,11 +111,10 @@ export const progressions_list: string[] = [
 ]
 
 export function convertToTree(progressions: string[]): TreeNode<Chord> {
-    const root: TreeNode<Chord> = new TreeNode<Chord>(new Chord([0], "root"), false);
-    let filteredProgressions = removeDuplicates(progressions);
-    filteredProgressions.forEach(progression => {
+    const root: TreeNode<Chord> = "root".node({ isLeaf: false });
+    progressions.removeDuplicates().forEach(progression => {
         let currentNode = root;
-        progression.split(" ").map((chord, index, array) => chord.node(index === array.length - 1))
+        progression.split(" ").map((chord, index, array) => chord.node({ isLeaf: index === array.length - 1 }))
             .forEach(chord => {
                 const next = currentNode.children.find(child => child.value.label === chord.value.label && !child.isLeaf);
                 if (next && !chord.isLeaf) {
@@ -127,8 +126,4 @@ export function convertToTree(progressions: string[]): TreeNode<Chord> {
             });
     })
     return root;
-}
-
-function removeDuplicates(array: string[]) {
-    return array.filter((value, index, self) => self.indexOf(value) === index);
 }
