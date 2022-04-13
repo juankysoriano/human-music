@@ -37,7 +37,7 @@ export class Music {
         }
 
         this.voices.forEach(voice => {
-            const attack = this.currentBeat % this.beatDuration === 0 ? 32 : 32
+            const attack = this.currentBeat % this.beatDuration === 0 ? 64 : 96
             voice.play(this.chordsGenerator.generateNote(voice), attack)
             voice.tick()
         })
