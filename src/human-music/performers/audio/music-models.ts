@@ -89,7 +89,7 @@ export class Chord {
     readonly notes: number[]
     readonly label: string
 
-    constructor(notes: number[], label: string) {
+    constructor({ notes, label }: { notes: number[], label: string }) {
         this.notes = notes
         this.label = label
     }

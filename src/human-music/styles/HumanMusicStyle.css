@@ -92,7 +92,6 @@
     background: rgba(18, 18, 18, 0.98);
     color: white;
     border: 0.5vmin solid white;
-    border-radius: 1vmin;
     transform: rotateY(180deg);
     display: table;
   }
@@ -120,7 +119,6 @@
     height: 100%;
     box-sizing: border-box;
     border: 0.5vmin solid white;
-    border-radius: 1vmin;
   }
 
   .HumanMusic .Automata .flip-card .flip-card-inner .flip-card-front .Loading {
@@ -128,10 +126,23 @@
     width: 100%;
     height: 100%;
     color: white;
+    box-sizing: border-box;
     border: 0.5vmin solid white;
-    border-radius: 1vmin;
-    padding-top: 45%;
     position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .HumanMusic
+    .Automata
+    .flip-card
+    .flip-card-inner
+    .flip-card-front
+    .Loading
+    .LoadingText {
+    color: white;
+    font-size: 2vmax;
   }
 
   .HumanMusic .Automata .Controllers {
@@ -316,7 +327,6 @@
     background: rgba(18, 18, 18, 0.98);
     color: white;
     border: 0.5vmin solid white;
-    border-radius: 1vmin;
     transform: rotateY(180deg);
     display: table;
   }
@@ -344,7 +354,6 @@
     height: 100%;
     box-sizing: border-box;
     border: 0.5vmin solid white;
-    border-radius: 1vmin;
   }
 
   .HumanMusic .Automata .flip-card .flip-card-inner .flip-card-front .Loading {
@@ -354,9 +363,21 @@
     color: white;
     box-sizing: border-box;
     border: 0.5vmin solid white;
-    border-radius: 1vmin;
-    padding-top: 45%;
     position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .HumanMusic
+    .Automata
+    .flip-card
+    .flip-card-inner
+    .flip-card-front
+    .Loading
+    .LoadingText {
+    color: white;
+    font-size: 2vmax;
   }
 
   .HumanMusic .Automata .Controllers {
