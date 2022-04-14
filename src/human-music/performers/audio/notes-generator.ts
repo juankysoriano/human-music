@@ -4,7 +4,7 @@ import { Chord, progressions, Voice } from "./music-models"
 export class ChordsGenerator {
    private tone: number
    private currentNode: TreeNode<Chord> = progressions.shuffle()
-   private track = 0
+   private recordCount = 0
    private finishedRecording = false
    private record: TreeNode<Chord>[] = []
    private automata: CellularAutomata1D
@@ -16,9 +16,9 @@ export class ChordsGenerator {
 
    nextChord() {
       if (this.finishedRecording) {
-         const index = this.track % this.record.length
+         const index = this.recordCount % this.record.length
          this.currentNode = this.record[index]
-         this.track++
+         this.recordCount++
       } else {
          const index = this.automata.leeDistance() % this.currentNode.children.length
          this.currentNode = this.currentNode.children[index]
@@ -28,8 +28,8 @@ export class ChordsGenerator {
       console.log(`ID: ${this.currentNode.value.label} Notes: ${this.currentNode.value.notes.map((note) => note - 6)}`)
    }
 
-   get isNewProgression(): boolean {
-      const isFirstChord = (this.track - 1) % this.record.length === 0
+   get progressionFinished(): boolean {
+      const isFirstChord = (this.recordCount - 1) % this.record.length === 0
       return this.finishedRecording && isFirstChord
    }
 

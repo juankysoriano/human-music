@@ -34,7 +34,7 @@ export default function HumanMusic() {
    }
 
    async function randomiseAutomata() {
-      const automata = ruleSelector.randomAutomata()
+      const automata = ruleSelector.randomSelection()
       setAutomata(automata)
    }
 

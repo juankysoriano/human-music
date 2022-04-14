@@ -1,7 +1,7 @@
 import p5 from "p5"
 import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1D"
 
-const colors = ["#090909", "#ffffff", "#a71c1c", "#07ac1c"]
+const colors = ["#090909", "#ffffff", "#a71c1c", "#bfb2bf"]
 
 export class Painter {
    private step: number = 0
@@ -19,14 +19,14 @@ export class Painter {
       for (let i = 0; i < this.automata.size; i++) {
          this.sketch.fill(colors[this.automata.state[i]])
          this.sketch.noStroke()
-         this.sketch.rect(i * this.cellSize, this.step * this.cellSize, Math.ceil(this.cellSize), Math.ceil(this.cellSize))
+         this.sketch.rect(i * this.cellSize, Math.ceil(this.step * this.cellSize), Math.ceil(this.cellSize), Math.ceil(this.cellSize * 0.0625))
       }
 
       if (this.step * this.cellSize >= this.sketch.height) {
          this.sketch.background(9, 9, 9, 235)
          this.step = 0
       } else {
-         this.step++
+         this.step += 0.0625
       }
    }
 

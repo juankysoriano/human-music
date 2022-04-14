@@ -222,7 +222,7 @@ export class Player {
             throw new Error("Must pass a cellular automata upon building")
          }
 
-         return new Player(new Music(this.automata!, [new Voice(0, 3, 40), new Voice(1, 4, 45), new Voice(2, 5, 50)]))
+         return new Player(new Music(this.automata!, [new Voice(0, 3, 64), new Voice(1, 4, 64), new Voice(2, 5, 64)]))
       }
    }
 }

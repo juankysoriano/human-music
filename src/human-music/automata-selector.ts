@@ -1,51 +1,48 @@
 import { CellularAutomata, Dimensions, Size, Type } from "./cellular-automata/index"
 
 export class AutomataSelector {
-   randomAutomata() {
-      const radius = 1
+   randomSelection() {
+      const parameters = this.findParameters()
+      return new CellularAutomata.Builder()
+         .withSize(Size.EXTRA_SMALL)
+         .withStates(parameters.states)
+         .withType(parameters.type)
+         .withDimensions(Dimensions.UNIDIMENSIONAL)
+         .withRule(parameters.rule)
+         .build()
+   }
 
-      let found = false
-      let rule = 0
-      let type = Type.ELEMENTARY
-      const states = 3
-      while (!found) {
-         type = Math.random() < 0.0 ? Type.ELEMENTARY : Type.TOTALISTIC
-         let maxRule = 0
-         switch (type) {
-            case Type.ELEMENTARY:
-               maxRule = states ** (states ** (2 * radius + 1)) - 1
-               break
-            case Type.TOTALISTIC:
-               maxRule = states ** (states * (2 * radius + 1)) - 1
-               break
+   private findParameters() {
+      const differentStates = new Set<number>()
+      let configuration = null
+      while (differentStates.size < 5 || differentStates.size > 10) {
+         differentStates.clear()
+         configuration = this.randomConfiguration()
+
+         for (let i = 0; i < 200; i++) {
+            configuration.automata.evolve()
+            if (i >= 100) {
+               differentStates.add(configuration.automata.leeDistance())
+            }
          }
-         rule = Math.floor(Math.random() * maxRule);
-         const automata = new CellularAutomata.Builder()
-            .withSize(Size.MEDIUM)
-            .withStates(states)
-            .withType(type)
-            .withDimensions(Dimensions.UNIDIMENSIONAL)
-            .withRule(rule)
-            .build()
-         const distances = new Set<number>()
-         for (let i = 0; i < 100; i++) {
-            automata.evolve()
-         }
-         for (let i = 0; i < 100; i++) {
-            distances.add(automata.leeDistance())
-            automata.evolve()
-         }
-         found = distances.size >= 5 && distances.size <= 20
       }
 
-      return (
-         new CellularAutomata.Builder()
-            .withSize(Size.MEDIUM)
-            .withStates(states)
-            .withType(type)
-            .withDimensions(Dimensions.UNIDIMENSIONAL)
-            .withRule(rule)
-            .build()
-      )
+      return configuration!.parameters
+   }
+
+   private randomConfiguration() {
+      const states = 2 + Math.floor(Math.random() * 3)
+      const type = Math.random() < 0.0 ? Type.ELEMENTARY : Type.TOTALISTIC
+      const maxRule = Type.ELEMENTARY ? states ** (states ** 4) - 1 : states ** (states * 4) - 1
+      const rule = Math.floor(Math.random() * maxRule)
+      const automata = new CellularAutomata.Builder()
+         .withSize(Size.EXTRA_SMALL)
+         .withStates(states)
+         .withType(type)
+         .withDimensions(Dimensions.UNIDIMENSIONAL)
+         .withRule(rule)
+         .build()
+      const parameters = { states, type, rule }
+      return { automata, parameters }
    }
 }

@@ -1,6 +1,6 @@
 import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1D"
-import { ChordsGenerator } from "./generators"
 import * as MIDI from "./MIDI"
+import { ChordsGenerator } from "./notes-generator"
 import { convertToTree, progressions_list } from "./progressions"
 import { DurationTransformation, PitchTransformation } from "./transformations"
 
@@ -8,7 +8,7 @@ export class Music {
    private durationTransformation: DurationTransformation
    private pitchTransformation: PitchTransformation
    private chordsGenerator: ChordsGenerator
-   private beatDuration: number = 32
+   private beatDuration: number = 8
    private currentBeat: number = 0
 
    readonly voices: Voice[]
@@ -21,31 +21,37 @@ export class Music {
    }
 
    play() {
-      if (this.isNewBeat()) {
+      if (this.beatFinished) {
          this.chordsGenerator.nextChord()
-      }
-
-      if ((this.isNewBeat() && this.chordsGenerator.isNewProgression) || this.currentBeat === 0) {
-         this.durationTransformation.restore()
-         this.pitchTransformation.restore()
-
-         this.voices.forEach((voice) => {
-            voice.stop()
-            this.durationTransformation.mutate(voice)
-            this.pitchTransformation.mutate(voice)
-         })
+         if (this.chordsGenerator.progressionFinished || this.currentBeat === 0) {
+            this.transformVoices()
+         }
       }
 
       this.voices.forEach((voice) => {
-         const attack = this.currentBeat % this.beatDuration === 0 ? voice.attack : Math.floor(voice.attack * 1.5)
-         voice.play(this.chordsGenerator.generateNote(voice), attack)
+         const note = this.chordsGenerator.generateNote(voice)
+         const attack = this.currentBeat % this.beatDuration === 0 ? voice.attack : 72
+         voice.play(note, attack)
          voice.tick()
       })
 
       this.currentBeat++
    }
 
-   private isNewBeat = () => this.currentBeat % this.beatDuration === 0
+   private transformVoices = () => {
+      this.durationTransformation.restore()
+      this.pitchTransformation.restore()
+
+      this.voices.forEach((voice) => {
+         voice.stop()
+         this.durationTransformation.mutate(voice)
+         this.pitchTransformation.mutate(voice)
+      })
+   }
+
+   private get beatFinished(): boolean {
+      return this.currentBeat % this.beatDuration === 0
+   }
 
    release() {
       this.voices.forEach((voice) => voice.stop())

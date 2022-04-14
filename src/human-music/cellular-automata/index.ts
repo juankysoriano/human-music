@@ -70,7 +70,8 @@ export class CellularAutomata {
                this.size = sketchWidth / 1
                break
          }
-         this.size = 201
+         this.size = Math.floor(this.size)
+         this.size = this.size % 2 === 0 ? this.size + 1 : this.size
          return this
       }
 
