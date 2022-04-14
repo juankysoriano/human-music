@@ -37,7 +37,7 @@ export class Music {
       }
 
       this.voices.forEach((voice) => {
-         const attack = this.currentBeat % this.beatDuration === 0 ? 64 : 96
+         const attack = this.currentBeat % this.beatDuration === 0 ? voice.attack : Math.floor(voice.attack * 1.5)
          voice.play(this.chordsGenerator.generateNote(voice), attack)
          voice.tick()
       })
@@ -57,12 +57,14 @@ export class Voice {
    private instrument
 
    readonly octave: number
+   readonly attack: number
    notesDuration: number = 0
    positionInChord: number = 0
 
-   constructor(instrument: number, octave: number) {
+   constructor(instrument: number, octave: number, attack: number) {
       this.instrument = instrument
       this.octave = octave
+      this.attack = attack
    }
 
    play(midiNote: number, attack: number) {
@@ -113,4 +115,3 @@ class Note {
 }
 
 export const progressions = convertToTree(progressions_list).filter((value) => value.isTriad)
-//.filter(value => !value.label.startsWith('b'))

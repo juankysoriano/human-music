@@ -1,7 +1,7 @@
 import p5 from "p5"
 import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1D"
 
-const colors = ["#09090935", "#ffffff35", "#a71c1c35"]
+const colors = ["#09090935", "#ffffff35", "#a71c1c35", "#07ac1c35"]
 
 export class Painter {
    private step: number = 0
