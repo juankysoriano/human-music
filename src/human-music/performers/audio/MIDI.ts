@@ -15,9 +15,9 @@ declare global {
 
 export function loadMidi(loaded: () => void) {
    window.MIDI = MIDI || {}
-   const instruments = ["acoustic_bass", "acoustic_guitar_steel", "acoustic_guitar_nylon"]
+   const instruments = ["bright_acoustic_piano", "bright_acoustic_piano", "bright_acoustic_piano"]
    MIDI.loadPlugin({
-      soundfontUrl: "https://juankysoriano.github.io/midi-js-soundfonts/8MBGSFX/",
+      soundfontUrl: "https://juankysoriano.github.io/midi-js-soundfonts/AirFont/",
       targetFormat: "mp3",
       instrument: instruments,
       onsuccess() {
