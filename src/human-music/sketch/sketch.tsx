@@ -13,10 +13,13 @@ let automataPlayer: Player | null
 let counter = 0
 
 const sketch: Sketch = (p5) => {
+   p5.noLoop()
+
+   setInterval(() => p5.draw(), 1000 / 64)
+
    p5.setup = () => {
       p5.createCanvas($("#sketch").width()!, $("#sketch").height()!)
       p5.background(9, 9, 9)
-      p5.frameRate(64)
    }
 
    p5.updateWithProps = (props) => {
@@ -40,7 +43,6 @@ const sketch: Sketch = (p5) => {
 }
 
 async function updateSketch(p5: P5Instance, newAutomata: CellularAutomata1D) {
-   p5.noLoop()
    automataPlayer?.stop()
    automata = null
    automataPainter = null
@@ -51,7 +53,6 @@ async function updateSketch(p5: P5Instance, newAutomata: CellularAutomata1D) {
       automataPainter = new Painter.Builder().withSketch(p5).withAutomata(newAutomata).build()
       automataPlayer = new Player.Builder().withAutomata(automata).build()
       counter = 0
-      p5.loop()
    }, 250)
 }
 

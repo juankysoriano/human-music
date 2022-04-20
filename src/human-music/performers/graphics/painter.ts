@@ -19,7 +19,12 @@ export class Painter {
       for (let i = 0; i < this.automata.size; i++) {
          this.sketch.fill(colors[this.automata.state[i]])
          this.sketch.noStroke()
-         this.sketch.rect(i * this.cellSize, Math.ceil(this.step * this.cellSize), Math.ceil(this.cellSize), Math.ceil(this.cellSize * 0.0625))
+         this.sketch.rect(
+            Math.ceil(i * this.cellSize),
+            Math.ceil(this.step * this.cellSize),
+            Math.ceil(this.cellSize),
+            Math.ceil(this.cellSize * 0.0625)
+         )
       }
 
       if (this.step * this.cellSize >= this.sketch.height) {

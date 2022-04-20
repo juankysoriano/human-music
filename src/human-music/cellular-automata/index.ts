@@ -71,7 +71,7 @@ export class CellularAutomata {
                break
          }
          this.size = Math.floor(this.size)
-         this.size = this.size % 2 === 0 ? this.size + 1 : this.size
+         this.size = 15
          return this
       }
 
