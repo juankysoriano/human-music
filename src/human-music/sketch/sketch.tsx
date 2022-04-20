@@ -9,35 +9,30 @@ import { Painter } from "../performers/graphics/painter"
 import SketchProvider from "./SketchProvider"
 
 let automata: CellularAutomata1D | null
-let automataPainter: Painter | null
 let automataPlayer: Player | null
 
 const sketch = createAutomataSketch({
    frameRate: 12,
+
    onSetup: (p5: P5Instance) => {
       p5.createCanvas($("#sketch").width()!, $("#sketch").height()!)
       p5.background(9, 9, 9)
    },
-   onDraw: (p5: P5Instance) => {
-      automataPainter?.draw()
-   },
-   onAutomataStep: (p5: P5Instance) => {
+
+   onStep: () => {
       automata?.evolve()
       automataPlayer?.play()
    },
+
    onUpdateProps: (p5: P5Instance, props: SketchProps) => {
       p5.resizeCanvas($("#sketch").width()!, $("#sketch").height()!)
       if (props.newAutomata) {
          p5.background(9, 9, 9)
-         updateSketch(p5, props.newAutomata as CellularAutomata1D)
-      }
-
-      async function updateSketch(p5: P5Instance, newAutomata: CellularAutomata1D) {
          automataPlayer?.stop()
-         automata = newAutomata
+         automata = props.newAutomata as CellularAutomata1D
+         automataPlayer = new Player.Builder().withAutomata(automata).build()
          const automataPainter = new Painter.Builder().withSketch(p5).withAutomata(automata).build()
          automataPainter.draw()
-         automataPlayer = new Player.Builder().withAutomata(automata).build()
       }
    },
 })
