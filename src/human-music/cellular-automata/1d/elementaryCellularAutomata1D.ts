@@ -5,6 +5,7 @@ export class ElementaryCellularAutomata1D implements CellularAutomata1D {
    readonly size: number
    readonly radius: number
    readonly rule: number
+   private originalState: number[]
    private _state: number[]
    private tempState: number[]
    private neighbourhoodCode: number[]
@@ -15,7 +16,8 @@ export class ElementaryCellularAutomata1D implements CellularAutomata1D {
       this.size = size
       this.radius = radius
       this.rule = rule
-      this._state = initialState
+      this._state = [...initialState]
+      this.originalState = [...initialState]
       this.lookupTable = lookupTable
       this.tempState = Array.from({ length: size })
       this.neighbourhoodCode = Array.from({ length: size })
@@ -70,6 +72,10 @@ export class ElementaryCellularAutomata1D implements CellularAutomata1D {
 
    leeDistance(): number {
       return leeDistance(this)
+   }
+
+   reset() {
+      this._state = [...this.originalState]
    }
 
    static Builder = class {

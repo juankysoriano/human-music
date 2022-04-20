@@ -7,6 +7,7 @@ export interface CellularAutomata1D {
    get previousState(): ReadonlyArray<number>
    evolve(): void
    leeDistance(): number
+   reset(): void
 }
 
 export const leeDistance = (automata: CellularAutomata1D): number =>

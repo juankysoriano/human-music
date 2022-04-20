@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import earth from "../resources/images/earth.png"
 import github from "../resources/images/github.png"
-import { AutomataSelector } from "./automata-selector"
+import { AutomataSelector } from "./cellular-automata/automata-selector"
 import { CellularAutomata1D } from "./cellular-automata/1d/cellularAutomata1D"
 import * as MIDI from "./performers/audio/MIDI"
 import CellularAutomataSketch from "./sketch/sketch"

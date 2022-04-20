@@ -7,7 +7,7 @@ export interface Transformation {
 }
 
 export class DurationTransformation implements Transformation {
-   private staticDurations: number[] = [1, 2, 4].shuffle()
+   private staticDurations: number[] = [3, 6, 12].shuffle()
    private durations: number[] = [...this.staticDurations]
    private automata: CellularAutomata1D
 

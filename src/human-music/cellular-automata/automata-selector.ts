@@ -1,18 +1,13 @@
-import { CellularAutomata, Dimensions, Size, Type } from "./cellular-automata/index"
+import { CellularAutomata, Dimensions, Type } from "./index";
 
 export class AutomataSelector {
    randomSelection() {
-      const parameters = this.findParameters()
-      return new CellularAutomata.Builder()
-         .withSize(Size.EXTRA_SMALL)
-         .withStates(parameters.states)
-         .withType(parameters.type)
-         .withDimensions(Dimensions.UNIDIMENSIONAL)
-         .withRule(parameters.rule)
-         .build()
+      const automata = this.findautomata();
+      automata.reset();
+      return automata;
    }
 
-   private findParameters() {
+   private findautomata() {
       const differentStates = new Set<number>()
       let configuration = null
       while (differentStates.size < 5) {
@@ -27,18 +22,18 @@ export class AutomataSelector {
          }
       }
 
-      return configuration!.parameters
+      return configuration!.automata
    }
 
    private randomConfiguration() {
-      const states = 2 + Math.floor(Math.random() * 2)
-      const type = Math.random() < 0.0 ? Type.ELEMENTARY : Type.TOTALISTIC
-      const maxRule = Type.ELEMENTARY ? states ** (states ** 4) - 1 : states ** (states * 4) - 1
+      const states = 2 + Math.floor(Math.random() * 3)
+      const type = Math.random() < 0.5 ? Type.ELEMENTARY : Type.TOTALISTIC
+      const maxRule = Type.ELEMENTARY ? states ** (states ** 2) - 1 : states ** (states * 2) - 1
       const rule = Math.floor(Math.random() * maxRule)
       const automata = new CellularAutomata.Builder()
-         .withSize(Size.EXTRA_SMALL)
          .withStates(states)
          .withType(type)
+         .withRandomInitialConfiguration()
          .withDimensions(Dimensions.UNIDIMENSIONAL)
          .withRule(rule)
          .build()

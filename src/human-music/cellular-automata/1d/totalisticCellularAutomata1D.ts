@@ -6,6 +6,7 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
    readonly radius: number
    readonly rule: number
    private _state: number[]
+   private originalState: number[]
    private tempState: number[]
    private neighbourhoodCode: number[]
    private lookupTable: number[]
@@ -15,7 +16,8 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
       this.size = size
       this.radius = radius
       this.rule = rule
-      this._state = initialState
+      this._state = [...initialState]
+      this.originalState = [...initialState]
       this.lookupTable = lookupTable
       this.tempState = Array.from({ length: size })
       this.neighbourhoodCode = Array.from({ length: size })
@@ -65,6 +67,10 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
 
    private wrappedIndex(index: number) {
       return index < 0 ? index + this.size : index >= this.size ? index - this.size : index
+   }
+
+   reset() {
+      this._state = [...this.originalState]
    }
 
    leeDistance(): number {

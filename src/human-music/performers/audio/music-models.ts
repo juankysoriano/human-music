@@ -8,7 +8,7 @@ export class Music {
    private durationTransformation: DurationTransformation
    private pitchTransformation: PitchTransformation
    private chordsGenerator: ChordsGenerator
-   private beatDuration: number = 8
+   private beatDuration: number = 24
    private currentBeat: number = 0
 
    readonly voices: Voice[]
@@ -145,4 +145,4 @@ class Note {
    isFinished = () => this.duration <= 0
 }
 
-export const progressions = convertToTree(progressions_list)//.filter((value) => value.isTriad)
+export const progressions = convertToTree(progressions_list).filter((chord) => chord.isTriad)

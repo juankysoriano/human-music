@@ -11,20 +11,12 @@ export enum Type {
    ELEMENTARY,
 }
 
-export enum Size {
-   EXTRA_SMALL,
-   SMALL,
-   MEDIUM,
-   LARGE,
-   EXTRA_LARGE,
-}
-
 export class CellularAutomata {
    static Builder = class {
       private dimensions: Dimensions = Dimensions.UNIDIMENSIONAL
       private type: Type = Type.ELEMENTARY
       private states: number = 2
-      private size: number = 100
+      private size: number = 5
       private rule: number = 0
       private randomInitialConfiguration: boolean = false
 
@@ -46,32 +38,6 @@ export class CellularAutomata {
             throw new Error("Number of states must be greater than 1")
          }
          this.states = states
-         return this
-      }
-
-      withSize(size: Size) {
-         const sketch = document.getElementById("sketch")
-         const sketchWidth = sketch === null ? 0 : sketch.clientWidth
-
-         switch (size) {
-            case Size.EXTRA_SMALL:
-               this.size = sketchWidth / 30
-               break
-            case Size.SMALL:
-               this.size = sketchWidth / 15
-               break
-            case Size.MEDIUM:
-               this.size = sketchWidth / 5
-               break
-            case Size.LARGE:
-               this.size = sketchWidth / 2
-               break
-            case Size.EXTRA_LARGE:
-               this.size = sketchWidth / 1
-               break
-         }
-         this.size = Math.floor(this.size)
-         this.size = 15
          return this
       }
 
@@ -126,3 +92,4 @@ export class CellularAutomata {
 
 export * from "./1d/elementaryCellularAutomata1D"
 export * from "./1d/totalisticCellularAutomata1D"
+
