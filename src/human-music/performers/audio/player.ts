@@ -1,5 +1,5 @@
-import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1D"
-import { Music, Voice } from "./music-models"
+import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1D";
+import { ChordVoice, Music, Voice } from './music-models';
 export class Player {
    private music: Music
    constructor(music: Music) {
@@ -221,8 +221,8 @@ export class Player {
          if (this.automata === null) {
             throw new Error("Must pass a cellular automata upon building")
          }
-
-         return new Player(new Music(this.automata!, [new Voice(0, 3, 64), new Voice(1, 4, 64), new Voice(2, 5, 64)]))
+         return new Player(new Music(this.automata!, [new Voice(0, 3, 24), new Voice(1, 5, 64)], new ChordVoice(2, 4, 32)))
+         //return new Player(new Music(this.automata!, [new Voice(0, 3, 64), new Voice(1, 4, 64), new Voice(2, 5, 64)]))
       }
    }
 }

@@ -12,9 +12,11 @@ export class Music {
    private currentBeat: number = 0
 
    readonly voices: Voice[]
+   readonly chordVoice: ChordVoice
 
-   constructor(automata: CellularAutomata1D, voices: Voice[]) {
+   constructor(automata: CellularAutomata1D, voices: Voice[], chordVoice: ChordVoice) {
       this.voices = voices
+      this.chordVoice = chordVoice;
       this.durationTransformation = new DurationTransformation(automata)
       this.pitchTransformation = new PitchTransformation(automata)
       this.chordsGenerator = new ChordsGenerator(automata)
@@ -26,12 +28,12 @@ export class Music {
          if (this.chordsGenerator.progressionFinished || this.currentBeat === 0) {
             this.transformVoices()
          }
+         this.chordVoice.play(this.chordsGenerator.currentChord(this.chordVoice), this.chordVoice.attack);
       }
 
       this.voices.forEach((voice) => {
          const note = this.chordsGenerator.generateNote(voice)
-         const attack = this.currentBeat % this.beatDuration === 0 ? voice.attack : 72
-         voice.play(note, attack)
+         voice.play(note, voice.attack)
          voice.tick()
       })
 
@@ -93,6 +95,29 @@ export class Voice {
    }
 }
 
+export class ChordVoice {
+   readonly octave: number;
+   readonly attack: number;
+   private instrument: number;
+   private currentChord: number[] = []
+
+   constructor(instrument: number, octave: number, attack: number) {
+      this.instrument = instrument
+      this.octave = octave
+      this.attack = attack
+   }
+
+   play(chord: number[], attack: number) {
+      MIDI.chordOff(this.instrument, this.currentChord)
+      MIDI.chordOn(this.instrument, chord, attack)
+      this.currentChord = chord
+   }
+
+   stop() {
+      MIDI.chordOff(this.instrument, this.currentChord)
+   }
+}
+
 export class Chord {
    readonly notes: number[]
    readonly label: string
@@ -120,4 +145,4 @@ class Note {
    isFinished = () => this.duration <= 0
 }
 
-export const progressions = convertToTree(progressions_list).filter((value) => value.isTriad)
+export const progressions = convertToTree(progressions_list)//.filter((value) => value.isTriad)

@@ -1,6 +1,6 @@
-import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1D"
-import { TreeNode } from "../../utils/data-structures/TreeNote"
-import { Chord, progressions, Voice } from "./music-models"
+import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1D";
+import { TreeNode } from "../../utils/data-structures/TreeNote";
+import { Chord, ChordVoice, progressions, Voice } from './music-models';
 export class ChordsGenerator {
    private tone: number
    private currentNode: TreeNode<Chord> = progressions.shuffle()
@@ -37,4 +37,7 @@ export class ChordsGenerator {
       this.currentNode.value.notes[(this.automata.leeDistance() + voice.positionInChord) % this.currentNode.value.notes.length] +
       voice.octave * 12 +
       this.tone
+
+   currentChord = (chordVoice: ChordVoice) =>
+      this.currentNode.value.notes.map((note) => note + chordVoice.octave * 12 + this.tone)
 }
