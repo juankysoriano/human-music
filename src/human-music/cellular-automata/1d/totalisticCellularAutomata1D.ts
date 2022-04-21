@@ -73,6 +73,12 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
       this._state = [...this.originalState]
    }
 
+   mutate() {
+      for (let i = 0; i < this.size; i++) {
+         this._state[i] = Math.round(Math.random() * this.states)
+      }
+   }
+
    leeDistance(): number {
       return leeDistance(this)
    }

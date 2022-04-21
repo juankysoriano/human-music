@@ -8,6 +8,7 @@ export interface CellularAutomata1D {
    evolve(): void
    leeDistance(): number
    reset(): void
+   mutate(): void
 }
 
 export const leeDistance = (automata: CellularAutomata1D): number =>

@@ -66,7 +66,7 @@ export class CellularAutomata {
             lookupTable[i] = +ruleCharacters[i] - +"0"
          }
          const initialState = this.randomInitialConfiguration
-            ? Array.from({ length: this.size }, () => Math.round(Math.random()))
+            ? Array.from({ length: this.size }, () => Math.floor(Math.random() * this.states))
             : Array.from({ length: this.size }, (_, index) => (index === Math.floor(this.size / 2) ? 1 : 0))
 
          return new TotalisticCellularAutomata1D(this.states, this.size, radius, this.rule, initialState, lookupTable)
@@ -82,7 +82,7 @@ export class CellularAutomata {
             lookupTable[i] = character >= "0" && character <= "9" ? +ruleCharacters[i] - +"0" : +ruleCharacters[i] - +"W"
          }
          const initialState = this.randomInitialConfiguration
-            ? Array.from({ length: this.size }, () => Math.round(Math.random()))
+            ? Array.from({ length: this.size }, () => Math.floor(Math.random() * this.states))
             : Array.from({ length: this.size }, (_, index) => (index === Math.floor(this.size / 2) ? 1 : 0))
 
          return new ElementaryCellularAutomata1D(this.states, this.size, radius, this.rule, initialState, lookupTable)
@@ -92,4 +92,3 @@ export class CellularAutomata {
 
 export * from "./1d/elementaryCellularAutomata1D"
 export * from "./1d/totalisticCellularAutomata1D"
-

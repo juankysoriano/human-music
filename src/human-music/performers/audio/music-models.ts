@@ -10,13 +10,15 @@ export class Music {
    private chordsGenerator: ChordsGenerator
    private beatDuration: number = 24
    private currentBeat: number = 0
+   private automata: CellularAutomata1D
 
    readonly voices: Voice[]
    readonly chordVoice: ChordVoice
 
    constructor(automata: CellularAutomata1D, voices: Voice[], chordVoice: ChordVoice) {
       this.voices = voices
-      this.chordVoice = chordVoice;
+      this.chordVoice = chordVoice
+      this.automata = automata
       this.durationTransformation = new DurationTransformation(automata)
       this.pitchTransformation = new PitchTransformation(automata)
       this.chordsGenerator = new ChordsGenerator(automata)
@@ -26,9 +28,12 @@ export class Music {
       if (this.beatFinished) {
          this.chordsGenerator.nextChord()
          if (this.chordsGenerator.progressionFinished || this.currentBeat === 0) {
+            if (Math.random() > 0.5) {
+               this.automata.mutate()
+            }
             this.transformVoices()
          }
-         this.chordVoice.play(this.chordsGenerator.currentChord(this.chordVoice), this.chordVoice.attack);
+         this.chordVoice.play(this.chordsGenerator.currentChord(this.chordVoice), this.chordVoice.attack)
       }
 
       this.voices.forEach((voice) => {
@@ -96,9 +101,9 @@ export class Voice {
 }
 
 export class ChordVoice {
-   readonly octave: number;
-   readonly attack: number;
-   private instrument: number;
+   readonly octave: number
+   readonly attack: number
+   private instrument: number
    private currentChord: number[] = []
 
    constructor(instrument: number, octave: number, attack: number) {

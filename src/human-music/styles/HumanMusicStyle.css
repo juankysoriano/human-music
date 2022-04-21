@@ -17,8 +17,11 @@
       width: 50%;
       height: auto;
       align-self: center;
+      white-space: nowrap;
       -webkit-filter: drop-shadow(5px 5px 5px #020202);
       filter: drop-shadow(5px 5px 5px #020202);
+      margin-left: 4vh;
+      margin-right: 4vh;
    }
 
    .HumanMusic .Headers .EarthRadioLogo {
@@ -49,8 +52,8 @@
       align-self: center;
       justify-self: center;
       background-color: transparent;
-      width: 82vh;
-      height: 82vh;
+      width: 80vh;
+      height: 80vh;
       perspective: 2000px;
       /* Remove this if you don't want the 3D effect */
    }
@@ -161,11 +164,9 @@
 
    .HumanMusic .Misc {
       align-self: flex-end;
-      display: flex;
+      display: block;
       flex-direction: column;
       color: white;
-      margin-right: 1vmin;
-      margin-left: auto;
    }
 
    .HumanMusic .Misc .GitHubLink {

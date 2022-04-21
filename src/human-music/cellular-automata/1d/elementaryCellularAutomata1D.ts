@@ -70,62 +70,17 @@ export class ElementaryCellularAutomata1D implements CellularAutomata1D {
       return index < 0 ? index + this.size : index >= this.size ? index - this.size : index
    }
 
+   mutate() {
+      for (let i = 0; i < this.size; i++) {
+         this._state[i] = Math.round(Math.random() * this.states)
+      }
+   }
+
    leeDistance(): number {
       return leeDistance(this)
    }
 
    reset() {
       this._state = [...this.originalState]
-   }
-
-   static Builder = class {
-      private states: number = 2
-      private size: number = 100
-      private rule: number = 0
-      private randomInitialConfiguration: boolean = false
-
-      withStates(states: number) {
-         if (states < 1) {
-            throw new Error("Number of states must be greater than 1")
-         }
-         this.states = states
-         return this
-      }
-
-      withSize(size: number) {
-         this.size = size
-         if (size <= 10) {
-            throw new Error("Size of cellular automata must be greater than 10")
-         }
-         return this
-      }
-
-      withRule(rule: number) {
-         this.rule = rule
-         if (rule < 0) {
-            throw new Error("Rule must be a positive number")
-         }
-         return this
-      }
-
-      withRandomInitialConfiguration() {
-         this.randomInitialConfiguration = true
-         return this
-      }
-
-      build() {
-         const radius = 1
-         const ruleCharacters = Array.from(BigInt(this.rule).toString(this.states))
-         const lookupTable: number[] = Array.from({ length: ruleCharacters.length })
-         for (let i = 0; i < ruleCharacters.length; i++) {
-            const character = ruleCharacters[i]
-            lookupTable[i] = character >= "0" && character <= "9" ? +ruleCharacters[i] - +"0" : +ruleCharacters[i] - +"W"
-         }
-         const initialState = this.randomInitialConfiguration
-            ? Array.from({ length: this.size }, () => Math.round(Math.random()))
-            : Array.from({ length: this.size }, (_, index) => (index === Math.floor(this.size / 2) ? 1 : 0))
-
-         return new ElementaryCellularAutomata1D(this.states, this.size, radius, this.rule, initialState, lookupTable)
-      }
    }
 }
