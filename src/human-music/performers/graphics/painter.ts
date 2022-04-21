@@ -20,12 +20,7 @@ export class Painter {
          for (let x = 0; x < this.automata.size; x++) {
             this.sketch.fill(colors[this.automata.state[x]])
             this.sketch.noStroke()
-            this.sketch.rect(
-               Math.ceil(x * this.cellSize),
-               Math.ceil(y * this.cellSize),
-               Math.ceil(this.cellSize),
-               Math.ceil(this.cellSize)
-            )
+            this.sketch.rect(Math.ceil(x * this.cellSize), Math.ceil(y * this.cellSize), Math.ceil(this.cellSize), Math.ceil(this.cellSize))
          }
          this.automata.evolve()
       }
