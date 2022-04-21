@@ -28,7 +28,7 @@ export class Music {
       if (this.beatFinished) {
          this.chordsGenerator.nextChord()
          if (this.chordsGenerator.progressionFinished || this.currentBeat === 0) {
-            if (Math.random() > 0.5) {
+            if (Math.random() > 0.15) {
                this.automata.mutate()
             }
             this.transformVoices()
