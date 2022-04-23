@@ -28,9 +28,7 @@ export class Music {
       if (this.beatFinished) {
          this.chordsGenerator.nextChord()
          if (this.chordsGenerator.progressionFinished || this.currentBeat === 0) {
-            if (Math.random() > 0.15) {
-               this.automata.mutate()
-            }
+            this.automata.mutate()
             this.transformVoices()
          }
          this.chordVoice.play(this.chordsGenerator.currentChord(this.chordVoice), this.chordVoice.attack)
