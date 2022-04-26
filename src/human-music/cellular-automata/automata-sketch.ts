@@ -1,5 +1,5 @@
 import { P5CanvasInstance, Sketch, SketchProps } from 'react-p5-wrapper';
-import { Looper } from '../utils/ Looper';
+import { Looper } from '../utils/looper';
 
 export function createAutomataSketch(
     {

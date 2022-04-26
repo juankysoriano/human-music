@@ -10,14 +10,14 @@ export class Looper {
                 new Blob(
                     [
                         `onmessage = (event) => {
-                     if (event.data.message === "start") {
-                        const id = setInterval(() => postMessage({ message: "tick" }), ${interval})
-                        postMessage({ message: "started", identifier: id })
-                     }
-                     if (event.data.message === "stop") {
-                        clearInterval(event.data.identifier)
-                     }
-                  }`,
+                            if (event.data.message === "start") {
+                                const id = setInterval(() => postMessage({ message: "tick" }), ${interval})
+                                postMessage({ message: "started", identifier: id })
+                            }
+                            if (event.data.message === "stop") {
+                                clearInterval(event.data.identifier)
+                            }
+                        }`,
                     ],
                     {
                         type: "application/javascript",
