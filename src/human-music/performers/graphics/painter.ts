@@ -16,6 +16,11 @@ export class Painter {
 
    draw() {
       this.sketch.background(255, 0, 0)
+
+      for (let i = 0; i < 8; i++) {
+         this.automata.evolve()
+      }
+
       for (let y = 0; y < this.automata.size; y++) {
          for (let x = 0; x < this.automata.size; x++) {
             this.sketch.fill(colors[this.automata.state[x]])
