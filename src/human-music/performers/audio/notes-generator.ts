@@ -1,11 +1,11 @@
 import { CellularAutomata1D } from '../../cellular-automata/1d/cellularAutomata1D';
 import { TreeNode } from "../../utils/data-structures/TreeNote";
 import { Chord, ChordVoice, progressions, Voice } from './music-models';
-import { Operations, operations, patterns } from './patterns';
+import { mutations, Operations, operations } from './operations';
 export class ChordsGenerator {
    private tone: number
    private currentNode: TreeNode<Chord> = progressions.shuffle()
-   private patterns = patterns.shuffle()
+   private mutations = mutations.shuffle()
    private currentPattern: number[] = []
    private tickCount = 0
    private operations: Operations[] = operations.shuffle()
@@ -13,10 +13,12 @@ export class ChordsGenerator {
    private finishedRecording = false
    private record: TreeNode<Chord>[] = []
    private automata: CellularAutomata1D
+   private pulsesInBeat: number
 
-   constructor(automata: CellularAutomata1D) {
+   constructor(automata: CellularAutomata1D, pulsesInBeat: number) {
       this.automata = automata
       this.tone = Math.floor(Math.random() * 13) - 6
+      this.pulsesInBeat = pulsesInBeat
    }
 
    nextChord() {
@@ -27,6 +29,7 @@ export class ChordsGenerator {
       } else {
          const index = this.automata.leeDistance() % this.currentNode.children.length
          this.currentNode = this.currentNode.children[index]
+         this.currentNode.value.inversion(this.automata.leeDistance() % this.currentNode.value.notes.length)
          this.record.push(this.currentNode)
          this.finishedRecording = this.currentNode.isLeaf
       }
@@ -38,40 +41,69 @@ export class ChordsGenerator {
       return this.finishedRecording && isFirstChord
    }
 
-   tick() {
-      if (this.tickCount < 8) {
-         const nextOperation = this.operations[this.automata.leeDistance() % this.operations.length]
-         if (nextOperation === Operations.NEXT || this.currentPattern.length === 0) {
-            const next = this.automata.leeDistance() % 3
-            this.currentPattern.push(next)
-         } else if (nextOperation === Operations.PLUS) {
-            this.currentPattern = this.currentPattern.concat(this.currentPattern.map((value) => value + 1))
-         } else if (nextOperation === Operations.MINUS) {
-            this.currentPattern = this.currentPattern.concat(this.currentPattern.map((value) => value - 1))
-         } else if (nextOperation === Operations.MULTIPLY) {
-            this.currentPattern = this.currentPattern.concat(this.currentPattern.map((value) => value * 2))
-         } else if (nextOperation === Operations.DIVIDE) {
-            this.currentPattern = this.currentPattern.concat(this.currentPattern.map((value) => Math.floor(value / 2)))
-         } else if (nextOperation === Operations.REFLECTION) {
-            this.currentPattern = this.currentPattern.concat(this.currentPattern.reverse())
-         } else if (nextOperation === Operations.REPEAT) {
-            this.currentPattern = this.currentPattern.concat(this.currentPattern)
-         } else if (nextOperation === Operations.INVERSE) {
-            this.currentPattern = this.currentPattern.concat(this.currentPattern.map((value) => 2 - value))
+   get patternLenght(): number {
+      return this.currentPattern.length
+   }
+
+   nextNote() {
+      if (this.currentPattern.length < this.pulsesInBeat) {
+         const nextOperation = this.currentPattern.length === 0
+            ? Operations.NEXT
+            : this.operations[this.automata.leeDistance() % this.operations.length]
+         switch (nextOperation) {
+            case Operations.NEXT:
+               this.currentPattern.push(this.automata.leeDistance() % 3)
+               break;
+            case Operations.PLUS:
+               this.currentPattern = this.currentPattern.concat(this.currentPattern.map((value) => value + 1))
+               break;
+            case Operations.MINUS:
+               this.currentPattern = this.currentPattern.concat(this.currentPattern.map((value) => value - 1))
+               break;
+            case Operations.MULTIPLY:
+               this.currentPattern = this.currentPattern.concat(this.currentPattern.map((value) => value * 2))
+               break;
+            case Operations.DIVIDE:
+               this.currentPattern = this.currentPattern.concat(this.currentPattern.map((value) => Math.floor(value / 2)))
+               break;
+            case Operations.REFLECTION:
+               this.currentPattern = this.currentPattern.concat(this.currentPattern.reverse())
+               break;
+            case Operations.REPEAT:
+               this.currentPattern = this.currentPattern.concat(this.currentPattern)
+               break;
+            case Operations.INVERSE:
+               this.currentPattern = this.currentPattern.concat(this.currentPattern.map((value) => 2 - value))
+               break;
          }
       }
-      this.currentPattern = this.currentPattern.slice(0, 8)
-      this.currentPattern = this.currentPattern.map(value => value < 0 ? value + 3 : value)
-      this.currentPattern = this.currentPattern.map(value => value % 3)
+
+      this.currentPattern = this.currentPattern
+         .map(value => value < 0 ? value + 3 : value)
+         .map(value => value % 3)
+         .slice(0, this.pulsesInBeat)
+
       console.log(this.currentPattern)
+
       this.tickCount++
    }
 
-   generateNote = (voice: Voice) =>
+   mutatePattern() {
+      if (this.automata.leeDistance() % 4 === 0 && this.currentPattern.length === this.pulsesInBeat) {
+         console.log("MUTATE")
+         const mutation = this.mutations[this.automata.leeDistance() % this.mutations.length]
+         this.currentPattern = this.currentPattern.map((value, index) => value + mutation[index])
+            .map(value => value < 0 ? value + 3 : value)
+            .map(value => value % 3)
+            .slice(0, this.pulsesInBeat)
+      }
+   }
+
+   noteFor = (voice: Voice) =>
       this.currentNode.value.notes[(this.currentPattern[(this.tickCount - 1) % this.currentPattern.length] + voice.positionInChord) % this.currentNode.value.notes.length] +
       voice.octave * 12 +
       this.tone
 
-   currentChord = (chordVoice: ChordVoice) =>
+   chordFor = (chordVoice: ChordVoice) =>
       this.currentNode.value.notes.map((note) => note + chordVoice.octave * 12 + this.tone)
 }

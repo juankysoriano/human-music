@@ -12,7 +12,7 @@ let automata: CellularAutomata1D | null
 let automataPlayer: Player | null
 
 const sketch = createAutomataSketch({
-   frameRate: 12,
+   frameRate: 10,
 
    onSetup: (p5: P5Instance) => {
       p5.createCanvas($("#sketch").width()!, $("#sketch").height()!)

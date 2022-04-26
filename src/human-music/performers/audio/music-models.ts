@@ -8,7 +8,9 @@ export class Music {
    private durationTransformation: DurationTransformation
    private pitchTransformation: PitchTransformation
    private chordsGenerator: ChordsGenerator
-   private beatDuration: number = 24
+   private pulseDuration: number = 3
+   private pulsesInBeat: number = 8
+   private beatDuration: number = this.pulseDuration * this.pulsesInBeat
    private currentBeat: number = 0
    private automata: CellularAutomata1D
 
@@ -21,31 +23,29 @@ export class Music {
       this.automata = automata
       this.durationTransformation = new DurationTransformation(automata)
       this.pitchTransformation = new PitchTransformation(automata)
-      this.chordsGenerator = new ChordsGenerator(automata)
+      this.chordsGenerator = new ChordsGenerator(automata, this.pulsesInBeat)
    }
 
    play() {
       if (this.beatFinished) {
          this.chordsGenerator.nextChord()
          if (this.chordsGenerator.progressionFinished || this.currentBeat === 0) {
+            this.chordsGenerator.mutatePattern()
             this.automata.mutate()
             this.transformVoices()
          }
-         this.chordVoice.play(this.chordsGenerator.currentChord(this.chordVoice), this.chordVoice.attack)
+         this.chordVoice.play(this.chordsGenerator.chordFor(this.chordVoice), this.chordVoice.attack)
       }
 
-
-      if (this.currentBeat % 3 === 0) {
-         this.chordsGenerator.tick()
-         this.voices.forEach((voice) => {
-            const note = this.chordsGenerator.generateNote(voice)
-            voice.play(note, voice.attack)
-         })
+      if (this.pulseFinished) {
+         this.chordsGenerator.nextNote()
+         this.voices.forEach(voice => voice.play(
+            this.chordsGenerator.noteFor(voice),
+            voice.attack
+         ))
       }
 
-      this.voices.forEach((voice) => {
-         voice.tick()
-      })
+      this.voices.forEach(voice => voice.tick())
 
       this.currentBeat++
    }
@@ -63,6 +63,10 @@ export class Music {
 
    private get beatFinished(): boolean {
       return this.currentBeat % this.beatDuration === 0
+   }
+
+   private get pulseFinished(): boolean {
+      return this.currentBeat % this.pulseDuration === 0
    }
 
    release() {
@@ -129,16 +133,28 @@ export class ChordVoice {
 }
 
 export class Chord {
-   readonly notes: number[]
+   private _notes: number[]
    readonly label: string
 
    constructor({ notes, label }: { notes: number[]; label: string }) {
-      this.notes = notes
+      this._notes = notes
       this.label = label
    }
 
+   inversion(inversion: number): void {
+      this._notes = this._notes.map((note, index) => index < inversion ? note + 12 : note)
+      if (this._notes.filter(note => note >= 18).length === this._notes.length) {
+         this._notes = this._notes.map(note => note - 12)
+      }
+      this._notes = this._notes.sort((a, b) => a - b)
+   }
+
+   get notes(): number[] {
+      return this._notes
+   }
+
    get isTriad(): boolean {
-      return this.notes.length === 3
+      return this._notes.length === 3
    }
 }
 class Note {
