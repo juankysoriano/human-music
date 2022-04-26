@@ -1,5 +1,5 @@
 import { CellularAutomata1D } from '../../cellular-automata/1d/cellularAutomata1D';
-import { TreeNode } from "../../utils/data-structures/TreeNote";
+import { TreeNode } from "../../utils/data-structures/tree-node";
 import { Chord, ChordVoice, progressions, Voice } from './music-models';
 import { mutations, Operations, operations } from './operations';
 export class ChordsGenerator {

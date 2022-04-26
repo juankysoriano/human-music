@@ -5,8 +5,8 @@ import { CellularAutomata1D } from "./cellular-automata/1d/cellularAutomata1D"
 import { AutomataSelector } from "./cellular-automata/automata-selector"
 import * as MIDI from "./performers/audio/MIDI"
 import CellularAutomataSketch from "./sketch/sketch"
-import SketchProvider from "./sketch/SketchProvider"
-import "./styles/HumanMusicStyle.css"
+import SketchProvider from "./sketch/sketch-provider"
+import "./styles/human-music-style.css"
 
 export default function HumanMusic() {
    const [started, setStarted] = useState(false)

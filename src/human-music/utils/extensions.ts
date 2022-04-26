@@ -1,6 +1,6 @@
 import { Chord as TonalChord, Note, Progression } from "@tonaljs/tonal"
 import { Chord } from "../performers/audio/music-models"
-import { TreeNode } from "./data-structures/TreeNote"
+import { TreeNode } from "./data-structures/tree-node"
 
 declare global {
    interface Array<T> {

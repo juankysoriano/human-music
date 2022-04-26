@@ -6,7 +6,7 @@ import { CellularAutomata1D } from "../cellular-automata/1d/cellularAutomata1D"
 import { createAutomataSketch } from "../cellular-automata/automata-sketch"
 import { Player } from "../performers/audio/player"
 import { Painter } from "../performers/graphics/painter"
-import SketchProvider from "./SketchProvider"
+import SketchProvider from "./sketch-provider"
 
 let automata: CellularAutomata1D | null
 let automataPlayer: Player | null
