@@ -29,6 +29,8 @@ export const progressions_list: string[] = [
    "IIm V I I",
    "IIm V I IV",
    "I IV IIm V",
+   "I IIIm IV V IV",
+   "I IIIm IV V",
    //#"I IV Isus2 IV",
    //#"I IV V bVIIM",
    "I IV VIm V",

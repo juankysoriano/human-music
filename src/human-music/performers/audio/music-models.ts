@@ -34,9 +34,16 @@ export class Music {
          this.chordVoice.play(this.chordsGenerator.currentChord(this.chordVoice), this.chordVoice.attack)
       }
 
+
+      if (this.currentBeat % 3 === 0) {
+         this.chordsGenerator.tick()
+         this.voices.forEach((voice) => {
+            const note = this.chordsGenerator.generateNote(voice)
+            voice.play(note, voice.attack)
+         })
+      }
+
       this.voices.forEach((voice) => {
-         const note = this.chordsGenerator.generateNote(voice)
-         voice.play(note, voice.attack)
          voice.tick()
       })
 
