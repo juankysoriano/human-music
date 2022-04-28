@@ -39,13 +39,10 @@ export class Music {
 
       if (this.pulseFinished) {
          this.chordsGenerator.nextNote()
-         this.voices.forEach(voice => voice.play(
-            this.chordsGenerator.noteFor(voice),
-            voice.attack
-         ))
+         this.voices.forEach((voice) => voice.play(this.chordsGenerator.noteFor(voice), voice.attack))
       }
 
-      this.voices.forEach(voice => voice.tick())
+      this.voices.forEach((voice) => voice.tick())
 
       this.currentBeat++
    }
@@ -141,12 +138,34 @@ export class Chord {
       this.label = label
    }
 
-   inversion(inversion: number): void {
-      this._notes = this._notes.map((note, index) => index < inversion ? note + 12 : note)
-      if (this._notes.filter(note => note >= 18).length === this._notes.length) {
-         this._notes = this._notes.map(note => note - 12)
+   inversion(automata: CellularAutomata1D, previousChord: Chord): void {
+      const inversions = []
+      for (let inversion = 0; inversion < this.notes.length; inversion++) {
+         let notes = this.notes.map((note, index) => (index < inversion ? note + 12 : note))
+         if (notes.filter((note) => note >= 18).length === notes.length) {
+            notes = notes.map((note) => note - 12)
+         }
+         notes = notes.sort((a, b) => a - b)
+         inversions.push(notes)
       }
-      this._notes = this._notes.sort((a, b) => a - b)
+
+      if (previousChord === null) {
+         this._notes = inversions[automata.leeDistance() % inversions.length]
+         return
+      }
+      inversions.sort((first, second) => {
+         const firstDistance = first.reduce((acc, _, index) => acc + Math.abs(first[index] - previousChord.notes[index]), 0)
+         const sercondDistance = second.reduce((acc, _, index) => acc + Math.abs(second[index] - previousChord.notes[index]), 0)
+         return firstDistance - sercondDistance
+      })
+
+      this._notes = inversions.filter(
+         (inversion) => inversion.reduce((acc, _, index) => acc + Math.abs(inversion[index] - previousChord.notes[index]), 0) !== 0
+      )[0]
+      this._notes =
+         this.notes.concat(previousChord.notes).removeDuplicates().length === this.notes.length + previousChord.notes.length
+            ? inversions[1]
+            : this._notes
    }
 
    get notes(): number[] {
