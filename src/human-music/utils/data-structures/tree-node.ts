@@ -7,9 +7,10 @@ export class TreeNode<T> {
       return new TreeNode(null, true)
    }
 
-   constructor(value: T, isLeaf: boolean = false) {
+   constructor(value: T, isLeaf: boolean = false, children: TreeNode<T>[] = []) {
       this.value = value
       this.isLeaf = isLeaf
+      this._children = children
    }
 
    public get children(): TreeNode<T>[] {

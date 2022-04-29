@@ -16,7 +16,7 @@ export class CellularAutomata {
       private dimensions: Dimensions = Dimensions.UNIDIMENSIONAL
       private type: Type = Type.ELEMENTARY
       private states: number = 2
-      private size: number = 8
+      private size: number = 30
       private rule: number = 0
       private randomInitialConfiguration: boolean = false
 
@@ -92,3 +92,4 @@ export class CellularAutomata {
 
 export * from "./1d/elementaryCellularAutomata1D"
 export * from "./1d/totalisticCellularAutomata1D"
+

@@ -1,6 +1,5 @@
-import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1D"
-import { Voice } from "./music-models"
-
+import { CellularAutomata1D } from '../../../cellular-automata/1d/cellularAutomata1D';
+import { Voice } from './voice';
 export interface Transformation {
    mutate(voice: Voice): void
    restore(): void

@@ -1,5 +1,7 @@
 import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1D";
-import { ChordVoice, Music, Voice } from './music-models';
+import { ChordVoice } from "./music-models/chord-voice";
+import { Voice } from "./music-models/voice";
+import { Music } from "./music-models/music";
 export class Player {
    private music: Music
    constructor(music: Music) {
