@@ -2,8 +2,8 @@ import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1
 import { TreeNode } from "../../utils/data-structures/tree-node";
 import { Chord, progressions } from "./music-models/chord";
 import { ChordVoice } from "./music-models/chord-voice";
-import { Voice } from "./music-models/voice";
 import { mutations, Operations, operations } from './music-models/operations';
+import { Voice } from "./music-models/voice";
 export class ChordsGenerator {
    private tone: number
    private currentNode: TreeNode<Chord> = progressions.shuffle()
@@ -16,13 +16,11 @@ export class ChordsGenerator {
    private record: TreeNode<Chord>[] = []
    private automata: CellularAutomata1D
    private beatDuration: number
-   private pulsesInBeat: number
 
-   constructor(automata: CellularAutomata1D, beatDuration: number, pulsesInBeat: number) {
+   constructor(automata: CellularAutomata1D, beatDuration: number) {
       this.automata = automata
       this.tone = Math.floor(Math.random() * 13) - 6
       this.beatDuration = beatDuration
-      this.pulsesInBeat = pulsesInBeat
    }
 
    tick() {
@@ -82,18 +80,60 @@ export class ChordsGenerator {
    }
 
    private nextNote() {
-      if (this.currentPattern.length < this.pulsesInBeat) {
+      if (this.currentPattern.length < this.beatDuration) {
          const operation = this.currentPattern.length === 0
             ? Operations.NEXT
             : this.operations[this.automata.leeDistance() % this.operations.length]
          this.currentPattern = Operations.execute(operation, this.currentPattern, this.currentNode.value.notes, this.automata)
+            .slice(0, this.beatDuration)
+            .map((value, index, array) => {
+               if (index > 0 && !isNaN(value)) {
+                  let searchIndex = index - 1
+                  while (isNaN(array[searchIndex])) {
+                     searchIndex--
+                  }
+                  if (array[searchIndex] === value) {
+                     return value + 1
+                  }
+               }
+               return value
+            })
       }
+      //this.currentPattern =
+      //   [
+      //      0, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, // 1 x corchea
+      //      1, NaN, NaN, NaN, 2, NaN, NaN, NaN, 0, NaN, NaN, NaN, // 1 x triplet
+      //      2, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, // 1 x corchea
+      //      0, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, // 1 x corchea
+      //      1, NaN, NaN, NaN, NaN, NaN, 0, NaN, NaN, NaN, NaN, NaN, // 1 x semicorchea
+      //      2, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, // 1 x corchea
+      //      0, NaN, NaN, NaN, NaN, NaN, 1, NaN, NaN, NaN, NaN, NaN, // 1 x semicorchea
+      //      2, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, // 1 x corchea
+      //   ]
    }
 
    private mutatePattern() {
-      if (this.automata.leeDistance() % 7 === 0 && this.currentPattern.length === this.pulsesInBeat) {
+      if (this.automata.leeDistance() % 4 === 0 && this.currentPattern.length === this.beatDuration) {
          const mutation = this.mutations[this.automata.leeDistance() % this.mutations.length]
-         this.currentPattern = this.currentPattern.map((value, index) => value + mutation[index])
+         this.currentPattern = this.currentPattern.map((value, index) => value + mutation[index % mutation.length])
+            .slice(0, this.beatDuration)
+            .map((value, index, array) => {
+               if (index > 0 && !isNaN(value)) {
+                  let searchIndex = index - 1
+                  while (isNaN(array[searchIndex])) {
+                     searchIndex--
+                  }
+                  let candidate = value
+                  if (array[searchIndex] === candidate) {
+                     candidate = value + 1
+                  }
+                  if (index === array.length - 1 && array[0] === candidate) {
+                     candidate = value - 1
+                  }
+                  return candidate
+               }
+               return value
+            })
       }
    }
 }

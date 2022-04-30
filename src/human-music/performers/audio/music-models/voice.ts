@@ -18,7 +18,7 @@ export class Voice {
    }
 
    play(midiNote: number, attack: number) {
-      if (this.currentNote.isFinished()) {
+      if (this.currentNote.isFinished() && !isNaN(midiNote)) {
          if (this.currentNote.value !== midiNote) {
             MIDI.noteOff(this.instrument, this.currentNote.value);
             MIDI.noteOn(this.instrument, midiNote, attack);

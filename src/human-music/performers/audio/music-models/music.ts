@@ -9,8 +9,8 @@ export class Music {
    private durationTransformation: DurationTransformation;
    private pitchTransformation: PitchTransformation;
    private chordsGenerator: ChordsGenerator;
-   private pulseDuration: number = 3;
-   private pulsesInBeat: number = 8;
+   private pulseDuration: number = 12;
+   private pulsesInBeat: number = 6;
    private beatDuration: number = this.pulseDuration * this.pulsesInBeat;
    private currentBeat: number = 0;
    private automata: CellularAutomata1D;
@@ -24,7 +24,7 @@ export class Music {
       this.automata = automata;
       this.durationTransformation = new DurationTransformation(automata);
       this.pitchTransformation = new PitchTransformation(automata);
-      this.chordsGenerator = new ChordsGenerator(automata, this.beatDuration, this.pulsesInBeat);
+      this.chordsGenerator = new ChordsGenerator(automata, this.beatDuration);
    }
 
    play() {
