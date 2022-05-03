@@ -1,12 +1,14 @@
 import { CellularAutomata1D } from "../../../cellular-automata/1d/cellularAutomata1D";
 import { ChordsGenerator } from "../notes-generator";
 import { ChordVoice } from "./chord-voice";
-import { DurationTransformation, PitchTransformation } from './transformations';
+import { Note } from "./note";
+import { rythmFor } from './rythm';
+import { PitchTransformation, RythmTransformation } from './transformations';
 import { Voice } from "./voice";
 
 
 export class Music {
-   private durationTransformation: DurationTransformation;
+   private rythmTransformation: RythmTransformation;
    private pitchTransformation: PitchTransformation;
    private chordsGenerator: ChordsGenerator;
    private pulseDuration: number = 1;
@@ -14,6 +16,7 @@ export class Music {
    private beatDuration: number = this.pulseDuration * this.pulsesInBeat;
    private currentBeat: number = 0;
    private automata: CellularAutomata1D;
+   private rythms: Note[][];
 
    readonly voices: Voice[];
    readonly chordVoice: ChordVoice;
@@ -22,9 +25,10 @@ export class Music {
       this.voices = voices;
       this.chordVoice = chordVoice;
       this.automata = automata;
-      this.durationTransformation = new DurationTransformation(automata);
+      this.rythms = rythmFor(this.automata!, 48)
+      this.rythmTransformation = new RythmTransformation(automata, this.rythms);
       this.pitchTransformation = new PitchTransformation(automata);
-      this.chordsGenerator = new ChordsGenerator(automata, this.beatDuration, this.pulsesInBeat);
+      this.chordsGenerator = new ChordsGenerator(automata, this.beatDuration);
    }
 
    play() {
@@ -33,15 +37,17 @@ export class Music {
       if (this.beatFinished) {
          if (this.chordsGenerator.progressionFinished || this.currentBeat === 0) {
             this.automata.mutate();
-            this.durationTransformation.restore();
+            this.rythmTransformation.restore();
             this.pitchTransformation.restore();
 
             this.voices.forEach((voice) => {
                voice.stop()
-               this.durationTransformation.mutate(voice);
-               this.pitchTransformation.mutate(voice);
+               this.rythmTransformation.transform(voice);
+               this.pitchTransformation.transform(voice);
             });
          }
+         this.rythmTransformation.mutate()
+
          this.chordVoice.play(this.chordsGenerator.chordFor(this.chordVoice), this.chordVoice.attack);
       }
 

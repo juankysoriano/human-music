@@ -2,52 +2,40 @@ import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1
 import { TreeNode } from "../../utils/data-structures/tree-node";
 import { Chord, progressions } from "./music-models/chord";
 import { ChordVoice } from "./music-models/chord-voice";
-import { mutations, Operations, operations } from './music-models/operations';
 import { Voice } from "./music-models/voice";
 export class ChordsGenerator {
    private tone: number
    private currentNode: TreeNode<Chord> = progressions.shuffle()
-   private mutations = mutations.shuffle()
-   private currentPattern: number[] = []
    private tickCount = 0
-   private operations: Operations[] = operations.shuffle()
    private recordCount = 0
    private finishedRecording = false
    private record: TreeNode<Chord>[] = []
    private automata: CellularAutomata1D
    private beatDuration: number
-   private pulsesInBeat: number
 
-   constructor(automata: CellularAutomata1D, beatDuration: number, pulsesInBeat: number) {
+   constructor(automata: CellularAutomata1D, beatDuration: number) {
       this.automata = automata
-      this.tone = Math.floor(Math.random() * 13) - 6
+      this.tone = Math.floor(Math.random() * 13)
       this.beatDuration = beatDuration
-      this.pulsesInBeat = pulsesInBeat
    }
 
    tick() {
       if (this.tickCount % this.beatDuration === 0) {
          this.nextChord()
-         this.mutatePattern()
       }
-
-      this.nextNote()
 
       this.tickCount++
    }
 
    noteFor = (voice: Voice) => {
-      const patternValue = Math.abs(this.currentPattern[(this.tickCount - 1) % this.currentPattern.length])
-      let noteIndex = (patternValue + voice.positionInChord) % this.currentNode.value.notes.length
+      const noteIndex = (this.automata.leeDistance() + voice.toneOffset) % this.currentNode.value.notes.length
       const candidate = this.currentNode.value.notes[noteIndex] + voice.octave * 12 + this.tone
-      if (candidate === voice.currentNote.value && noteIndex === 0) {
-         noteIndex = Math.random() > 0.5 ? 2 : 1
-      } else if (candidate === voice.currentNote.value && noteIndex === 2) {
-         noteIndex = Math.random() > 0.5 ? 1 : 0
-      } else if (candidate === voice.currentNote.value && noteIndex === 1) {
-         noteIndex = Math.random() > 0.5 ? 2 : 0
+      if (candidate === voice.currentNote.value) {
+         return this.automata.leeDistance() % 2 === 0 && noteIndex > 0
+            ? this.currentNode.value.notes[(noteIndex - 1) % this.currentNode.value.notes.length] + voice.octave * 12 + this.tone
+            : this.currentNode.value.notes[(noteIndex + 1) % this.currentNode.value.notes.length] + voice.octave * 12 + this.tone;
       }
-      return this.currentNode.value.notes[noteIndex] + voice.octave * 12 + this.tone;
+      return candidate;
    }
 
    chordFor = (chordVoice: ChordVoice) => this.currentNode.value.notes.map((note) => note + chordVoice.octave * 12 + this.tone)
@@ -87,21 +75,5 @@ export class ChordsGenerator {
          candidate.isLeaf,
          candidate.children
       )
-   }
-
-   private nextNote() {
-      if (this.currentPattern.length < this.beatDuration) {
-         const operation = this.currentPattern.length === 0
-            ? Operations.NEXT
-            : this.operations[this.automata.leeDistance() % this.operations.length]
-         this.currentPattern = Operations.execute(operation, this.currentPattern, this.currentNode.value.notes, this.automata)
-      }
-   }
-
-   private mutatePattern() {
-      if (this.automata.leeDistance() % 4 === 0 && this.currentPattern.length === this.pulsesInBeat) {
-         const mutation = this.mutations[this.automata.leeDistance() % this.mutations.length]
-         this.currentPattern = this.currentPattern.map((value, index) => value + mutation[index % mutations.length])
-      }
    }
 }
