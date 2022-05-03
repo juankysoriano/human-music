@@ -6,7 +6,7 @@ export interface Transformation {
 }
 
 export class DurationTransformation implements Transformation {
-   private staticDurations: number[] = [3, 6, 12].shuffle()
+   private staticDurations: number[] = [0, 1, 2].shuffle()
    private durations: number[] = [...this.staticDurations]
    private automata: CellularAutomata1D
 
@@ -16,7 +16,7 @@ export class DurationTransformation implements Transformation {
 
    mutate(voice: Voice): void {
       const index = this.automata.leeDistance() % this.durations.length
-      voice.notesDuration = this.durations[index]
+      voice.updateDurations(this.durations[index])
       this.durations.splice(index, 1)
    }
 

@@ -40,5 +40,5 @@ export namespace Chord {
    }
 }
 
-export const progressions = convertToTree(progressions_list)
+export const progressions = convertToTree(progressions_list).filter(chord => chord.isTriad)
 

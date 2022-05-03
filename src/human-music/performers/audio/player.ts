@@ -1,7 +1,8 @@
 import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1D";
 import { ChordVoice } from "./music-models/chord-voice";
-import { Voice } from "./music-models/voice";
 import { Music } from "./music-models/music";
+import { rythmFor } from './music-models/rythm';
+import { Voice } from "./music-models/voice";
 export class Player {
    private music: Music
    constructor(music: Music) {
@@ -223,7 +224,9 @@ export class Player {
          if (this.automata === null) {
             throw new Error("Must pass a cellular automata upon building")
          }
-         return new Player(new Music(this.automata!, [new Voice(0, 3, 24), new Voice(1, 5, 64)], new ChordVoice(2, 4, 32)))
+         const rythms = rythmFor(this.automata!, 48)
+         console.log(rythms)
+         return new Player(new Music(this.automata!, [new Voice(0, 3, 64, rythms), new Voice(1, 5, 64, rythms)], new ChordVoice(2, 4, 64)))
       }
    }
 }

@@ -2,8 +2,8 @@ import { CellularAutomata1D } from "../../cellular-automata/1d/cellularAutomata1
 import { TreeNode } from "../../utils/data-structures/tree-node";
 import { Chord, progressions } from "./music-models/chord";
 import { ChordVoice } from "./music-models/chord-voice";
-import { Voice } from "./music-models/voice";
 import { mutations, Operations, operations } from './music-models/operations';
+import { Voice } from "./music-models/voice";
 export class ChordsGenerator {
    private tone: number
    private currentNode: TreeNode<Chord> = progressions.shuffle()
@@ -38,7 +38,15 @@ export class ChordsGenerator {
 
    noteFor = (voice: Voice) => {
       const patternValue = Math.abs(this.currentPattern[(this.tickCount - 1) % this.currentPattern.length])
-      const noteIndex = (patternValue + voice.positionInChord) % this.currentNode.value.notes.length
+      let noteIndex = (patternValue + voice.positionInChord) % this.currentNode.value.notes.length
+      const candidate = this.currentNode.value.notes[noteIndex] + voice.octave * 12 + this.tone
+      if (candidate === voice.currentNote.value && noteIndex === 0) {
+         noteIndex = Math.random() > 0.5 ? 2 : 1
+      } else if (candidate === voice.currentNote.value && noteIndex === 2) {
+         noteIndex = Math.random() > 0.5 ? 1 : 0
+      } else if (candidate === voice.currentNote.value && noteIndex === 1) {
+         noteIndex = Math.random() > 0.5 ? 2 : 0
+      }
       return this.currentNode.value.notes[noteIndex] + voice.octave * 12 + this.tone;
    }
 
@@ -82,7 +90,7 @@ export class ChordsGenerator {
    }
 
    private nextNote() {
-      if (this.currentPattern.length < this.pulsesInBeat) {
+      if (this.currentPattern.length < this.beatDuration) {
          const operation = this.currentPattern.length === 0
             ? Operations.NEXT
             : this.operations[this.automata.leeDistance() % this.operations.length]
@@ -91,9 +99,9 @@ export class ChordsGenerator {
    }
 
    private mutatePattern() {
-      if (this.automata.leeDistance() % 7 === 0 && this.currentPattern.length === this.pulsesInBeat) {
+      if (this.automata.leeDistance() % 4 === 0 && this.currentPattern.length === this.pulsesInBeat) {
          const mutation = this.mutations[this.automata.leeDistance() % this.mutations.length]
-         this.currentPattern = this.currentPattern.map((value, index) => value + mutation[index])
+         this.currentPattern = this.currentPattern.map((value, index) => value + mutation[index % mutations.length])
       }
    }
 }

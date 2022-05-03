@@ -9,8 +9,8 @@ export class Music {
    private durationTransformation: DurationTransformation;
    private pitchTransformation: PitchTransformation;
    private chordsGenerator: ChordsGenerator;
-   private pulseDuration: number = 3;
-   private pulsesInBeat: number = 8;
+   private pulseDuration: number = 1;
+   private pulsesInBeat: number = 48;
    private beatDuration: number = this.pulseDuration * this.pulsesInBeat;
    private currentBeat: number = 0;
    private automata: CellularAutomata1D;
@@ -37,6 +37,7 @@ export class Music {
             this.pitchTransformation.restore();
 
             this.voices.forEach((voice) => {
+               voice.stop()
                this.durationTransformation.mutate(voice);
                this.pitchTransformation.mutate(voice);
             });

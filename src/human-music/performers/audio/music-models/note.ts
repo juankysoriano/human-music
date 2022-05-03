@@ -1,13 +1,22 @@
 export class Note {
    readonly value!: number;
-   duration!: number;
+   readonly duration: number = 0;
+   readonly allowExtension!: boolean;
+   private currentDuration: number;
 
-   constructor(value: number, duration: number) {
+
+   constructor({ value = 0, duration = 0, allowExtension = true }) {
       this.value = value;
       this.duration = duration;
+      this.allowExtension = allowExtension;
+      this.currentDuration = duration;
    }
 
-   tick = () => this.duration--;
+   copy({ value = this.value, duration = this.duration, allowExtension = this.allowExtension }): Note {
+      return new Note({ value, duration, allowExtension });
+   }
 
-   isFinished = () => this.duration <= 0;
+   tick = () => this.currentDuration--;
+
+   isFinished = () => this.currentDuration <= 0;
 }
