@@ -28,10 +28,10 @@ export class ChordsGenerator {
    }
 
    noteFor = (voice: Voice) => {
-      const noteIndex = (this.automata.leeDistance() + voice.toneOffset) % this.currentNode.value.notes.length
+      const noteIndex = voice.currentNote.value % this.currentNode.value.notes.length
       const candidate = this.currentNode.value.notes[noteIndex] + voice.octave * 12 + this.tone
-      if (candidate === voice.currentNote.value) {
-         return this.automata.leeDistance() % 2 === 0 && noteIndex > 0
+      if (candidate === voice.lastValue && !voice.currentNote.allowRepeat) {
+         return noteIndex > 0
             ? this.currentNode.value.notes[(noteIndex - 1) % this.currentNode.value.notes.length] + voice.octave * 12 + this.tone
             : this.currentNode.value.notes[(noteIndex + 1) % this.currentNode.value.notes.length] + voice.octave * 12 + this.tone;
       }

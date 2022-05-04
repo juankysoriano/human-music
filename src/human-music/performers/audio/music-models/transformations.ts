@@ -6,29 +6,48 @@ export interface Transformation {
    restore(): void
 }
 
+enum Operations {
+   NOTHING,
+   REVERSE,
+}
 export class RythmTransformation implements Transformation {
    private staticDurations: number[] = [0, 1, 2].shuffle()
+   private staticRythms: Note[][]
    private durations: number[] = [...this.staticDurations]
    private automata: CellularAutomata1D
    private rythms: Note[][]
+   private operations: Operations[] =
+      [
+         Operations.NOTHING,
+         Operations.REVERSE,
+      ].shuffle()
+   private backup = new Map<Voice, Note[]>()
+
 
    constructor(automata: CellularAutomata1D, rythms: Note[][]) {
       this.automata = automata
       this.rythms = rythms
+      this.staticRythms = [...rythms]
    }
 
    transform(voice: Voice): void {
       const index = this.automata.leeDistance() % this.durations.length
       voice.rythm = this.rythms[this.durations[index]]
+      this.backup.set(voice, voice.rythm)
       this.durations.splice(index, 1)
    }
 
-   mutate(): void {
-      this.rythms = this.rythms.map(rythm => rythm.reverse())
+   mutate(voices: Voice[]): void {
+      const operation = this.operations[this.automata.leeDistance() % this.operations.length]
+      switch (operation) {
+         case Operations.NOTHING: break;
+         case Operations.REVERSE: voices.forEach(voice => voice.rythm = voice.rythm.reverse()); break;
+      }
    }
 
    restore(): void {
       this.durations = [...this.staticDurations]
+      this.rythms = [...this.staticRythms]
    }
 }
 

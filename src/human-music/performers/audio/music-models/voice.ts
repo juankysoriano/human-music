@@ -31,25 +31,35 @@ export class Voice {
       this.currentPattern = pattern
    }
 
+   get rythm(): Note[] {
+      return [...this.currentPattern]
+   }
+
    get currentNote(): Note {
-      return this._currentNote
+      const pattern = this.currentPattern
+      return pattern[this.noteIndex % pattern.length]
+   }
+
+   get lastValue(): number {
+      return this._currentNote.value
    }
 
    play(midiNote: number, attack: number) {
-      if (this.currentNote.isFinished()) {
-         MIDI.noteOff(this.instrument, this.currentNote.value);
+      if (this._currentNote.isFinished()) {
+         MIDI.noteOff(this.instrument, this._currentNote.value);
          MIDI.noteOn(this.instrument, midiNote, attack);
-         this._currentNote = this.currentPattern[this.noteIndex % this.currentPattern.length].copy({ value: midiNote });
+         const pattern = this.currentPattern.flat()
+         this._currentNote = pattern[this.noteIndex % pattern.length].copy({ value: midiNote });
          this.noteIndex++
       }
    }
 
    tick() {
-      this.currentNote.tick();
+      this._currentNote.tick();
    }
 
    stop() {
-      MIDI.noteOff(this.instrument, this.currentNote.value);
+      MIDI.noteOff(this.instrument, this._currentNote.value);
       this._currentNote = new Note({ value: 0, duration: 0 });
    }
 }

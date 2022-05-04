@@ -1,40 +1,55 @@
-import { CellularAutomata1D } from '../../../cellular-automata/1d/cellularAutomata1D';
 import { } from '../../../utils/extensions';
 import { Note } from "./note";
 
-export const rythms: Note[][] = [
-    [new Note({ duration: 48, allowExtension: false })],
-    [new Note({ duration: 24, allowExtension: false }), new Note({ duration: 24, allowExtension: false })],
-    //[new Note({ duration: 36, allowExtension: false }), new Note({ duration: 12, allowExtension: false })],
-    //[new Note({ duration: 12, allowExtension: false }), new Note({ duration: 36, allowExtension: false })],
-    [new Note({ duration: 12, allowExtension: false }), new Note({ duration: 24, allowExtension: false }), new Note({ duration: 12, allowExtension: false })],
-    [new Note({ duration: 24, allowExtension: false }), new Note({ duration: 12, allowExtension: false }), new Note({ duration: 12, allowExtension: false })],
-    [new Note({ duration: 12, allowExtension: false }), new Note({ duration: 12, allowExtension: false }), new Note({ duration: 24, allowExtension: false })],
-    //[new Note({ duration: 16, allowExtension: false }), new Note({ duration: 16, allowExtension: false }), new Note({ duration: 16, allowExtension: false })],
-    [new Note({ duration: 12, allowExtension: false }), new Note({ duration: 12, allowExtension: false }), new Note({ duration: 12, allowExtension: false }), new Note({ duration: 12, allowExtension: false })],
-    //[new Note({ duration: 24, allowExtension: false }), new Note({ duration: 8, allowExtension: false }), new Note({ duration: 8, allowExtension: false }), new Note({ duration: 8, allowExtension: false })],
-    //[new Note({ duration: 8, allowExtension: false }), new Note({ duration: 8, allowExtension: false }), new Note({ duration: 8, allowExtension: false }), new Note({ duration: 24, allowExtension: false })],
-    //[new Note({ duration: 12, allowExtension: false }), new Note({ duration: 8, allowExtension: false }), new Note({ duration: 8, allowExtension: false }), new Note({ duration: 8, allowExtension: false }), new Note({ duration: 12, allowExtension: false })],
-    //[new Note({ duration: 12, allowExtension: false }), new Note({ duration: 12, allowExtension: false }), new Note({ duration: 8, allowExtension: false }), new Note({ duration: 8, allowExtension: false }), new Note({ duration: 8, allowExtension: false })],
-    //[new Note({ duration: 8, allowExtension: false }), new Note({ duration: 8, allowExtension: false }), new Note({ duration: 8, allowExtension: false }), new Note({ duration: 12, allowExtension: false }), new Note({ duration: 12, allowExtension: false })],
-].shuffle()
+const allNotes: Note[] = [
+    48, // whole
+    36, // half dot
+    24, // half
+    18, // quarter dot
+    12, // quarter
+    9, // eighth dot
+    6, // eighth
+    3, // sixteenth
+].map(duration => new Note({ value: 0, duration, allowRepeat: false }))
 
-export function rythmFor(automata: CellularAutomata1D, beatDuration: number): Note[][] {
-    function findRythm(factor: number) {
-        const calculatedRythm = [];
-        while (duration(calculatedRythm) < beatDuration) {
-            automata.evolve()
-            const index = automata.leeDistance() % rythms.length;
-            const selected = rythms[index].map(note => note.copy({ duration: note.duration / factor }));
-            calculatedRythm.push(...selected);
-            automata.evolve()
+export function rythms(beatDuration: number): Note[][] {
+    function findRythm(rythm: Note[], max: number, min: number) {
+        const space = allNotes.filter(note => note.duration >= min && note.duration <= max);
+        const result = [];
+        for (const note of rythm) {
+            const candidates = findNotesFilling(note, space);
+            result.push(...candidates);
         }
-        return calculatedRythm
+        return result
     }
-    automata.reset()
-    return [findRythm(1), findRythm(2), findRythm(4)].shuffle();
+
+    function findNotesFilling(note: Note, space: Note[]): Note[] {
+        let notes: Note[] = [];
+        while (duration(notes) !== note.duration) {
+            const remaining = note.duration - duration(notes);
+            const availableNotes = space.filter(spaceNote => spaceNote.duration <= remaining)
+            if (availableNotes.length === 0) {
+                console.log("CLEARING", remaining)
+                notes = []
+            } else {
+                const candidate = space[Math.floor(Math.random() * space.length)];
+                if (duration(notes) + candidate.duration <= note.duration) {
+                    notes.push(candidate);
+                }
+            }
+        }
+        return notes;
+    }
+    const slow = findRythm([new Note({ duration: beatDuration })], 48, 24)
+    const mid = findRythm(slow, 36, 12)
+    const fast = findRythm(mid, 12, 3)
+
+    console.log("SLOW: " + slow.map(note => note.duration).join(", "))
+    console.log("MID: " + mid.map(note => note.duration).join(", "))
+    console.log("FAST: " + fast.map(note => note.duration).join(", "))
+    return [slow, mid, fast].shuffle();
 }
 
 function duration(notes: Note[]): number {
-    return notes.length === 0 ? 0 : notes.reduce((acc, note) => acc + note.duration, 0);
+    return notes.length === 0 ? 0 : notes.flat().reduce((acc, note) => acc + note.duration, 0);
 }

@@ -2,7 +2,7 @@ import { CellularAutomata1D } from "../../../cellular-automata/1d/cellularAutoma
 import { ChordsGenerator } from "../notes-generator";
 import { ChordVoice } from "./chord-voice";
 import { Note } from "./note";
-import { rythmFor } from './rythm';
+import { rythms } from './rythm';
 import { PitchTransformation, RythmTransformation } from './transformations';
 import { Voice } from "./voice";
 
@@ -25,7 +25,7 @@ export class Music {
       this.voices = voices;
       this.chordVoice = chordVoice;
       this.automata = automata;
-      this.rythms = rythmFor(this.automata!, 48)
+      this.rythms = rythms(this.beatDuration)
       this.rythmTransformation = new RythmTransformation(automata, this.rythms);
       this.pitchTransformation = new PitchTransformation(automata);
       this.chordsGenerator = new ChordsGenerator(automata, this.beatDuration);
@@ -46,7 +46,7 @@ export class Music {
                this.pitchTransformation.transform(voice);
             });
          }
-         this.rythmTransformation.mutate()
+         this.rythmTransformation.mutate(this.voices)
 
          this.chordVoice.play(this.chordsGenerator.chordFor(this.chordVoice), this.chordVoice.attack);
       }
