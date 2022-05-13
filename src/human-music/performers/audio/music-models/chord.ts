@@ -28,17 +28,17 @@ export namespace Chord {
             .sort((first, second) => first.distance(previousChord.notes) - second.distance(previousChord.notes))
             .filter(inversion => inversion.distance(previousChord.notes) !== 0)
          return new Chord({
-            notes: inversions[0].hasDuplicates() ? inversions[1] : inversions[0],
+            notes: (inversions[0].hasDuplicates() ? inversions[1] : inversions[0]).sort((a, b) => a - b),
             label: chord.label
          })
       } else {
          return new Chord({
-            notes: inversions[defaultInversion],
+            notes: inversions[defaultInversion].sort((a, b) => a - b),
             label: chord.label
          })
       }
    }
 }
 
-export const progressions = convertToTree(progressions_list).filter(chord => chord.isTriad)
+export const progressions = convertToTree(progressions_list)
 

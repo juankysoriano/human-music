@@ -4,14 +4,15 @@ import { Note } from "./note";
 
 export class Voice {
    private _currentNote: Note = new Note({ value: 0, duration: 0 });
-   private _toneOffset: number = 0;
    private instrument;
-   private currentPattern: Note[] = []
+   private currentRythm: Note[] = []
+   offset: number = 0
+   rythmIndex: number = 0;
 
    readonly octave: number;
    readonly attack: number;
 
-   private noteIndex = 0;
+   noteIndex = 0;
 
    constructor(instrument: number, octave: number, attack: number) {
       this.instrument = instrument;
@@ -19,24 +20,16 @@ export class Voice {
       this.attack = attack;
    }
 
-   get toneOffset(): number {
-      return this._toneOffset
-   }
-
-   set toneOffset(value: number) {
-      this._toneOffset = value
-   }
-
-   set rythm(pattern: Note[]) {
-      this.currentPattern = pattern
+   set rythm(rythm: Note[]) {
+      this.currentRythm = rythm
    }
 
    get rythm(): Note[] {
-      return [...this.currentPattern]
+      return [...this.currentRythm]
    }
 
    get currentNote(): Note {
-      const pattern = this.currentPattern
+      const pattern = this.currentRythm
       return pattern[this.noteIndex % pattern.length]
    }
 
@@ -48,8 +41,8 @@ export class Voice {
       if (this._currentNote.isFinished()) {
          MIDI.noteOff(this.instrument, this._currentNote.value);
          MIDI.noteOn(this.instrument, midiNote, attack);
-         const pattern = this.currentPattern.flat()
-         this._currentNote = pattern[this.noteIndex % pattern.length].copy({ value: midiNote });
+         const rythm = this.currentRythm
+         this._currentNote = rythm[this.noteIndex % rythm.length].copy({ value: midiNote });
          this.noteIndex++
       }
    }

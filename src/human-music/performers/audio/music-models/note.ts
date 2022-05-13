@@ -13,7 +13,7 @@ export class Note {
    }
 
    copy({ value = this.value, duration = this.duration, allowRepeat = this.allowRepeat }): Note {
-      return new Note({ value, duration, allowRepeat: allowRepeat });
+      return new Note({ value, duration, allowRepeat });
    }
 
    tick = () => this.currentDuration--;

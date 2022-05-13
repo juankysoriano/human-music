@@ -3,7 +3,12 @@ import { Chord } from "../performers/audio/music-models/chord"
 import { TreeNode } from "./data-structures/tree-node"
 
 declare global {
+   interface Map<K, V> {
+      filterByKey(criteria: (key: K) => boolean): Map<K, V>
+   }
+
    interface Array<T> {
+      groupBy<K>(grouper: (group: T) => K): Map<K, T[]>
       shuffle(): Array<T>
       removeDuplicates(): Array<T>
       hasDuplicates(): boolean
@@ -13,6 +18,31 @@ declare global {
    interface String {
       node({ isLeaf }: { isLeaf: boolean }): TreeNode<Chord>
    }
+}
+
+// eslint-disable-next-line no-extend-native
+Map.prototype.filterByKey = function <K, V>(this: Map<K, V>, criteria: (key: K) => boolean) {
+   const map = new Map<K, V>()
+   this.forEach((value, key) => {
+      if (criteria(key)) {
+         map.set(key, value)
+      }
+   })
+   return map
+}
+
+// eslint-disable-next-line no-extend-native
+Array.prototype.groupBy = function <K, T>(this: T[], grouper: (group: T) => K) {
+   const map = new Map<K, T[]>()
+   this.forEach((element) => {
+      const key = grouper(element)
+      if (!map.has(key)) {
+         map.set(key, [...[element]])
+      } else {
+         map.set(key, [...map.get(key) as T[], element])
+      }
+   })
+   return map
 }
 
 // eslint-disable-next-line no-extend-native

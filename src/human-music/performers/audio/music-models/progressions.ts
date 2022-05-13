@@ -114,6 +114,7 @@ export const progressions_list: string[] = [
    "Vm bVI Vm Im",
 ]
 
+
 export function convertToTree(progressions: string[]): TreeNode<Chord> {
    const root: TreeNode<Chord> = TreeNode.root()
    progressions.removeDuplicates().forEach((progression) => {

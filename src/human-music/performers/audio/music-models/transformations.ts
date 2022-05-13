@@ -2,7 +2,7 @@ import { CellularAutomata1D } from '../../../cellular-automata/1d/cellularAutoma
 import { Note } from './note';
 import { Voice } from './voice';
 export interface Transformation {
-   transform(voice: Voice): void
+   transform(voices: Voice[]): void
    restore(): void
 }
 
@@ -12,37 +12,38 @@ enum Operations {
 }
 export class RythmTransformation implements Transformation {
    private staticDurations: number[] = [0, 1, 2].shuffle()
-   private staticRythms: Note[][]
+   private staticRythms: Note[][][]
    private durations: number[] = [...this.staticDurations]
    private automata: CellularAutomata1D
-   private rythms: Note[][]
+   private rythms: Note[][][]
+   private count = 0
    private operations: Operations[] =
       [
          Operations.NOTHING,
          Operations.REVERSE,
       ].shuffle()
-   private backup = new Map<Voice, Note[]>()
 
 
-   constructor(automata: CellularAutomata1D, rythms: Note[][]) {
+   constructor(automata: CellularAutomata1D, rythms: Note[][][]) {
       this.automata = automata
       this.rythms = rythms
       this.staticRythms = [...rythms]
    }
 
-   transform(voice: Voice): void {
-      const index = this.automata.leeDistance() % this.durations.length
-      voice.rythm = this.rythms[this.durations[index]]
-      this.backup.set(voice, voice.rythm)
-      this.durations.splice(index, 1)
+   transform(voices: Voice[]): void {
+      voices.forEach(voice => {
+         const index = this.automata.leeDistance() % this.durations.length
+         voice.rythmIndex = this.durations[index]
+         voice.rythm = this.rythms[this.automata.leeDistance() % this.rythms.length][this.durations[index]]
+         this.durations.splice(index, 1)
+      })
    }
 
    mutate(voices: Voice[]): void {
-      const operation = this.operations[this.automata.leeDistance() % this.operations.length]
-      switch (operation) {
-         case Operations.NOTHING: break;
-         case Operations.REVERSE: voices.forEach(voice => voice.rythm = voice.rythm.reverse()); break;
-      }
+      voices.forEach(voice => {
+         voice.rythm = this.rythms[this.count % this.rythms.length][voice.rythmIndex]
+      })
+      this.count++
    }
 
    restore(): void {
@@ -51,19 +52,23 @@ export class RythmTransformation implements Transformation {
    }
 }
 
-export class PitchTransformation implements Transformation {
+export class MelodyTransformation implements Transformation {
    private staticToneOffsets: number[] = [0, 1, 2].shuffle()
    private toneOffsets: number[] = [...this.staticToneOffsets]
+   private first: boolean = true
+
    private automata: CellularAutomata1D
 
    constructor(automata: CellularAutomata1D) {
       this.automata = automata
    }
 
-   transform(voice: Voice): void {
-      const index = this.automata.leeDistance() % this.toneOffsets.length
-      voice.toneOffset = this.toneOffsets[index]
-      this.toneOffsets.splice(index, 1)
+   transform(voices: Voice[]): void {
+      voices.forEach(voice => {
+         const index = this.automata.leeDistance() % this.toneOffsets.length
+         voice.offset = this.toneOffsets[index]
+         this.toneOffsets.splice(index, 1)
+      })
    }
 
    restore(): void {

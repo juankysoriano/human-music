@@ -15,7 +15,7 @@ declare global {
 
 export function loadMidi(loaded: () => void) {
    window.MIDI = MIDI || {}
-   const instruments = ["acoustic_guitar_nylon", "acoustic_guitar_nylon", "acoustic_guitar_nylon"]
+   const instruments = ["acoustic_grand_piano", "acoustic_grand_piano", "acoustic_grand_piano"]
    MIDI.loadPlugin({
       soundfontUrl: "https://juankysoriano.github.io/midi-js-soundfonts/AirFont/",
       targetFormat: "mp3",
@@ -29,9 +29,9 @@ export function loadMidi(loaded: () => void) {
    })
 }
 
-export const noteOn = (instrument: number, note: number, velocity: number) => MIDI.noteOn(instrument, note, velocity + randomNumber(-5, 5), randomNumber(0, 0.025))
+export const noteOn = (instrument: number, note: number, velocity: number) => MIDI.noteOn(instrument, note, velocity + randomNumber(-5, 5), randomNumber(0, 0.015))
 
-export const chordOn = (instrument: number, chord: number[], velocity: number) => MIDI.chordOn(instrument, chord, velocity + randomNumber(-5, 5), randomNumber(0, 0.025))
+export const chordOn = (instrument: number, chord: number[], velocity: number) => MIDI.chordOn(instrument, chord, velocity + randomNumber(-5, 5), randomNumber(0, 0.015))
 
 export const noteOff = (instrument: number, note: number) => MIDI.noteOff(instrument, note, 0.2 + randomNumber(-0.05, 0.05))
 
