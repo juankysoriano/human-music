@@ -5,82 +5,82 @@ import { Note } from "./note";
 
 const allNotes: Map<number, Note[][]> = [
     [48], // whole
-    [36], // half dot
-    [24], // half
-    [18], // quarter dot
-    [12], // quarter
-    [9], // eighth dot
-    [6], // eighth
-    [3], // sixteenth
-    [12, 24, 12],
-    [12, 6, 6, 12],
-    [6, 12, 12, 6],
-    [12, 6, 12],
-    [6, 12, 6],
-    [6, 3, 3, 6],
-    [3, 6, 6, 3],
-    [6, 3, 6],
+    [36, 12],
+    [12, 36],
+    [36, 6, 6],
+    [6, 6, 36],
+    [6, 36, 6],
     [24, 24],
-    [24, 18],
-    [24, 12],
-    [24, 9],
-    [18, 24],
-    [18, 18],
-    [18, 18, 18],
-    [18, 12],
-    [18, 12, 18],
-    [18, 9],
-    [18, 9, 18],
-    [18, 6],
-    [18, 6, 18],
-    [18, 3],
-    [18, 3, 18],
-    [12, 3],
-    [12, 3, 12],
-    [12, 6],
-    [12, 6, 12],
-    [12, 9],
-    [12, 9, 12],
-    [12, 12],
-    [12, 12, 12],
-    [12, 18],
-    [12, 18, 12],
-    [12, 24],
+    [24, 12, 12],
     [12, 24, 12],
-    [6, 3],
-    [6, 3, 6],
-    [6, 6],
-    [6, 6, 6],
-    [6, 9],
-    [6, 9, 6],
-    [6, 12],
-    [6, 12, 6],
-    [6, 18],
-    [6, 18, 6],
-    [6, 24],
+    [12, 12, 24],
+    [12, 12, 12, 12],
+    [18, 18, 12],
+    [12, 18, 18],
+    [18, 12, 18],
+
+    [36], // half dot
+    [24, 12],
+    [12, 24],
+    [24, 6, 6],
+    [6, 6, 24],
     [6, 24, 6],
-    [3, 6, 3],
-    [3, 3],
-    [3, 6],
-    [3, 9],
-    [3, 9, 3],
-    [3, 12],
-    [3, 12, 3],
-    [3, 18],
-    [3, 18, 3],
-    //[8, 8, 8, 8, 8, 8],
-    [6, 6, 6, 6, 6, 6],
-    //[4, 4, 4, 4, 4, 4],
-    [3, 3, 3, 3, 3, 3],
-    [16, 16, 16],
     [12, 12, 12],
-    //[8, 8, 8],
+    [12, 12, 6, 6],
+    [6, 6, 12, 12],
+    [6, 12, 12, 6],
+    [12, 6, 6, 12],
+    [12, 6, 12, 6],
+    [6, 12, 6, 12],
+
+    [24], // half
+    [18, 6],
+    [6, 18],
+    [18, 3, 3],
+    [3, 3, 18],
+    [3, 18, 3],
+    [12, 12],
+    [12, 6, 6],
+    [6, 12, 6],
+    [6, 6, 12],
+    [6, 6, 6, 6],
+    [9, 9, 6],
+    [6, 9, 9],
+    [9, 6, 9],
+
+    [18], // quarter dot
+    [12, 6],
+    [6, 12],
+    [12, 3, 3],
+    [3, 3, 12],
+    [3, 12, 3],
     [6, 6, 6],
-    //[4, 4, 4],
-    [3, 3, 3],
-    [18, 18],
-    [9, 9],
-].map(group => group.map(duration => new Note({ value: 0, duration, allowRepeat: true })))
+    [6, 6, 3, 3],
+    [3, 3, 6, 6],
+    [3, 6, 6, 3],
+    [6, 3, 3, 6],
+    [6, 3, 6, 3],
+    [3, 6, 3, 6],
+
+    [12], // quarter
+    [9, 3],
+    [3, 9],
+    [6, 6],
+    [6, 3, 3],
+    [3, 6, 3],
+    [3, 3, 6],
+    [3, 3, 3, 3],
+
+    [9], // eighth dot
+    [6, 3],
+    [3, 6],
+    [3, 3, 3,],
+
+    [6], // eighth
+    [3, 3],
+
+    [3], // sixteenth
+].map(group => group.map(duration => new Note({ value: 0, duration, allowRepeat: false })))
     .groupBy((durations) => duration(durations))
 
 export function rythms(automata: CellularAutomata1D, beatDuration: number): Note[][][] {
@@ -102,7 +102,6 @@ export function rythms(automata: CellularAutomata1D, beatDuration: number): Note
     function findNotesFilling(note: Note[], space: Map<number, Note[][]>): Note[][] {
         let notes: Note[][] = [[]]
         let attemps = 0
-
         while (groupDuration(notes) !== duration(note)) {
             const remaining = duration(note) - groupDuration(notes)
             const availableNotes = space.filterByKey(value => value <= remaining)
@@ -113,7 +112,8 @@ export function rythms(automata: CellularAutomata1D, beatDuration: number): Note
                     return []
                 }
             } else {
-                const candidate = Array.from(availableNotes.values()).flat()[Math.floor(Math.random() * availableNotes.size)]
+                const candidates = Array.from(availableNotes.values()).flat()
+                const candidate = candidates[Math.floor(Math.random() * candidates.length)]
                 if (groupDuration(notes) + duration(candidate) <= duration(note)) {
                     notes.push(candidate);
                 }
@@ -128,7 +128,9 @@ export function rythms(automata: CellularAutomata1D, beatDuration: number): Note
             while (duration(faster.slice(0, index)) < acc) {
                 index++
             }
-            slower[currentIndex] = note.copy({ value: faster[index].value })
+            if (index < faster.length) {
+                slower[currentIndex] = note.copy({ value: faster[index].value })
+            }
             return (acc + note.duration)
         }, 0)
         return slower
@@ -142,22 +144,24 @@ export function rythms(automata: CellularAutomata1D, beatDuration: number): Note
             case 0: return copy.map(notes => notes.reverse());
             case 1: return copy.map(notes => notes.map(note => note.copy({ value: note.value + 1 })));
             case 2: return copy.map(notes => notes.map(note => note.copy({ value: note.value - 1 })));
-            case 3: return copy.map(notes => {
+            case 3: return copy.flatMap(notes => {
                 automata.evolve()
-                return findNotesFilling(notes, allNotes.filterByKey(key => key >= duration(notes) && key <= duration(notes)))
+                const value = automata.leeDistance()
+                return [findNotesFilling(notes, allNotes)
                     .flatMap((notes, index) => notes.map(note => {
-                        const melodyNote = note.copy({ value: automata.leeDistance() + (index + 1) })
-                        automata.evolve()
-                        return melodyNote
-                    })).flat()
+                        return note.copy({ value: index * value })
+                    })).flat()]
+
             });
             case 4: return copy.map(notes => {
                 automata.evolve()
+                const value = automata.leeDistance()
                 return notes.map((note, index) => {
-                    const melodyNote = note.copy({ value: automata.leeDistance() + (index + 1) })
+                    const melodyNote = note.copy({ value: index * value })
                     automata.evolve()
                     return melodyNote
                 })
+
             });
             default: return copy
         }
@@ -179,22 +183,23 @@ export function rythms(automata: CellularAutomata1D, beatDuration: number): Note
     let fast4: Note[] = []
 
 
-
     while (slow.flat().length === 0 || mid.flat().length === 0 || fast.flat().length === 0) {
-        slow = findRythm([[new Note({ duration: beatDuration })]], beatDuration, 24).shuffle()
-        mid = findRythm(slow, 36, 12)
-        fast = findRythm(mid, 24, 3)
+        slow = findRythm([[new Note({ duration: beatDuration })]], beatDuration, beatDuration).shuffle().filter(group => group.length > 0)
+        mid = findRythm(slow, 24, 18).filter(group => group.length > 0)
+        fast = findRythm(mid, 12, 9).filter(group => group.length > 0)
     }
 
+    automata.evolve()
+    const value = automata.leeDistance()
     fast = fast.flatMap((notes, index) => [notes.map(note => {
-        const melodyNote = note.copy({ value: automata.leeDistance() + (index + 1) })
+        const melodyNote = note.copy({ value: index * value })
         automata.evolve()
         return melodyNote
     })])
 
-    fast2 = mutation(automata, fast).flat()
-    fast3 = mutation(automata, fast).flat()
-    fast4 = mutation(automata, fast).flat()
+    fast2 = mutation(automata, mutation(automata, fast)).flat()
+    fast3 = mutation(automata, mutation(automata, fast)).flat()
+    fast4 = mutation(automata, mutation(automata, fast)).flat()
     fast = fast.flat()
     mid = indexReduce(mid.flat(), fast)
     mid2 = indexReduce(mid, fast2)
@@ -205,10 +210,7 @@ export function rythms(automata: CellularAutomata1D, beatDuration: number): Note
     slow3 = indexReduce(slow, mid3)
     slow4 = indexReduce(slow, mid4)
 
-    return [Math.random() > 0.5 ? [slow, mid, fast] : [slow.reverse(), mid.reverse(), fast.reverse()]
-        , Math.random() > 0.5 ? [slow2, mid2, fast2] : [slow2.reverse(), mid2.reverse(), fast2.reverse()]
-        , Math.random() > 0.5 ? [slow3, mid3, fast3] : [slow3.reverse(), mid3.reverse(), fast3.reverse()]
-        , Math.random() > 0.5 ? [slow4, mid4, fast4] : [slow4.reverse(), mid4.reverse(), fast4.reverse()]]
+    return [[slow, mid, fast], [slow2, mid2, fast2], [slow3, mid3, fast3], [slow4, mid4, fast4]]
 }
 
 function duration(notes: Note[]): number {

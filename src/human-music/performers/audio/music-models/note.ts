@@ -5,7 +5,7 @@ export class Note {
    private currentDuration: number;
 
 
-   constructor({ value = 0, duration = 0, allowRepeat = true }) {
+   constructor({ value = 0, duration = 0, allowRepeat = false }) {
       this.value = value;
       this.duration = duration;
       this.allowRepeat = allowRepeat;

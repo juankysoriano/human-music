@@ -11,7 +11,7 @@ enum Operations {
    REVERSE,
 }
 export class RythmTransformation implements Transformation {
-   private staticDurations: number[] = [0, 1, 2].shuffle()
+   private staticDurations: number[] = [1, 2].shuffle()
    private staticRythms: Note[][][]
    private durations: number[] = [...this.staticDurations]
    private automata: CellularAutomata1D
@@ -55,7 +55,6 @@ export class RythmTransformation implements Transformation {
 export class MelodyTransformation implements Transformation {
    private staticToneOffsets: number[] = [0, 1, 2].shuffle()
    private toneOffsets: number[] = [...this.staticToneOffsets]
-   private first: boolean = true
 
    private automata: CellularAutomata1D
 

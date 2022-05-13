@@ -8,16 +8,16 @@ export class AutomataSelector {
    }
 
    private findautomata() {
-      const differentStates = new Set<number>()
+      let different = 0;
+      let previousState = 0;
       let configuration = null
-      while (differentStates.size < 5) {
-         differentStates.clear()
+      while (different < 5) {
          configuration = this.randomConfiguration()
 
          for (let i = 0; i < 200; i++) {
             configuration.automata.evolve()
             if (i >= 100) {
-               differentStates.add(configuration.automata.leeDistance())
+               different = previousState !== configuration.automata.leeDistance() ? different + 1 : different
             }
          }
       }

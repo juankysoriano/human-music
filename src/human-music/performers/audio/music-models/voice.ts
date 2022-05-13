@@ -37,6 +37,10 @@ export class Voice {
       return this._currentNote.value
    }
 
+   get isFinished(): boolean {
+      return this._currentNote.isFinished()
+   }
+
    play(midiNote: number, attack: number) {
       if (this._currentNote.isFinished()) {
          MIDI.noteOff(this.instrument, this._currentNote.value);

@@ -28,14 +28,17 @@ export class ChordsGenerator {
    }
 
    noteFor = (voice: Voice) => {
-      const noteIndex = voice.currentNote.value % this.currentNode.value.notes.length
-      const candidate = this.currentNode.value.notes[noteIndex] + voice.octave * 12 + this.tone
-      if (candidate === voice.lastValue) {
-         return noteIndex > 0
-            ? this.currentNode.value.notes[(noteIndex - 1) % this.currentNode.value.notes.length] + voice.octave * 12 + this.tone
-            : this.currentNode.value.notes[(noteIndex + 1) % this.currentNode.value.notes.length] + voice.octave * 12 + this.tone;
+      if (voice.isFinished) {
+         const noteIndex = voice.currentNote.value % this.currentNode.value.notes.length
+         let candidate = this.currentNode.value.notes[noteIndex] + voice.octave * 12 + this.tone
+         if (candidate === voice.lastValue && !voice.currentNote.allowRepeat) {
+            candidate = this.currentNode.value.notes[(noteIndex + 1) % this.currentNode.value.notes.length] + voice.octave * 12 + this.tone;
+         }
+         console.log(candidate)
+         return candidate
       }
-      return candidate
+      return 0
+
    }
 
    chordFor = (chordVoice: ChordVoice) => this.currentNode.value.notes.map((note) => note + chordVoice.octave * 12 + this.tone)
@@ -77,7 +80,3 @@ export class ChordsGenerator {
       )
    }
 }
-
-const wave = [[0, 1, 2, 1], [0, 1, 2, 3, 2, 1], [0, 1, 2, 3, 4, 3, 2, 1]]
-const up = [[0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
-const down = [[2, 1, 0], [3, 2, 1, 0], [4, 3, 2, 1, 0]]

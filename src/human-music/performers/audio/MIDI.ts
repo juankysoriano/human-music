@@ -37,4 +37,4 @@ export const noteOff = (instrument: number, note: number) => MIDI.noteOff(instru
 
 export const chordOff = (instrument: number, chord: number[]) => MIDI.chordOff(instrument, chord, 0.2 + randomNumber(-0.05, 0.05))
 
-const randomNumber = (min: number, max: number) => Math.random() * (max - min) + min
+const randomNumber = (min: number, max: number) => 0
