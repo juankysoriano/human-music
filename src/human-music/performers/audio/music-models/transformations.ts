@@ -11,7 +11,7 @@ enum Operations {
    REVERSE,
 }
 export class RythmTransformation implements Transformation {
-   private staticDurations: number[] = [1, 2].shuffle()
+   private staticDurations: number[] = [0, 1, 2].shuffle()
    private staticRythms: Note[][][]
    private durations: number[] = [...this.staticDurations]
    private automata: CellularAutomata1D
@@ -34,9 +34,9 @@ export class RythmTransformation implements Transformation {
       voices.forEach(voice => {
          const index = this.automata.leeDistance() % this.durations.length
          voice.rythmIndex = this.durations[index]
-         voice.rythm = this.rythms[this.automata.leeDistance() % this.rythms.length][this.durations[index]]
          this.durations.splice(index, 1)
       })
+      this.count = 0
    }
 
    mutate(voices: Voice[]): void {

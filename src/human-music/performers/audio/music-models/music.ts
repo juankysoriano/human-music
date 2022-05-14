@@ -48,10 +48,8 @@ export class Music {
          this.chordVoice.play(this.chordsGenerator.chordFor(this.chordVoice), this.chordVoice.attack);
       }
 
-      this.voices.forEach((voice) => {
-         voice.play(this.chordsGenerator.noteFor(voice), voice.attack);
-         voice.tick();
-      });
+      this.voices.filter(voice => voice.isFinished).forEach(voice => voice.play(this.chordsGenerator.noteFor(voice), voice.attack))
+      this.voices.forEach(voice => voice.tick())
 
       this.currentBeat++;
    }

@@ -3,7 +3,131 @@ import { CellularAutomata1D } from '../../../cellular-automata/1d/cellularAutoma
 import { } from '../../../utils/extensions';
 import { Note } from "./note";
 
-const allNotes: Map<number, Note[][]> = [
+const melodyPatterns: Map<number, number[][]> = [
+    [0],
+    [+1],
+    [-1],
+    //[-1, -1],
+    [-1, 0],
+    [-1, +1],
+    [0, -1],
+    //[0, 0],
+    [0, +1],
+    [+1, -1],
+    [+1, 0],
+    //[+1, +1],
+    //[-1, -1, -1],
+    //[-1, -1, 0],
+    //[-1, -1, +1],
+    [-1, 0, -1],
+    //[-1, 0, 0],
+    [-1, 0, +1],
+    [-1, +1, -1],
+    [-1, +1, 0],
+    //[-1, +1, +1],
+    //[0, -1, -1],
+    [0, -1, 0],
+    [0, -1, +1],
+    //[0, 0, -1],
+    //[0, 0, 0],
+    //[0, 0, +1],
+    [0, +1, -1],
+    [0, +1, 0],
+    //[0, +1, +1],
+    //[+1, -1, -1],
+    [+1, -1, 0],
+    [+1, -1, +1],
+    [+1, 0, -1],
+    //[+1, 0, 0],
+    [+1, 0, +1],
+    //[+1, +1, -1],
+    //[+1, +1, 0],
+    //[+1, +1, +1],
+    //[-1, -1, -1, -1],
+    //[-1, -1, -1, 0],
+    //[-1, -1, -1, +1],
+    //[-1, -1, 0, -1],
+    //[-1, -1, 0, 0],
+    //[-1, -1, 0, +1],
+    //[-1, -1, +1, -1],
+    //[-1, -1, +1, 0],
+    //[-1, -1, +1, +1],
+    //[-1, 0, -1, -1],
+    [-1, 0, -1, 0],
+    [-1, 0, -1, +1],
+    //[-1, 0, 0, -1],
+    //[-1, 0, 0, 0],
+    //[-1, 0, 0, +1],
+    [-1, 0, +1, -1],
+    [-1, 0, +1, 0],
+    //[-1, 0, +1, +1],
+    //[-1, +1, -1, -1],
+    [-1, +1, -1, 0],
+    [-1, +1, -1, +1],
+    [-1, +1, 0, -1],
+    //[-1, +1, 0, 0],
+    [-1, +1, 0, +1],
+    //[-1, +1, +1, -1],
+    //[-1, +1, +1, 0],
+    //[-1, +1, +1, +1],
+    //[0, -1, -1, -1],
+    //[0, -1, -1, 0],
+    //[0, -1, -1, +1],
+    [0, -1, 0, -1],
+    //[0, -1, 0, 0],
+    [0, -1, 0, +1],
+    [0, -1, +1, -1],
+    [0, -1, +1, 0],
+    //[0, -1, +1, +1],
+    //[0, 0, -1, -1],
+    //[0, 0, -1, 0],
+    //[0, 0, -1, +1],
+    //[0, 0, 0, -1],
+    //[0, 0, 0, 0],
+    //[0, 0, 0, +1],
+    //[0, 0, +1, -1],
+    //[0, 0, +1, 0],
+    //[0, 0, +1, +1],
+    //[0, +1, -1, -1],
+    [0, +1, -1, 0],
+    [0, +1, -1, +1],
+    [0, +1, 0, -1],
+    //[0, +1, 0, 0],
+    [0, +1, 0, +1],
+    //[0, +1, +1, -1],
+    //[0, +1, +1, 0],
+    //[0, +1, +1, +1],
+    //[+1, -1, -1, -1],
+    //[+1, -1, -1, 0],
+    //[+1, -1, -1, +1],
+    [+1, -1, 0, -1],
+    //[+1, -1, 0, 0],
+    [+1, -1, 0, +1],
+    [+1, -1, +1, -1],
+    [+1, -1, +1, 0],
+    //[+1, -1, +1, +1],
+    //[+1, 0, -1, -1],
+    [+1, 0, -1, 0],
+    [+1, 0, -1, +1],
+    //[+1, 0, 0, -1],
+    //[+1, 0, 0, 0],
+    //[+1, 0, 0, +1],
+    [+1, 0, +1, -1],
+    [+1, 0, +1, 0],
+    //[+1, 0, +1, +1],
+    //[+1, +1, -1, -1],
+    //[+1, +1, -1, 0],
+    //[+1, +1, -1, +1],
+    //[+1, +1, 0, -1],
+    //[+1, +1, 0, 0],
+    //[+1, +1, 0, +1],
+    //[+1, +1, +1, -1],
+    //[+1, +1, +1, 0],
+    //[+1, +1, +1, +1],
+].groupBy(pattern => pattern.length);
+
+
+const rythmPatterns: Map<number, Note[][]> = [
     [48], // whole
     [36, 12],
     [12, 36],
@@ -80,12 +204,12 @@ const allNotes: Map<number, Note[][]> = [
     [3, 3],
 
     [3], // sixteenth
-].map(group => group.map(duration => new Note({ value: 0, duration, allowRepeat: false })))
+].map(group => group.map(duration => new Note({ value: 0, duration, allowRepeat: true })))
     .groupBy((durations) => duration(durations))
 
 export function rythms(automata: CellularAutomata1D, beatDuration: number): Note[][][] {
     function findRythm(rythm: Note[][], max: number, min: number) {
-        const space = allNotes.filterByKey(key => key >= min && key <= max)
+        const space = rythmPatterns.filterByKey(key => key >= min && key <= max)
         const result = [];
 
         for (const note of rythm) {
@@ -128,9 +252,9 @@ export function rythms(automata: CellularAutomata1D, beatDuration: number): Note
             while (duration(faster.slice(0, index)) < acc) {
                 index++
             }
-            if (index < faster.length) {
-                slower[currentIndex] = note.copy({ value: faster[index].value })
-            }
+            slower[currentIndex] = index < faster.length
+                ? note.copy({ value: faster[index].value })
+                : note.copy({ value: faster[faster.length - 1].value });
             return (acc + note.duration)
         }, 0)
         return slower
@@ -145,23 +269,19 @@ export function rythms(automata: CellularAutomata1D, beatDuration: number): Note
             case 1: return copy.map(notes => notes.map(note => note.copy({ value: note.value + 1 })));
             case 2: return copy.map(notes => notes.map(note => note.copy({ value: note.value - 1 })));
             case 3: return copy.flatMap(notes => {
-                automata.evolve()
-                const value = automata.leeDistance()
-                return [findNotesFilling(notes, allNotes)
-                    .flatMap((notes, index) => notes.map(note => {
-                        return note.copy({ value: index * value })
-                    })).flat()]
+                return [findNotesFilling(notes, rythmPatterns)
+                    .filter(group => group.length > 0)
+                    .flatMap(notes => {
+                        const melody = melodyPatterns.get(notes.length)![Math.floor(Math.random() * melodyPatterns.get(notes.length)!.length)]
+                        automata.evolve()
+                        return notes.map((note, index) => note.copy({ value: Math.abs(automata.leeDistance() + melody[index]) }))
+                    }).flat()]
 
             });
             case 4: return copy.map(notes => {
+                const melody = melodyPatterns.get(notes.length)![Math.floor(Math.random() * melodyPatterns.get(notes.length)!.length)]
                 automata.evolve()
-                const value = automata.leeDistance()
-                return notes.map((note, index) => {
-                    const melodyNote = note.copy({ value: index * value })
-                    automata.evolve()
-                    return melodyNote
-                })
-
+                return notes.map((note, index) => note.copy({ value: Math.abs(automata.leeDistance() + melody[index]) }))
             });
             default: return copy
         }
@@ -185,17 +305,16 @@ export function rythms(automata: CellularAutomata1D, beatDuration: number): Note
 
     while (slow.flat().length === 0 || mid.flat().length === 0 || fast.flat().length === 0) {
         slow = findRythm([[new Note({ duration: beatDuration })]], beatDuration, beatDuration).shuffle().filter(group => group.length > 0)
-        mid = findRythm(slow, 24, 18).filter(group => group.length > 0)
-        fast = findRythm(mid, 12, 9).filter(group => group.length > 0)
+        mid = findRythm(slow, beatDuration, 24).filter(group => group.length > 0)
+        fast = findRythm(mid, 24, 12).filter(group => group.length > 0)
     }
 
-    automata.evolve()
-    const value = automata.leeDistance()
-    fast = fast.flatMap((notes, index) => [notes.map(note => {
-        const melodyNote = note.copy({ value: index * value })
+
+    fast = fast.map(notes => {
+        const melody = melodyPatterns.get(notes.length)![Math.floor(Math.random() * melodyPatterns.get(notes.length)!.length)]
         automata.evolve()
-        return melodyNote
-    })])
+        return notes.map((note, index) => note.copy({ value: Math.abs(automata.leeDistance() + melody[index]) }))
+    })
 
     fast2 = mutation(automata, mutation(automata, fast)).flat()
     fast3 = mutation(automata, mutation(automata, fast)).flat()
@@ -209,7 +328,7 @@ export function rythms(automata: CellularAutomata1D, beatDuration: number): Note
     slow2 = indexReduce(slow, mid2)
     slow3 = indexReduce(slow, mid3)
     slow4 = indexReduce(slow, mid4)
-
+    console.log(fast)
     return [[slow, mid, fast], [slow2, mid2, fast2], [slow3, mid3, fast3], [slow4, mid4, fast4]]
 }
 

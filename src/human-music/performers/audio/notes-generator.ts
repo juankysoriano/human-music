@@ -28,17 +28,13 @@ export class ChordsGenerator {
    }
 
    noteFor = (voice: Voice) => {
-      if (voice.isFinished) {
-         const noteIndex = voice.currentNote.value % this.currentNode.value.notes.length
-         let candidate = this.currentNode.value.notes[noteIndex] + voice.octave * 12 + this.tone
-         if (candidate === voice.lastValue && !voice.currentNote.allowRepeat) {
-            candidate = this.currentNode.value.notes[(noteIndex + 1) % this.currentNode.value.notes.length] + voice.octave * 12 + this.tone;
-         }
-         console.log(candidate)
-         return candidate
+      const noteIndex = voice.currentNote.value % this.currentNode.value.notes.length
+      let candidate = this.currentNode.value.notes[noteIndex] + voice.octave * 12 + this.tone
+      if (candidate === voice.lastValue && !voice.currentNote.allowRepeat) {
+         candidate = this.currentNode.value.notes[(noteIndex + 1) % this.currentNode.value.notes.length] + voice.octave * 12 + this.tone;
       }
-      return 0
-
+      console.log(candidate, voice.octave, voice.offset)
+      return candidate
    }
 
    chordFor = (chordVoice: ChordVoice) => this.currentNode.value.notes.map((note) => note + chordVoice.octave * 12 + this.tone)
