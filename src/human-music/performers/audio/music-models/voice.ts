@@ -6,6 +6,7 @@ export class Voice {
    private _currentNote: Note = new Note({ value: 0, duration: 0 });
    private instrument;
    private currentRythm: Note[] = []
+   private _lastValue: number = 0
    offset: number = 0
    rythmIndex: number = 0;
 
@@ -21,6 +22,7 @@ export class Voice {
    }
 
    set rythm(rythm: Note[]) {
+      this._lastValue = 0
       this.currentRythm = rythm
    }
 
@@ -34,19 +36,20 @@ export class Voice {
    }
 
    get lastValue(): number {
-      return this._currentNote.value
+      return this._lastValue
    }
 
    get isFinished(): boolean {
       return this._currentNote.isFinished()
    }
 
-   play(midiNote: number, attack: number) {
+   play(midiNote: number[], attack: number) {
       if (this._currentNote.isFinished()) {
          MIDI.noteOff(this.instrument, this._currentNote.value);
-         MIDI.noteOn(this.instrument, midiNote, attack);
+         MIDI.noteOn(this.instrument, midiNote[0], attack);
          const rythm = this.currentRythm
-         this._currentNote = rythm[this.noteIndex % rythm.length].copy({ value: midiNote });
+         this._currentNote = rythm[this.noteIndex % rythm.length].copy({ value: midiNote[0] });
+         this._lastValue = midiNote[1]
          this.noteIndex++
       }
    }

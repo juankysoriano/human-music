@@ -69,18 +69,11 @@ Array.prototype.distance = function <T>(this: T[], other: T[]) {
 
 // eslint-disable-next-line no-extend-native
 String.prototype.node = function (this: string, { isLeaf }: { isLeaf: boolean }) {
-   const node = new TreeNode<Chord>(
-      new Chord({
-         notes: Progression.fromRomanNumerals("C", [this.toString()])
-            .map((note) => TonalChord.get(note).notes)[0]
-            .map((note) => (Note.get(`${note}0`).midi as number) - 12)
-            .sort((a, b) => a - b),
-         label: this.toString(),
-      }),
-      isLeaf
-   )
-   if (node.value.notes.length === 0) {
-      console.log("Problem with chord: " + node.value.label)
-   }
-   return node
+   return new TreeNode<Chord>(new Chord({
+      notes: Progression.fromRomanNumerals("C", [this.toString()])
+         .map((note) => TonalChord.get(note).notes)[0]
+         .map((note) => (Note.get(`${note}0`).midi as number) - 12)
+         .sort((a, b) => a - b),
+      label: this.toString(),
+   }), isLeaf)
 }

@@ -3,6 +3,7 @@ import { TreeNode } from "../../utils/data-structures/tree-node";
 import { Chord, progressions } from "./music-models/chord";
 import { ChordVoice } from "./music-models/chord-voice";
 import { Voice } from "./music-models/voice";
+
 export class ChordsGenerator {
    private tone: number
    private currentNode: TreeNode<Chord> = progressions.shuffle()
@@ -28,13 +29,13 @@ export class ChordsGenerator {
    }
 
    noteFor = (voice: Voice) => {
-      const noteIndex = voice.currentNote.value % this.currentNode.value.notes.length
+      const noteValue = voice.lastValue + voice.currentNote.value
+      const noteIndex = (noteValue < 0 ? this.currentNode.value.notes.length + noteValue : noteValue) % this.currentNode.value.notes.length
       let candidate = this.currentNode.value.notes[noteIndex] + voice.octave * 12 + this.tone
       if (candidate === voice.lastValue && !voice.currentNote.allowRepeat) {
          candidate = this.currentNode.value.notes[(noteIndex + 1) % this.currentNode.value.notes.length] + voice.octave * 12 + this.tone;
       }
-      console.log(candidate, voice.octave, voice.offset)
-      return candidate
+      return [candidate, noteIndex]
    }
 
    chordFor = (chordVoice: ChordVoice) => this.currentNode.value.notes.map((note) => note + chordVoice.octave * 12 + this.tone)
