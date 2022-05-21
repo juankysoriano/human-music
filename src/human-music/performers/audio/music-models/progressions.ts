@@ -1,5 +1,4 @@
 import { TreeNode } from '../../../utils/data-structures/tree-node';
-import '../../../utils/extensions';
 import { Chord } from './chord';
 
 export const progressions_list: string[] = [

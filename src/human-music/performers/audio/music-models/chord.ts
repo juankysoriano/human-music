@@ -1,5 +1,3 @@
-import { convertToTree, progressions_list } from './progressions';
-
 export class Chord {
    readonly notes: number[]
    readonly label: string
@@ -39,6 +37,3 @@ export namespace Chord {
       }
    }
 }
-
-export const progressions = convertToTree(progressions_list)
-

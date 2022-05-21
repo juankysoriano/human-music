@@ -4,7 +4,7 @@ export class TreeNode<T> {
    private _children: TreeNode<T>[] = []
 
    static root(): TreeNode<any> {
-      return new TreeNode(null, true)
+      return new TreeNode(null, false)
    }
 
    constructor(value: T, isLeaf: boolean = false, children: TreeNode<T>[] = []) {

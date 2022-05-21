@@ -1,6 +1,7 @@
-import { Chord as TonalChord, Note, Progression } from "@tonaljs/tonal"
-import { Chord } from "../performers/audio/music-models/chord"
-import { TreeNode } from "./data-structures/tree-node"
+import { Chord as TonalChord, Note as TonalNote, Progression } from "@tonaljs/tonal";
+import { Chord } from "../performers/audio/music-models/chord";
+import { Note } from '../performers/audio/music-models/note';
+import { TreeNode } from "./data-structures/tree-node";
 
 declare global {
    interface Map<K, V> {
@@ -72,8 +73,11 @@ String.prototype.node = function (this: string, { isLeaf }: { isLeaf: boolean })
    return new TreeNode<Chord>(new Chord({
       notes: Progression.fromRomanNumerals("C", [this.toString()])
          .map((note) => TonalChord.get(note).notes)[0]
-         .map((note) => (Note.get(`${note}0`).midi as number) - 12)
-         .sort((a, b) => a - b),
+         .map((note) => (TonalNote.get(`${note}0`).midi as number) - 12),
       label: this.toString(),
    }), isLeaf)
+}
+
+export function duration(notes: Note[]) {
+   return notes.length === 0 ? 0 : notes.flat().reduce((acc, note) => acc + note.duration, 0)
 }

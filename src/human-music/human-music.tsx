@@ -7,6 +7,7 @@ import * as MIDI from "./performers/audio/MIDI"
 import CellularAutomataSketch from "./sketch/sketch"
 import SketchProvider from "./sketch/sketch-provider"
 import "./styles/human-music-style.css"
+import {} from "./utils/extensions"
 
 export default function HumanMusic() {
    const [started, setStarted] = useState(false)

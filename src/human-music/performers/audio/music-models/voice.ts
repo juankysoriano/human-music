@@ -4,16 +4,15 @@ import { Note } from "./note";
 
 export class Voice {
    private _currentNote: Note = new Note({ value: 0, duration: 0 });
+   private _lastMidiNote: number = 0
+   private _toneOffset: number = 0
    private instrument;
-   private currentRythm: Note[] = []
-   private _lastValue: number = 0
-   offset: number = 0
-   rythmIndex: number = 0;
+   private _melody: { index: number, notes: Note[] } = { index: 0, notes: [] }
+   private _nextNoteIndex = 0;
 
    readonly octave: number;
    readonly attack: number;
 
-   noteIndex = 0;
 
    constructor(instrument: number, octave: number, attack: number) {
       this.instrument = instrument;
@@ -21,36 +20,44 @@ export class Voice {
       this.attack = attack;
    }
 
-   set rythm(rythm: Note[]) {
-      this._lastValue = 0
-      this.currentRythm = rythm
+   set toneOffset(value: number) {
+      this._toneOffset = value
    }
 
-   get rythm(): Note[] {
-      return [...this.currentRythm]
+   get toneOffset() {
+      return this._toneOffset
+   }
+
+   set melody(value: { index: number, notes: Note[] }) {
+      this._currentNote = new Note({ value: 0, duration: 0 });
+      this._lastMidiNote = 0
+      this._nextNoteIndex = 0
+      this._melody = value
+   }
+
+   get melody() {
+      return this._melody
    }
 
    get currentNote(): Note {
-      const pattern = this.currentRythm
-      return pattern[this.noteIndex % pattern.length]
+      return this._currentNote
    }
 
-   get lastValue(): number {
-      return this._lastValue
+   get nextNote(): Note {
+      return this._melody.notes[this._nextNoteIndex]
    }
 
    get isFinished(): boolean {
       return this._currentNote.isFinished()
    }
 
-   play(midiNote: number[], attack: number) {
+   play({ value, midiNote }: { value: number, midiNote: number }, attack: number) {
       if (this._currentNote.isFinished()) {
-         MIDI.noteOff(this.instrument, this._currentNote.value);
-         MIDI.noteOn(this.instrument, midiNote[0], attack);
-         const rythm = this.currentRythm
-         this._currentNote = rythm[this.noteIndex % rythm.length].copy({ value: midiNote[0] });
-         this._lastValue = midiNote[1]
-         this.noteIndex++
+         MIDI.noteOff(this.instrument, this._lastMidiNote);
+         MIDI.noteOn(this.instrument, midiNote, attack);
+         this._currentNote = this.melody.notes[this._nextNoteIndex % this._melody.notes.length].copy({ value });
+         this._lastMidiNote = midiNote
+         this._nextNoteIndex++
       }
    }
 
@@ -59,7 +66,7 @@ export class Voice {
    }
 
    stop() {
-      MIDI.noteOff(this.instrument, this._currentNote.value);
+      MIDI.noteOff(this.instrument, this._lastMidiNote);
       this._currentNote = new Note({ value: 0, duration: 0 });
    }
 }

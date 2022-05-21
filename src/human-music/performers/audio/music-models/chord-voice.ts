@@ -1,6 +1,5 @@
 import * as MIDI from "../MIDI";
 
-
 export class ChordVoice {
    readonly octave: number;
    readonly attack: number;

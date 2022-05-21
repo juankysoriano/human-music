@@ -1,14 +1,12 @@
 import { CellularAutomata1D } from "../../../cellular-automata/1d/cellularAutomata1D";
-import { ChordsGenerator } from "../notes-generator";
+import { MelodiesGenerator } from "../tools/melodies-generator";
+import { VoiceTransformation } from '../tools/music-transformation';
+import { ChordsGenerator } from "../tools/notes-generator";
 import { ChordVoice } from "./chord-voice";
-import { rythms } from './rythm';
-import { MelodyTransformation, RythmTransformation } from './transformations';
 import { Voice } from "./voice";
 
-
 export class Music {
-   private rythmTransformation: RythmTransformation;
-   private melodyTransformation: MelodyTransformation;
+   private voiceTransformation: VoiceTransformation;
    private chordsGenerator: ChordsGenerator;
    private pulseDuration: number = 1;
    private pulsesInBeat: number = 48;
@@ -23,43 +21,37 @@ export class Music {
       this.voices = voices;
       this.chordVoice = chordVoice;
       this.automata = automata;
-      this.rythmTransformation = new RythmTransformation(automata, rythms(this.automata, this.beatDuration));
-      this.melodyTransformation = new MelodyTransformation(automata);
-      this.chordsGenerator = new ChordsGenerator(automata, this.beatDuration);
+      this.voiceTransformation = new VoiceTransformation(
+         automata,
+         new MelodiesGenerator(this.automata, this.beatDuration).generateMelodies()
+      );
+      this.chordsGenerator = new ChordsGenerator(this.automata, this.beatDuration);
    }
 
    play() {
       this.chordsGenerator.tick();
 
       if (this.beatFinished) {
-         if (this.chordsGenerator.progressionFinished || this.currentBeat === 0) {
-            this.rythmTransformation.restore();
-            this.melodyTransformation.restore();
-
-            this.voices.forEach((voice) => {
-               voice.stop()
-            });
-            this.rythmTransformation.transform(this.voices);
-            this.melodyTransformation.transform(this.voices);
+         if (this.chordsGenerator.progressionFinished) {
+            this.voiceTransformation.transform(this.voices)
          }
-         this.automata.mutate();
-         this.rythmTransformation.mutate(this.voices)
-
-         this.chordVoice.play(this.chordsGenerator.chordFor(this.chordVoice), this.chordVoice.attack);
+         this.voiceTransformation.mutate(this.voices)
+         this.chordVoice.play(this.chordsGenerator.chordFor(this.chordVoice), this.chordVoice.attack)
       }
 
+      this.voices.filter(voice => voice.isFinished).forEach(voice => console.log("---"))
       this.voices.filter(voice => voice.isFinished).forEach(voice => voice.play(this.chordsGenerator.noteFor(voice), voice.attack))
       this.voices.forEach(voice => voice.tick())
 
-      this.currentBeat++;
+      this.currentBeat++
    }
 
 
    private get beatFinished(): boolean {
-      return this.currentBeat % this.beatDuration === 0;
+      return this.currentBeat % this.beatDuration === 0
    }
 
    release() {
-      this.voices.forEach((voice) => voice.stop());
+      this.voices.forEach((voice) => voice.stop())
    }
 }
