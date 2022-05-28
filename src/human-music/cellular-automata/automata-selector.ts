@@ -15,7 +15,6 @@ export class AutomataSelector {
          configuration = this.randomConfiguration()
 
          for (let i = 0; i < 200; i++) {
-            configuration.automata.evolve()
             if (i >= 100) {
                different = previousState !== configuration.automata.leeDistance() ? different + 1 : different
             }
@@ -34,7 +33,7 @@ export class AutomataSelector {
          .withStates(states)
          .withType(type)
          .withRandomInitialConfiguration()
-         .withDimensions(Dimensions.UNIDIMENSIONAL)
+         .withDimensions(Dimensions.ONE)
          .withRule(rule)
          .build()
       const parameters = { states, type, rule }

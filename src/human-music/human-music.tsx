@@ -22,19 +22,17 @@ export default function HumanMusic() {
 
    async function load() {
       if (!loaded) {
-         MIDI.loadMidi(() => {
-            setLoaded(true)
-         })
+         MIDI.loadMidi(() => setLoaded(true))
       }
    }
 
    async function start() {
       MIDI.start()
       setStarted(true)
-      randomiseAutomata()
+      randomizeAutomata()
    }
 
-   async function randomiseAutomata() {
+   async function randomizeAutomata() {
       const automata = ruleSelector.randomSelection()
       setAutomata(automata)
    }
@@ -67,8 +65,8 @@ export default function HumanMusic() {
                </div>
                <div className="Controllers" style={{ visibility: loaded ? "visible" : "hidden" }}>
                   {started ? (
-                     <button className="ruleButton" onClick={randomiseAutomata}>
-                        Randomise
+                     <button className="ruleButton" onClick={randomizeAutomata}>
+                        Randomize
                      </button>
                   ) : (
                      <button className="startButton" onClick={start}>

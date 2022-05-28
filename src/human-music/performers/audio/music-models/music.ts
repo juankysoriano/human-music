@@ -1,18 +1,13 @@
 import { CellularAutomata1D } from "../../../cellular-automata/1d/cellularAutomata1D";
 import { MelodiesGenerator } from "../tools/melodies-generator";
-import { VoiceTransformation } from '../tools/music-transformation';
-import { ChordsGenerator } from "../tools/notes-generator";
+import { ProgressionGenerator } from '../tools/progressions-generator';
 import { ChordVoice } from "./chord-voice";
 import { Voice } from "./voice";
 
 export class Music {
-   private voiceTransformation: VoiceTransformation;
-   private chordsGenerator: ChordsGenerator;
-   private pulseDuration: number = 1;
-   private pulsesInBeat: number = 48;
+   private pulseDuration: number = 144
+   private pulsesInBeat: number = 4
    private beatDuration: number = this.pulseDuration * this.pulsesInBeat;
-   private currentBeat: number = 0;
-   private automata: CellularAutomata1D;
 
    readonly voices: Voice[];
    readonly chordVoice: ChordVoice;
@@ -20,38 +15,21 @@ export class Music {
    constructor(automata: CellularAutomata1D, voices: Voice[], chordVoice: ChordVoice) {
       this.voices = voices;
       this.chordVoice = chordVoice;
-      this.automata = automata;
-      this.voiceTransformation = new VoiceTransformation(
-         automata,
-         new MelodiesGenerator(this.automata, this.beatDuration).generateMelodies()
-      );
-      this.chordsGenerator = new ChordsGenerator(this.automata, this.beatDuration);
+
+      const progression = new ProgressionGenerator(automata, this.beatDuration).generateProgression()
+      const melody = new MelodiesGenerator(automata, this.beatDuration, progression.chords, progression.scale).generateMelody()
+
+      this.chordVoice.changeChords(progression.chords)
+      this.voices.forEach(voice => voice.changeMelody(melody))
    }
 
    play() {
-      this.chordsGenerator.tick();
-
-      if (this.beatFinished) {
-         if (this.chordsGenerator.progressionFinished) {
-            this.voiceTransformation.transform(this.voices)
-         }
-         this.voiceTransformation.mutate(this.voices)
-         this.chordVoice.play(this.chordsGenerator.chordFor(this.chordVoice), this.chordVoice.attack)
-      }
-
-      this.voices.filter(voice => voice.isFinished).forEach(voice => console.log("---"))
-      this.voices.filter(voice => voice.isFinished).forEach(voice => voice.play(this.chordsGenerator.noteFor(voice), voice.attack))
-      this.voices.forEach(voice => voice.tick())
-
-      this.currentBeat++
-   }
-
-
-   private get beatFinished(): boolean {
-      return this.currentBeat % this.beatDuration === 0
+      this.chordVoice.play({ attack: 24 })
+      this.voices.forEach(voice => voice.play({ attack: 48 }))
    }
 
    release() {
+      this.chordVoice.stop()
       this.voices.forEach((voice) => voice.stop())
    }
 }

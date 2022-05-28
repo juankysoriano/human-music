@@ -1,9 +1,11 @@
 import { Chord as TonalChord, Note as TonalNote, Progression } from "@tonaljs/tonal";
 import { Chord } from "../performers/audio/music-models/chord";
-import { Note } from '../performers/audio/music-models/note';
 import { TreeNode } from "./data-structures/tree-node";
 
 declare global {
+   interface Object {
+      apply<T>(effect: (object: T) => void): T
+   }
    interface Map<K, V> {
       filterByKey(criteria: (key: K) => boolean): Map<K, V>
    }
@@ -19,6 +21,12 @@ declare global {
    interface String {
       node({ isLeaf }: { isLeaf: boolean }): TreeNode<Chord>
    }
+}
+
+// eslint-disable-next-line no-extend-native
+Object.prototype.apply = function <T>(this: T, effect: (object: T) => void) {
+   effect(this)
+   return this
 }
 
 // eslint-disable-next-line no-extend-native
@@ -75,9 +83,7 @@ String.prototype.node = function (this: string, { isLeaf }: { isLeaf: boolean })
          .map((note) => TonalChord.get(note).notes)[0]
          .map((note) => (TonalNote.get(`${note}0`).midi as number) - 12),
       label: this.toString(),
+      scale: [],
+      duration: 0,
    }), isLeaf)
-}
-
-export function duration(notes: Note[]) {
-   return notes.length === 0 ? 0 : notes.flat().reduce((acc, note) => acc + note.duration, 0)
 }

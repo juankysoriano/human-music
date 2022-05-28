@@ -14,7 +14,7 @@ export function createAutomataSketch(
     return (p5: P5CanvasInstance) => {
         bpm = Math.max(20, bpm)
         drawLooper = new Looper({
-            interval: 1000 / Math.round(12 * (bpm / 60)),
+            interval: 1000 / Math.round(144 * (bpm / 60)),
             onTick: () => onStep(p5),
         })
         p5.noLoop()

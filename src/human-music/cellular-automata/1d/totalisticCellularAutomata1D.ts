@@ -1,4 +1,4 @@
-import { CellularAutomata1D, leeDistance } from "./cellularAutomata1D"
+import { CellularAutomata1D } from "./cellularAutomata1D"
 
 export class TotalisticCellularAutomata1D implements CellularAutomata1D {
    readonly states: number
@@ -76,9 +76,5 @@ export class TotalisticCellularAutomata1D implements CellularAutomata1D {
    mutate() {
       const index = Math.floor(Math.random() * this.size)
       this._state[index] = Math.floor(Math.random() * this.states)
-   }
-
-   leeDistance(): number {
-      return leeDistance(this)
    }
 }

@@ -10,13 +10,8 @@ export class Player {
       this.music = music
    }
 
-   play() {
-      this.music.play()
-   }
-
-   stop() {
-      this.music.release()
-   }
+   play = () => this.music.play()
+   stop = () => this.music.release()
 
    static Builder = class {
       private automata?: CellularAutomata1D
@@ -29,7 +24,8 @@ export class Player {
          if (this.automata === null) {
             throw new Error("Must pass a cellular automata upon building")
          }
-         return new Player(new Music(this.automata!, [new Voice(0, 4, 36), new Voice(1, 5, 48)], new ChordVoice(2, 4, 12)))
+         const tone = Math.floor(Math.random() * 13)
+         return new Player(new Music(this.automata!, [new Voice(0, 5, tone, [])], new ChordVoice(1, 4, tone, [])))
       }
    }
 }

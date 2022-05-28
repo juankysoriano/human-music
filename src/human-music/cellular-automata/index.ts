@@ -1,9 +1,10 @@
+import { CellularAutomata1D } from "./1d/cellularAutomata1D"
 import { ElementaryCellularAutomata1D } from "./1d/elementaryCellularAutomata1D"
 import { TotalisticCellularAutomata1D } from "./1d/totalisticCellularAutomata1D"
 
 export enum Dimensions {
-   UNIDIMENSIONAL,
-   BIDIMENSIONAL,
+   ONE,
+   TWO,
 }
 
 export enum Type {
@@ -13,7 +14,7 @@ export enum Type {
 
 export class CellularAutomata {
    static Builder = class {
-      private dimensions: Dimensions = Dimensions.UNIDIMENSIONAL
+      private dimensions: Dimensions = Dimensions.ONE
       private type: Type = Type.ELEMENTARY
       private states: number = 2
       private size: number = 15
@@ -21,7 +22,7 @@ export class CellularAutomata {
       private randomInitialConfiguration: boolean = false
 
       withDimensions(dimensions: Dimensions) {
-         if (dimensions === Dimensions.BIDIMENSIONAL) {
+         if (dimensions === Dimensions.TWO) {
             throw new Error("Bi-dimensional automata not implemented yet")
          }
          this.dimensions = dimensions
@@ -54,11 +55,11 @@ export class CellularAutomata {
          return this
       }
 
-      build() {
-         return this.type === Type.TOTALISTIC ? this.buildTotallistic1D() : this.buildElementary1D()
-      }
+      build = () => this.type === Type.TOTALISTIC
+         ? this.buildTotalistic1D()
+         : this.buildElementary1D()
 
-      private buildTotallistic1D() {
+      private buildTotalistic1D() {
          const radius = 1
          const ruleCharacters = Array.from(BigInt(this.rule).toString(this.states))
          const lookupTable: number[] = Array.from({ length: ruleCharacters.length })
@@ -90,6 +91,31 @@ export class CellularAutomata {
    }
 }
 
-export * from "./1d/elementaryCellularAutomata1D"
-export * from "./1d/totalisticCellularAutomata1D"
+declare module './1d/elementaryCellularAutomata1D' {
+   interface ElementaryCellularAutomata1D {
+      leeDistance(): number
+   }
+}
 
+declare module './1d/totalisticCellularAutomata1D' {
+   interface TotalisticCellularAutomata1D {
+      leeDistance(): number
+   }
+}
+
+ElementaryCellularAutomata1D.prototype.leeDistance = function (): number {
+   return leeDistance(this)
+}
+
+TotalisticCellularAutomata1D.prototype.leeDistance = function () {
+   return leeDistance(this)
+}
+
+const leeDistance = (automata: CellularAutomata1D): number => {
+   automata.evolve()
+   return automata.state.reduce((acc, _, index) => {
+      const euclideanDistance = Math.abs(automata.state[index] - automata.previousState[index])
+      const leeDistance = automata.state[index] > 0 && euclideanDistance > 0 ? Math.min(euclideanDistance, automata.states - euclideanDistance) : 0
+      return acc + leeDistance
+   }, 0);
+}

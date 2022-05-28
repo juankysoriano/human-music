@@ -1,4 +1,4 @@
-import { CellularAutomata1D, leeDistance } from "./cellularAutomata1D"
+import { CellularAutomata1D } from "./cellularAutomata1D"
 
 export class ElementaryCellularAutomata1D implements CellularAutomata1D {
    readonly states: number
@@ -66,17 +66,11 @@ export class ElementaryCellularAutomata1D implements CellularAutomata1D {
       return code
    }
 
-   private wrappedIndex(index: number) {
-      return index < 0 ? index + this.size : index >= this.size ? index - this.size : index
-   }
+   wrappedIndex = (index: number) => index < 0 ? index + this.size : index >= this.size ? index - this.size : index
 
-   mutate() {
+   mutate = () => {
       const index = Math.floor(Math.random() * this.size)
       this._state[index] = Math.floor(Math.random() * this.states)
-   }
-
-   leeDistance(): number {
-      return leeDistance(this)
    }
 
    reset() {
