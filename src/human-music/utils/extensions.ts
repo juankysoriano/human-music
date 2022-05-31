@@ -16,8 +16,9 @@ declare global {
       removeDuplicates(): Array<T>
       hasDuplicates(): boolean
       distance(other: Array<T>): number
+      intersection(other: Array<T>): Array<T>
+      mapPush(mapFunction: (value: T) => T): Array<T>
    }
-
    interface String {
       node({ isLeaf }: { isLeaf: boolean }): TreeNode<Chord>
    }
@@ -55,6 +56,17 @@ Array.prototype.groupBy = function <K, T>(this: T[], grouper: (group: T) => K) {
 }
 
 // eslint-disable-next-line no-extend-native
+Array.prototype.intersection = function <T>(this: T[], other: T[]) {
+   const intersection = [] as T[]
+   this.forEach((element) => {
+      if (other.includes(element)) {
+         intersection.push(element)
+      }
+   })
+   return intersection
+}
+
+// eslint-disable-next-line no-extend-native
 Array.prototype.removeDuplicates = function <T>(this: T[]) {
    return this.filter((value, index, self) => self.indexOf(value) === index)
 }
@@ -77,13 +89,32 @@ Array.prototype.distance = function <T>(this: T[], other: T[]) {
 }
 
 // eslint-disable-next-line no-extend-native
+Array.prototype.mapPush = function <T, U>(this: T[], mapFunction: (value: T) => U) {
+   return [...this, this.map(value => mapFunction(value))]
+}
+
+// eslint-disable-next-line no-extend-native
 String.prototype.node = function (this: string, { isLeaf }: { isLeaf: boolean }) {
    return new TreeNode<Chord>(new Chord({
       notes: Progression.fromRomanNumerals("C", [this.toString()])
-         .map((note) => TonalChord.get(note).notes)[0]
-         .map((note) => (TonalNote.get(`${note}0`).midi as number) - 12),
+         .map(chordName => TonalChord.get(chordName).notes)[0]
+         .map(noteName => (TonalNote.get(`${noteName}0`).midi as number) - 12)
+         /* TODO 
+         * What we are trying here is to make sure the chord is properly ordered. F, A, C === 5, 9, 12 !== 5, 9, 0
+         * We need to find an easier way of solving this.
+         */
+         .map((note, index, array) => index > 0 && note <= array[index - 1] ? note + 12 : note)
+         .map((note, index, array) => index > 0 && note <= array[index - 1] ? note + 12 : note)
+         .map((note, index, array) => index > 0 && note <= array[index - 1] ? note + 12 : note)
+         .map((note, index, array) => index > 0 && note <= array[index - 1] ? note + 12 : note)
+         .map((note, index, array) => index > 0 && note <= array[index - 1] ? note + 12 : note),
       label: this.toString(),
-      scale: [],
       duration: 0,
    }), isLeaf)
+}
+
+export function intersection<T>(...arrays: T[][]): T[] {
+   const intersection = arrays[0] as T[]
+   arrays.forEach((array) => intersection.push(...intersection.intersection(array)))
+   return intersection
 }

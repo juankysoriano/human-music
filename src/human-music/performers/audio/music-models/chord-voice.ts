@@ -5,11 +5,11 @@ export class ChordVoice {
    private instrument: number;
    private octave: number;
    private tone: number;
-   private currentChord = { index: -1, value: new Chord({ notes: [], duration: 0, label: "", scale: [] }) }
+   private currentChord = { index: -1, value: new Chord() }
    private chords: Chord[]
    private get nextChord() {
       const index = this.currentChord.index + 1;
-      return { index, value: this.chords[index % this.chords.length].copy({}) }
+      return { index, value: this.chords[index % this.chords.length].copy() }
    }
 
    constructor(instrument: number, octave: number, tone: number, chords: Chord[]) {

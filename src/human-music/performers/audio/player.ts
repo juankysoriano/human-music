@@ -6,9 +6,7 @@ import { Voice } from "./music-models/voice";
 
 export class Player {
    private music: Music
-   constructor(music: Music) {
-      this.music = music
-   }
+   constructor(music: Music) { this.music = music }
 
    play = () => this.music.play()
    stop = () => this.music.release()

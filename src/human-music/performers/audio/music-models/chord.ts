@@ -1,19 +1,17 @@
 export class Chord {
    readonly label: string
-   readonly scale: number[] = []
    readonly midiNotes: number[]
    readonly duration: number
    private currentDuration: number;
 
-   constructor({ notes, duration, label, scale }: { notes: number[], duration: number, label: string, scale: number[] }) {
+   constructor({ notes, duration, label } = { notes: [] as number[], duration: 0, label: "" }) {
       this.midiNotes = notes
       this.duration = duration
       this.label = label
-      this.scale = scale
       this.currentDuration = duration
    }
 
-   copy = ({ notes = this.midiNotes, duration = this.duration, label = this.label, scale = this.scale }) => new Chord({ notes, duration, label, scale })
+   copy = ({ notes = this.midiNotes, duration = this.duration, label = this.label } = { notes: this.midiNotes, duration: this.duration, label: this.label }) => new Chord({ notes, duration, label })
    tick = () => this.currentDuration--
    isFinished = () => this.currentDuration <= 0
 }

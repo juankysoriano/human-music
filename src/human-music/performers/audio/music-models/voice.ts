@@ -7,10 +7,10 @@ export class Voice {
    private octave: number;
    private tone: number
    private notes: Note[] = []
-   private currentNote = { index: -1, value: new Note({}) }
+   private currentNote = { index: -1, value: new Note() }
    private get nextNote() {
       const index = this.currentNote.index + 1;
-      return { index, value: this.notes[index % this.notes.length].copy({}) }
+      return { index, value: this.notes[index % this.notes.length].copy() }
    }
 
    constructor(instrument: number, octave: number, tone: number, notes: Note[]) {
