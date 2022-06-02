@@ -11,7 +11,7 @@ export class AutomataSelector {
       let different = 0;
       let previousState = 0;
       let configuration = null
-      while (different < 5) {
+      while (different < 7) {
          configuration = this.randomConfiguration()
 
          for (let i = 0; i < 200; i++) {

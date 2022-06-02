@@ -23,7 +23,8 @@ export class Player {
             throw new Error("Must pass a cellular automata upon building")
          }
          const tone = Math.floor(Math.random() * 13)
-         return new Player(new Music(this.automata!, [new Voice(0, 5, tone, [])], new ChordVoice(1, 4, tone, [])))
+         const offset = tone < 6 ? 1 : 0
+         return new Player(new Music(this.automata!, [new Voice(0, 4 + offset, tone, [])], new ChordVoice(1, 3 + offset, tone, [])))
       }
    }
 }

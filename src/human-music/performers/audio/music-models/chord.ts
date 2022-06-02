@@ -32,14 +32,14 @@ export namespace Chord {
 
          const notes: number[] = (inversions[0].hasDuplicates() ? inversions[1] : inversions[0])
             .sort((a, b) => a - b)
-            .apply(notes => notes.push(notes[0] + 12))
+         //.apply(notes => notes.push(notes[0] + 12))
 
          return chord.copy({ notes: notes.sort((a, b) => a - b) })
       }
 
       const notes: number[] = inversions[defaultInversion]
          .sort((a, b) => a - b)
-         .apply(notes => notes.push(notes[0] + 12))
+      //.apply(notes => notes.push(notes[0] + 12))
 
       return chord.copy({ notes: notes.sort((a, b) => a - b) })
    }

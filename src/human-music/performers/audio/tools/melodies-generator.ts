@@ -5,9 +5,7 @@ import { Note } from '../music-models/note';
 export class MelodiesGenerator {
     private rythmPatterns: Map<number, number[][]> = [
         [1],
-        //[3 / 4, 1 / 4],
         [1 / 2, 1 / 2],
-        //[2 / 4, 1 / 4, 1 / 4],
         [1 / 3, 1 / 3, 1 / 3],
         [1 / 4, 1 / 4, 1 / 4, 1 / 4],
         [1 / 5, 1 / 5, 1 / 5, 1 / 5, 1 / 5],
@@ -38,178 +36,186 @@ export class MelodiesGenerator {
         const c = this.melodyStep()
         const d = this.melodyStep()
         const random = Math.floor(Math.random() * 8)
+        let base
         switch (random) {
             case 0:
                 console.log("a,a,b,a")
                 console.log([a, a, b, a])
-                return [a, a, b, a].flat()
+                base = [a, a, b, a].flat()
+                break;
             case 1:
                 console.log("a,b,a,a")
                 console.log([a, b, a, a])
-                return [a, b, a, a].flat()
+                base = [a, b, a, a].flat()
+                break
             case 2:
                 console.log("a,b,a,c")
                 console.log([a, b, a, c])
-                return [a, b, a, c].flat()
+                base = [a, b, a, c]
+                break
             case 3:
                 console.log("a,b")
                 console.log([a, b].flat())
-                return [a, b].flat()
+                base = [a, b]
+                break
             case 4:
                 console.log("a,b,b,a")
                 console.log([a, b, b, a])
-                return [a, b, b, a].flat()
+                base = [a, b, b, a]
+                break
             case 5:
                 console.log("a,b,c,a")
                 console.log([a, b, c, a])
-                return [a, b, c, a].flat()
+                base = [a, b, c, a]
+                break
             case 6:
                 console.log("a,b,c,b")
                 console.log([a, b, c, b])
-                return [a, b, a, b, c, b].flat()
+                base = [a, b, c, b]
+                break
             default:
                 console.log("a,b,c,d")
                 console.log([a, b, c, d].flat())
-                return [a, b, c, d].flat()
+                base = [a, b, c, d]
+                break
         }
+        return base.flat()
+
     }
 
     private melodyStep(): Note[] {
-        let notes: { note: Note, chord: Chord }[] = []
+        const notes: { note: Note, chord: Chord }[] = []
         this.chords.forEach(chord => {
             notes.push({ note: new Note({ value: chord.midiNotes[this.automata.leeDistance() % chord.midiNotes.length], duration: this.beatDuration }), chord })
         })
 
-        //divisions
-        notes = notes.flatMap((current) => {
-            if (this.automata.leeDistance() % 2 === 0) {
-                const durations = this.rythmPatterns.get(2)!
-                const durationsFactor = durations[this.automata.leeDistance() % durations.length].shuffle()
-                const newNote1 = current.note.copy({ duration: durationsFactor[0] * current.note.duration })
-                const newNote2 = current.note.copy({ value: current.chord.midiNotes[this.automata.leeDistance() % current.chord.midiNotes.length], duration: durationsFactor[1] * current.note.duration })
-                if (newNote1.midiNote !== newNote2.midiNote) {
-                    return [{ note: newNote1, chord: current.chord }, { note: newNote2, chord: current.chord }]
-                } else {
-                    return [current]
-                }
-            } else {
-                return [current]
-            }
-        })
+        const baseMelody = this.divideNotes(notes);
+        const withNeightbourdTones: Note[] = this.neightbourdTones(baseMelody.map(value => value.note));
+        const withPassingTones: Note[] = this.passingTones(withNeightbourdTones);
         this.automata.mutate()
 
-        notes = notes.flatMap((current) => {
-            if (this.automata.leeDistance() % 3 === 0) {
-                const durations = this.rythmPatterns.get(2)!
-                const durationsFactor = durations[this.automata.leeDistance() % durations.length].shuffle()
-                const newNote1 = current.note.copy({ duration: durationsFactor[0] * current.note.duration })
-                const newNote2 = current.note.copy({ value: current.chord.midiNotes[this.automata.leeDistance() % current.chord.midiNotes.length], duration: durationsFactor[1] * current.note.duration })
-                if (newNote1.midiNote !== newNote2.midiNote) {
-                    return [{ note: newNote1, chord: current.chord }, { note: newNote2, chord: current.chord }]
-                } else {
-                    return [current]
-                }
-            } else {
-                return [current]
-            }
-        })
+        console.log(baseMelody)
 
-        // notes = notes.flatMap((current) => {
-        //     if (Math.random() > 0.2) {
-        //         const durations = this.rythmPatterns.get(2)!
-        //         const durationsFactor = durations[Math.floor(Math.random() * durations.length)].shuffle()
-        //         const newNote1 = current.note.copy({ duration: durationsFactor[0] * current.note.duration })
-        //         const newNote2 = current.note.copy({ value: current.chord.notes[Math.floor(Math.random() * current.chord.notes.length)], duration: durationsFactor[1] * current.note.duration })
-        //         if (newNote1.value !== newNote2.value) {
-        //             return [{ note: newNote1, chord: current.chord }, { note: newNote2, chord: current.chord }]
-        //         } else {
-        //             return [current]
-        //         }
-        //     } else {
-        //         return [current]
-        //     }
-        // })
-        // notes = notes.flatMap((current) => {
-        //     if (Math.random() > 0.4) {
-        //         const durations = this.rythmPatterns.get(2)!
-        //         const durationsFactor = durations[Math.floor(Math.random() * durations.length)].shuffle()
-        //         const newNote1 = current.note.copy({ duration: durationsFactor[0] * current.note.duration })
-        //         const newNote2 = current.note.copy({ value: current.chord.notes[Math.floor(Math.random() * current.chord.notes.length)], duration: durationsFactor[1] * current.note.duration })
-        //         if (newNote1.value !== newNote2.value) {
-        //             return [{ note: newNote1, chord: current.chord }, { note: newNote2, chord: current.chord }]
-        //         } else {
-        //             return [current]
-        //         }
-        //     } else {
-        //         return [current]
-        //     }
-        // })
-        this.automata.mutate()
-        const floritures: Note[] = []
+        return withPassingTones
+    }
+
+    private divideNotes(notes: { note: Note; chord: Chord; }[]): { note: Note, chord: Chord }[] {
+        notes = notes.flatMap((current, index, array) => {
+            if (Math.random() > 0.2) {
+                const durations = this.rythmPatterns.get(2)!;
+                const durationsFactor = durations[this.automata.leeDistance() % durations.length].shuffle();
+                const newNote1 = current.note.copy({ duration: durationsFactor[0] * current.note.duration });
+                const lastNote = array[(index + 1) % array.length];
+                let newNote2 = current.note.copy({ value: current.chord.midiNotes[this.automata.leeDistance() % current.chord.midiNotes.length], duration: durationsFactor[1] * current.note.duration });
+                while (newNote1.midiNote === newNote2.midiNote || newNote2.midiNote === lastNote.note.midiNote) {
+                    this.automata.mutate()
+                    newNote2 = current.note.copy({ value: current.chord.midiNotes[this.automata.leeDistance() % current.chord.midiNotes.length], duration: durationsFactor[1] * current.note.duration });
+                }
+                return [{ note: newNote1, chord: current.chord }, { note: newNote2, chord: current.chord }];
+            } else {
+                return [current];
+            }
+        });
+        notes = notes.flatMap((current, index, array) => {
+            if (Math.random() > 0.4) {
+                const durations = this.rythmPatterns.get(2)!;
+                const durationsFactor = durations[this.automata.leeDistance() % durations.length].shuffle();
+                const newNote1 = current.note.copy({ duration: durationsFactor[0] * current.note.duration });
+                const lastNote = array[(index + 1) % array.length];
+                let newNote2 = current.note.copy({ value: current.chord.midiNotes[this.automata.leeDistance() % current.chord.midiNotes.length], duration: durationsFactor[1] * current.note.duration });
+                while (newNote1.midiNote === newNote2.midiNote || newNote2.midiNote === lastNote.note.midiNote) {
+                    this.automata.mutate()
+                    newNote2 = current.note.copy({ value: current.chord.midiNotes[this.automata.leeDistance() % current.chord.midiNotes.length], duration: durationsFactor[1] * current.note.duration });
+                }
+                return [{ note: newNote1, chord: current.chord }, { note: newNote2, chord: current.chord }];
+            } else {
+                return [current];
+            }
+        });
+        notes = notes.flatMap((current, index, array) => {
+            if (Math.random() > 0.8) {
+                const durations = this.rythmPatterns.get(2)!;
+                const durationsFactor = durations[this.automata.leeDistance() % durations.length].shuffle();
+                const newNote1 = current.note.copy({ duration: durationsFactor[0] * current.note.duration });
+                const lastNote = array[(index + 1) % array.length];
+                let newNote2 = current.note.copy({ value: current.chord.midiNotes[this.automata.leeDistance() % current.chord.midiNotes.length], duration: durationsFactor[1] * current.note.duration });
+                while (newNote1.midiNote === newNote2.midiNote || newNote2.midiNote === lastNote.note.midiNote) {
+                    this.automata.mutate()
+                    newNote2 = current.note.copy({ value: current.chord.midiNotes[this.automata.leeDistance() % current.chord.midiNotes.length], duration: durationsFactor[1] * current.note.duration });
+                }
+                return [{ note: newNote1, chord: current.chord }, { note: newNote2, chord: current.chord }];
+            } else {
+                return [current];
+            }
+        });
+        return notes;
+    }
+
+    private neightbourdTones(notes: Note[]) {
+        const neightbourdTones: Note[] = [];
         notes.forEach(current => {
-            if (this.automata.leeDistance() % 2 === 0) {
-                const value = current.note.midiNote
+            if (Math.random() >= 0.8) {
+                const value = current.midiNote;
                 const nextValue = this.automata.leeDistance() % 2 === 0
                     ? this.scale.indexOf(value) > 0
                         ? this.scale[this.scale.indexOf(value) - 1]
                         : this.scale[this.scale.indexOf(value) + 1]
                     : this.scale.indexOf(value) < this.scale.length - 1
                         ? this.scale[this.scale.indexOf(value) + 1]
-                        : this.scale[this.scale.indexOf(value) - 1]
-                const durations = this.rythmPatterns.get(3)!
-                const durationsFactor = durations[this.automata.leeDistance() % durations.length].shuffle()
-                const resultingGroup = [value, nextValue, value].map((value, index) => new Note({ value, duration: current.note.duration * durationsFactor[index] }))
-                floritures.push(...resultingGroup)
+                        : this.scale[this.scale.indexOf(value) - 1];
+                const durations = this.rythmPatterns.get(3)!;
+                const durationsFactor = durations[this.automata.leeDistance() % durations.length].shuffle();
+                const resultingGroup = [value, nextValue, value].map((value, index) => new Note({ value, duration: current.duration * durationsFactor[index] }));
+                neightbourdTones.push(...resultingGroup);
             } else {
-                floritures.push(current.note)
+                neightbourdTones.push(current);
             }
-        })
-        this.automata.mutate()
-        // passing tones
-        const result: Note[] = []
-        floritures.forEach((current, index, array) => {
-            if (this.automata.leeDistance() % 2 === 0) {
-                const first = current
-                const second = array[(index + 1) % array.length]
-                const scale = [...this.scale]
+        });
+        return neightbourdTones;
+    }
+
+    private passingTones(neightbourdTones: Note[]) {
+        const result: Note[] = [];
+        for (let i = 0; i < neightbourdTones.length; i++) {
+            let current = neightbourdTones[i];
+            if (Math.random() >= 0.8) {
+                const first = current;
+                const second = neightbourdTones[(i + 1) % neightbourdTones.length];
+                const scale = [...this.scale];
                 if (first.midiNote === second.midiNote) {
-                    result.push(first)
+                    result.push(first);
                 } else if (first.midiNote < second.midiNote) {
 
-                    const notesInBetween = scale.splice(scale.indexOf(first.midiNote), scale.indexOf(second.midiNote) - scale.indexOf(first.midiNote))
-
-                    if (notesInBetween.length > 4 || notesInBetween.length === 0) {
-                        result.push(first)
+                    const notesInBetween = scale.splice(scale.indexOf(first.midiNote), scale.indexOf(second.midiNote) - scale.indexOf(first.midiNote));
+                    console.log(first.midiNote, second.midiNote, notesInBetween)
+                    if (notesInBetween.length > 2 || notesInBetween.length === 0) {
+                        result.push(first);
                     } else {
-                        const durations = this.rythmPatterns.get(notesInBetween.length)!
-                        const durationsFactor = durations[this.automata.leeDistance() % durations.length].shuffle()
+                        const durations = this.rythmPatterns.get(notesInBetween.length)!;
+                        const durationsFactor = durations[this.automata.leeDistance() % durations.length].shuffle();
                         const availableDuration = first.duration
-                        const resultingGroup = notesInBetween.map((value, index) => new Note({ value, duration: availableDuration * durationsFactor[index] }))
-                        result.push(...resultingGroup)
+                        const resultingGroup = notesInBetween.map((value, index) => new Note({ value, duration: availableDuration * durationsFactor[index] }));
+                        result.push(...resultingGroup);
                     }
 
                 } else {
-                    scale.reverse()
-                    const notesInBetween = scale.splice(scale.indexOf(first.midiNote), scale.indexOf(second.midiNote) - scale.indexOf(first.midiNote))
+                    scale.reverse();
+                    const notesInBetween = scale.splice(scale.indexOf(first.midiNote), scale.indexOf(second.midiNote) - scale.indexOf(first.midiNote));
 
-                    if (notesInBetween.length > 4 || notesInBetween.length === 0) {
-                        result.push(first)
+                    if (notesInBetween.length > 2 || notesInBetween.length === 0) {
+                        result.push(first);
                     } else {
-                        const durations = this.rythmPatterns.get(notesInBetween.length)!
-                        const durationsFactor = durations[this.automata.leeDistance() % durations.length].shuffle()
+                        const durations = this.rythmPatterns.get(notesInBetween.length)!;
+                        const durationsFactor = durations[this.automata.leeDistance() % durations.length].shuffle();
                         const availableDuration = first.duration
-                        const resultingGroup = notesInBetween.map((value, index) => new Note({ value, duration: availableDuration * durationsFactor[index] }))
-                        result.push(...resultingGroup)
+                        const resultingGroup = notesInBetween.map((value, index) => new Note({ value, duration: availableDuration * durationsFactor[index] }));
+                        result.push(...resultingGroup);
                     }
                 }
             } else {
-                result.push(current)
+                result.push(current);
             }
-        })
-        this.automata.mutate()
-
-        console.log(result)
-
-        return result
+        }
+        return result;
     }
 }
