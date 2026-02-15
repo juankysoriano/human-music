@@ -17,7 +17,7 @@ export default function HumanMusic() {
 
    useEffect(() => {
       load()
-   })
+   }, [])
 
    async function load() {
       if (!loaded) {
@@ -28,14 +28,31 @@ export default function HumanMusic() {
    }
 
    async function start() {
+      // CRITICAL: For mobile browsers, we must resume AudioContext on user gesture
+      const resumed = await MIDI.resumeAudioContext()
+      if (!resumed) {
+         console.warn("AudioContext could not be resumed")
+         // Still try to start - some browsers may work anyway
+      }
+      
       MIDI.start()
       setStarted(true)
       randomiseAutomata()
    }
 
    async function randomiseAutomata() {
+      // Ensure audio context is active before generating new music
+      await MIDI.resumeAudioContext()
+      
       const automata = ruleSelector.randomSelection()
       setAutomata(automata)
+   }
+
+   // Handle touch events for mobile
+   const handleTouchStart = async (e: React.TouchEvent) => {
+      // Prevent default to ensure our handler runs
+      e.preventDefault()
+      await start()
    }
 
    return (
@@ -66,11 +83,19 @@ export default function HumanMusic() {
                </div>
                <div className="Controllers" style={{ visibility: loaded ? "visible" : "hidden" }}>
                   {started ? (
-                     <button className="ruleButton" onClick={randomiseAutomata}>
+                     <button 
+                        className="ruleButton" 
+                        onClick={randomiseAutomata}
+                        onTouchEnd={(e) => { e.preventDefault(); randomiseAutomata(); }}
+                     >
                         Randomise
                      </button>
                   ) : (
-                     <button className="startButton" onClick={start}>
+                     <button 
+                        className="startButton" 
+                        onClick={start}
+                        onTouchEnd={handleTouchStart}
+                     >
                         Start
                      </button>
                   )}
