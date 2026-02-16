@@ -87,27 +87,27 @@ declare global {
 export function loadMidi(loaded: () => void) {
    window.MIDI = MIDI || {}
    
-   // Cargar instrumentos ricos (piano, cuerdas, etc.)
+   // Cargar instrumentos - volvemos a guitarra nylon por calidad de sonido
    const instruments = [
-      currentInstruments.solo,
-      currentInstruments.accompaniment,
-      currentInstruments.bass,
+      "acoustic_guitar_nylon",
+      "acoustic_guitar_nylon", 
+      "acoustic_guitar_nylon",
    ]
    
    MIDI.loadPlugin({
-      soundfontUrl: "https://juankysoriano.github.io/midi-js-soundfonts/FluidR3_GM/",
+      soundfontUrl: "https://juankysoriano.github.io/midi-js-soundfonts/AirFont/",
       targetFormat: "mp3",
       instrument: instruments,
       onsuccess() {
-         // Asignar instrumentos a canales
-         MIDI.programChange(0, MIDI.GM.byName[currentInstruments.solo]?.program || 0)
-         MIDI.programChange(1, MIDI.GM.byName[currentInstruments.accompaniment]?.program || 48)
-         MIDI.programChange(2, MIDI.GM.byName[currentInstruments.bass]?.program || 43)
+         // Asignar mismo instrumento a todos los canales (mejor calidad)
+         MIDI.programChange(0, MIDI.GM.byName["acoustic_guitar_nylon"].program)
+         MIDI.programChange(1, MIDI.GM.byName["acoustic_guitar_nylon"].program)
+         MIDI.programChange(2, MIDI.GM.byName["acoustic_guitar_nylon"].program)
          
          // Volumen por canal
-         MIDI.setVolume(0, 110)  // Solo
-         MIDI.setVolume(1, 90)   // Acompañamiento  
-         MIDI.setVolume(2, 100)  // Bajo
+         MIDI.setVolume(0, 110)  // Melodía
+         MIDI.setVolume(1, 85)   // Acompañamiento  
+         MIDI.setVolume(2, 95)   // Bajo
          
          // For mobile: ensure AudioContext is created but suspended
          if (window.MIDI?.AudioContext && window.MIDI.AudioContext.state === "running") {
